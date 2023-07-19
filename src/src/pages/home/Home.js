@@ -22,6 +22,7 @@ function Home() {
               </p>
               <a
                 className="btn btn-primary text-white rounded-5 py-2 px-4 fw-medium"
+                href=""
                 style={{ width: "fit-content" }}
               >
                 Check waterpoints

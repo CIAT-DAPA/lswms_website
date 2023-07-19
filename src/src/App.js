@@ -3,6 +3,7 @@ import "./App.css";
 import Menu from "./components/menu/Menu";
 import Home from "./pages/home/Home";
 import Visualization from "./pages/visualization/Visualization";
+import Footer from "./components/footer/Footer";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/visualization" element={<Visualization />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 }

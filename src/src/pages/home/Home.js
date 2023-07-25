@@ -39,34 +39,37 @@ function Home() {
             </Col>
           </Row>
         </Container>
+        <div className="divider">
+          <div class="scroll-down-link scroll-down-arrow"></div>
+        </div>
       </div>
- 
-        <Row className="g-0">
-          <Feature
-            title="Interactive Map"
-            description="Explore our interactive map and view the location of each waterpoint in Ethiopia. Get detailed data on existing infrastructure."
-            image={feature1}
-            color="blue"
-          ></Feature>
-          <Feature
-            title="Updated Statistics and Data"
-            description="Access up-to-date statistics and key data on water access in pastoralist communities. Get detailed information on the current status of water points, water supply and priority needs."
-            image={feature2}
-            color="white"
-          ></Feature>
-          <Feature
-            title="Resources for Decision-Making"
-            description="Access a wide range of relevant resources, reports and studies to support informed waterpoint decision-making. Find technical information and comparative analysis"
-            image={feature3}
-            color="blue"
-          ></Feature>
-          <Feature
-            title="Historical data"
-            description="Discover various historical data such as rainfall, evapotranspiration and water levels."
-            image={feature4}
-            color="white"
-          ></Feature>
-        </Row>
+
+      <Row className="g-0">
+        <Feature
+          title="Interactive Map"
+          description="Explore our interactive map and view the location of each waterpoint in Ethiopia. Get detailed data on existing infrastructure."
+          image={feature1}
+          color="blue"
+        ></Feature>
+        <Feature
+          title="Waterpoint overview"
+          description="Discover the past and future of water. Access historical waterpoint, temperature and rainfall data, along with forecasts for smarter and more efficient management."
+          image={feature2}
+          color="white"
+        ></Feature>
+        <Feature
+          title="Dashboard waterpoint"
+          description="Our Dashboard provides real-time information on waterpoints and resources for effective decisions. Decide with confidence!"
+          image={feature3}
+          color="blue"
+        ></Feature>
+        <Feature
+          title="Routes"
+          description="Find your way to the water! With our routing module, getting to the waterpoint has never been easier."
+          image={feature4}
+          color="white"
+        ></Feature>
+      </Row>
     </div>
   );
 }

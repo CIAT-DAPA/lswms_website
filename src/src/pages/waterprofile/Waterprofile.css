@@ -1,0 +1,16 @@
+.profile-bg {
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.486) 0%,
+      rgba(201, 201, 201, 0.06) 100%
+    ),
+    url("../../assets/img/profilebg.jpg");
+  background-size: cover;
+  background-position: top;
+  min-height: 75vh;
+}
+
+.container-profile {
+  position: relative;
+  top: 45vh;
+}

@@ -6,6 +6,8 @@ import feature2 from "../../assets/img/feature2.png";
 import feature3 from "../../assets/img/feature3.png";
 import feature4 from "../../assets/img/feature4.png";
 import Feature from "../../components/feature/Feature";
+import { Link } from "react-router-dom";
+
 function Home() {
   return (
     <div>
@@ -20,13 +22,14 @@ function Home() {
                 Empowering vital decisions to make the right water management
                 choices for you.
               </p>
-              <a
+              <Link
+                type="button"
                 className="btn btn-primary text-white rounded-5 py-2 px-4 fw-medium"
-                href=""
                 style={{ width: "fit-content" }}
+                to="/visualization"
               >
-                Check waterpoints
-              </a>
+                Go to Viewer
+              </Link>
             </Col>
             <Col className="col-12 col-md-5 col-lg-5 d-flex flex-column gap-2">
               <h5 className="fw-medium">

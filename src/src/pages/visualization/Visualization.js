@@ -64,13 +64,14 @@ function Visualization() {
                 Profile
               </Link>
 
-              <a
+              <Link
+                type="button"
                 className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-                href=""
+                to="/historicaldata"
               >
                 <img src={dataIcon} alt="" className="me-3" />
                 Data
-              </a>
+              </Link>
             </div>
           </Popup>
         </Marker>

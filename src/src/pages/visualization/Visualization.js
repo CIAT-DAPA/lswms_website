@@ -68,6 +68,7 @@ function Visualization() {
                 type="button"
                 className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
                 to="/historicaldata"
+                state={{ idAclimate: "test" }}
               >
                 <img src={dataIcon} alt="" className="me-3" />
                 Data

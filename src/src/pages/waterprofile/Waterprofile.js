@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import downloadImg from "../../assets/svg/download.svg";
@@ -9,10 +9,13 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import WatershedContent from "../../components/watershedContent/WatershedContent";
 import WaterpointContent from "../../components/waterpointContent/WaterpointContent";
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 function Waterprofile() {
   const location = useLocation();
   const idWater = location.state?.idWater;
+  const profileRef = useRef(null);
 
   var tableContent = {
     district: "Haro",
@@ -76,8 +79,23 @@ function Waterprofile() {
     },
   };
 
+  const downloadProfileAsPdf = () => {
+    const profileElement = document.getElementById("profile");
+
+    html2canvas(profileElement).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("profile.pdf");
+    });
+  };
+
   return (
-    <div>
+    <div ref={profileRef} id="profile">
       {idWater ? (
         <>
           <div className="profile-bg">
@@ -131,7 +149,7 @@ function Waterprofile() {
               </Col>
             </Row>
             <div className="mb-5 mt-4">
-              <Button className="me-5 rounded-4 ">
+              <Button className="me-5 rounded-4" onClick={downloadProfileAsPdf}>
                 <img src={downloadImg} alt="" className="me-3" />
                 Download profile
               </Button>
@@ -147,7 +165,7 @@ function Waterprofile() {
           style={{ height: "100vh" }}
           className="d-flex justify-content-around flex-column align-items-center flex-lg-row"
         >
-          <img src={img404} alt=""/>
+          <img src={img404} alt="" />
           <div>
             <h1>No water ID was provided.</h1>
             <p>Try to get the profile from the waterpoints display.</p>

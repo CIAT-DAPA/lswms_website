@@ -29,3 +29,7 @@ table {
 .leaflet-top {
   top: 60px;
 }
+
+.modal-backdrop.show {
+  opacity: 1;
+}

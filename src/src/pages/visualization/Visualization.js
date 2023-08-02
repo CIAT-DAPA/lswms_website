@@ -36,7 +36,6 @@ function Visualization() {
   const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles`;
   const [waterpoints, setWaterpoints] = useState([]);
   const [monitored, setMonitored] = useState([]);
-  const [wpProfiles, setWpProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

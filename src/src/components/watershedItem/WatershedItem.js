@@ -4,8 +4,8 @@ import './WatershedItem.css'
 function WatershedItem(props) {
   return (
     <>
-     <h6>{props.title}</h6>
-     <p className='text-justify'>{props.description}</p>
+     <h6 className='text-capitalize '>{props.title}</h6>
+     <p className=''>{props.description}</p>
     </>
   )
 }

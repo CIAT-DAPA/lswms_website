@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import downloadImg from "../../assets/svg/download.svg";
 import emailImg from "../../assets/svg/email.svg";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import "./Waterprofile.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 import WatershedContent from "../../components/watershedContent/WatershedContent";
@@ -11,73 +11,48 @@ import WaterpointContent from "../../components/waterpointContent/WaterpointCont
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Configuration from "../../conf/Configuration";
+import axios from "axios";
 
 function Waterprofile() {
   const location = useLocation();
   const idWater = location.state?.idWater;
-  const profileRef = useRef(null);
+  const [wpProfile, setWpProfile] = useState();
+  const [loading, setLoading] = useState(true);
+  const [wsTable, setWsTable] = useState(null);
+  const [listSeason, setListSeason] = useState(null);
+  const [listWater, setListWater] = useState(null);
+  const [livestock, setLivestock] = useState(null);
 
-  var tableContent = {
-    district: "Haro",
-    kebele: "Bake",
-    region: "Borona",
-    zone: "Oromia",
-  };
+  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}`;
+  useEffect(() => {
+    //Call to API to get waterpoints
+    axios
+      .get(urlWp)
+      .then((response) => {
+        setWpProfile(response.data[0]);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
-  var listSeasonContent = {
-    id: 1,
-    content: {
-      title: "Seasons",
-      type: String,
-      language: "En",
-      values: {
-        Bega: "December to February",
-        Belg: "March to May",
-        Kiremt: "June to August",
-        Meher: "September to November",
-      },
-    },
-    type_content: {
-      name: "Watershred",
-    },
-  };
-
-  var listSourcesContent = {
-    id: 1,
-    content: {
-      title: "Water Sources",
-      type: String,
-      language: "En",
-      values: {
-        0: "Traditional Wells or Singing Wells (“Tullas”)",
-        1: "Spring Fed Ponds",
-        2: "Open Surface Ponds (“Harros”)",
-        3: "Unprotected Perennial and Seasonal Springs",
-        4: "Scoop Wells on Sandy Rivers",
-        5: "Shallow Wells (“Addadis”)",
-      },
-    },
-    type_content: {
-      name: "Watershred",
-    },
-  };
-
-  var lsContent = {
-    id: 1,
-    content: {
-      title: "Livestock",
-      type: String,
-      language: "En",
-      values: {
-        Cow: "23",
-        Donkey: "12",
-        Sheep: "43",
-      },
-    },
-    type_content: {
-      name: "Agriculture context",
-    },
-  };
+  useEffect(() => {
+    if (wpProfile) {
+      const { adm1, adm2, adm3, watershed_name } = wpProfile;
+      setWsTable({ adm1, adm2, adm3, watershed_name });
+      setListSeason(wpProfile.contents_ws.find((e) => e.title === "seasons"));
+      setListWater(
+        wpProfile.contents_ws.find((e) => e.title === "water sources")
+      );
+      setLivestock(
+        wpProfile.contents_wp.find(
+          (e) => e.title === "agriculture context livestock"
+        )
+      );
+    }
+  }, [wpProfile]);
 
   const downloadProfileAsPdf = () => {
     const profileElement = document.getElementById("profile");
@@ -95,71 +70,104 @@ function Waterprofile() {
   };
 
   return (
-    <div ref={profileRef} id="profile">
+    <div id="profile">
       {idWater ? (
-        <>
-          <div className="profile-bg">
-            <Container className="container-profile">
-              <Row className="text-white ">
-                <Col className="col-12 text-center">
-                  <h5 className="fw-medium">Oromia, Borona, Bake, Haro Bake</h5>
-                  <h1 className="fw-normal my-4">Haro Bake</h1>
-                  <p className="fw-normal">
-                    Area: 34 ha <br /> Population: 120 <br /> 34.2523, 24.1231
-                  </p>
+        loading ? (
+          <Modal
+            show={loading}
+            backdrop="static"
+            keyboard={false}
+            centered
+            size="sm"
+          >
+            <Modal.Body className="d-flex align-items-center ">
+              <Spinner animation="border" role="status" className="me-2" />
+              Getting the waterpoint profile...
+            </Modal.Body>
+          </Modal>
+        ) : (
+          <>
+            <div className="profile-bg">
+              <Container className="container-profile">
+                <Row className="text-white ">
+                  <Col className="col-12 text-center">
+                    <h5 className="fw-medium">{`${wpProfile.adm1}, ${wpProfile.adm2}, ${wpProfile.adm3}, ${wpProfile.watershed_name}`}</h5>
+                    <h1 className="fw-normal my-4">{wpProfile.name}</h1>
+                    <p className="fw-normal">
+                      Area: {wpProfile.area} ha <br /> Population:{" "}
+                      {wpProfile.contents_wp[7].values[0].male} <br />{" "}
+                      {wpProfile.lat}, {wpProfile.lon}
+                    </p>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+            <Container className="mt-3">
+              <Row>
+                <Col className="col-12 col-md-8">
+                  <h5 className="fw-medium">Map</h5>
+                  <MapContainer
+                    center={[wpProfile.lat, wpProfile.lon]}
+                    zoom={7}
+                    style={{
+                      height: "400px",
+                      width: "100%",
+                    }}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                  </MapContainer>
+                  <WatershedContent contentWs={wpProfile.contents_ws} />
+                  <WaterpointContent contentWp={wpProfile.contents_wp} />
+                </Col>
+                <Col className="col-12 col-md-4">
+                  {wsTable && (
+                    <WaterpointItem
+                      item={wsTable}
+                      type="table"
+                      title="Watershed description"
+                    />
+                  )}
+
+                  {listSeason && (
+                    <WaterpointItem item={listSeason} type="list" />
+                  )}
+
+                  {listWater && <WaterpointItem item={listWater} type="list" />}
+
+                  {wpProfile && (
+                    <WaterpointItem
+                      item={
+                        wpProfile.contents_wp.find((e) => e.title === "general")
+                          .values
+                      }
+                      type="table"
+                      title="Waterpoint description"
+                    />
+                  )}
+                  {livestock && (
+                    <WaterpointItem item={livestock} type="icon-y" />
+                  )}
                 </Col>
               </Row>
-            </Container>
-          </div>
-          <Container className="mt-3">
-            <Row>
-              <Col className="col-12 col-md-8">
-                <h5 className="fw-medium">Map</h5>
-                <MapContainer
-                  center={[9.149175, 40.498867]}
-                  zoom={5}
-                  style={{
-                    height: "400px",
-                    width: "100%",
-                  }}
+              <div className="mb-5 mt-4">
+                <Button
+                  className="me-5 rounded-4"
+                  onClick={downloadProfileAsPdf}
                 >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                </MapContainer>
-                <WatershedContent />
-                <WaterpointContent />
-              </Col>
-              <Col className="col-12 col-md-4">
-                <WaterpointItem
-                  item={tableContent}
-                  type="table"
-                  title="Watershed description"
-                />
-                <WaterpointItem item={listSeasonContent} type="list" />
-                <WaterpointItem item={listSourcesContent} type="list" />
-
-                <WaterpointItem
-                  item={tableContent}
-                  type="table"
-                  title="Waterpoint description"
-                />
-                <WaterpointItem item={lsContent} align="y" type="icon" />
-              </Col>
-            </Row>
-            <div className="mb-5 mt-4">
-              <Button className="me-5 rounded-4" onClick={downloadProfileAsPdf}>
-                <img src={downloadImg} alt="" className="me-3" />
-                Download profile
-              </Button>
-              {/* <Button disabled={true}>
+                  <img src={downloadImg} alt="" className="me-3" />
+                  Download profile
+                </Button>
+                {/* <Button disabled={true}>
                 <img src={emailImg} className="me-3" />
                 Send profile
               </Button> */}
-            </div>
-          </Container>
-        </>
+              </div>
+            </Container>
+          </>
+        )
       ) : (
         <div
           style={{ height: "100vh" }}

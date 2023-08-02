@@ -61,6 +61,11 @@ function WaterpointItem(props) {
   };
 
   const itemIconY = () => {
+    const totalSum = props.item.values.reduce((acc, item) => {
+      const value = Object.values(item)[0];
+      return acc + value;
+    }, 0);
+    console.log(totalSum)
     return (
       <div className="col col-12 col-lg-5 mt-3">
         <h6 className="text-capitalize mb-3">{props.item.title}</h6>
@@ -82,7 +87,7 @@ function WaterpointItem(props) {
                       ? sheepImg
                       : unknowImg
                   }
-                  percentage={50}
+                  percentage={value*100/totalSum}
                 />
                 <p className="mb-0 me-2 ms-2 text-capitalize">{`${key}:`}</p>{" "}
                 <p className="mb-0">{`${value}`}</p>

@@ -33,9 +33,10 @@ function Visualization() {
     iconSize: [32, 32],
   });
 
-  const urlWp = `${Configuration.get_url_api_base()}/waterpoints`;
+  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles`;
   const [waterpoints, setWaterpoints] = useState([]);
   const [monitored, setMonitored] = useState([]);
+  const [wpProfiles, setWpProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -86,6 +87,10 @@ function Visualization() {
     const scaledDepthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;
+
+    // If there is wp content or not
+    const hasContentsWp = wp.contents_wp.length > 0;
+
     return (
       <Marker
         position={[wp.lat, wp.lon]}
@@ -111,7 +116,21 @@ function Visualization() {
               <tr>
                 <td>Name:</td>
                 <td>
-                  <div className="td-name text-center fw-medium ">
+                  <div
+                    className={`td-name text-center fw-medium ${
+                      scaledDepthValue.value > 100
+                        ? "td-green"
+                        : scaledDepthValue.value <= 100 &&
+                          scaledDepthValue.value >= 50
+                        ? "td-yellow"
+                        : scaledDepthValue.value < 50 &&
+                          scaledDepthValue.value >= 3
+                        ? "td-brown"
+                        : scaledDepthValue.value < 3
+                        ? "td-red"
+                        : "td-gray"
+                    }`}
+                  >
                     {wp.name}
                   </div>
                 </td>
@@ -133,7 +152,9 @@ function Visualization() {
           <div className="d-flex justify-content-between mt-3">
             <Link
               type="button"
-              className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
+              className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
+                hasContentsWp ? "" : "disabled "
+              }`}
               to="/waterprofile"
               state={{ idWater: wp.id }}
             >
@@ -158,8 +179,14 @@ function Visualization() {
 
   return (
     <>
-      <Modal show={loading} backdrop="static" keyboard={false} centered size="sm">
-        <Modal.Body>
+      <Modal
+        show={loading}
+        backdrop="static"
+        keyboard={false}
+        centered
+        size="sm"
+      >
+        <Modal.Body className="d-flex align-items-center ">
           <Spinner animation="border" role="status" className="me-2" />
           Getting the waterpoints...
         </Modal.Body>
@@ -180,6 +207,7 @@ function Visualization() {
           return <div key={i}>{loading ? <></> : popupData(wp)}</div>;
         })}
       </MapContainer>
+      <Legend />
     </>
   );
 }

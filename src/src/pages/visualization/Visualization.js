@@ -63,7 +63,6 @@ function Visualization() {
           const monitoredData = responses.map((response) => {
             const lastData = response.data;
             lastData.sort((a, b) => new Date(b.date) - new Date(a.date));
-            console.log(lastData[0]);
             return lastData[0];
           });
           setMonitored(monitoredData);
@@ -181,7 +180,7 @@ function Visualization() {
               type="button"
               className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
               to="/historicaldata"
-              state={{ idAclimate: "test" }}
+              state={{ idWater: wp.id }}
             >
               <img src={dataIcon} alt="" className="me-3" />
               Data

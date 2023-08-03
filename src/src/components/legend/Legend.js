@@ -12,23 +12,23 @@ function Legend() {
       <p className="fw-medium mb-3">Legend</p>
       <div className="d-flex align-items-center mb-1">
         <img src={greenImg} alt="" className="me-1" />
-        <p className="m-0">Mora than 100% median depth.</p>
+        <p className="m-0">Good</p>
       </div>
       <div className="d-flex align-items-center mb-1">
         <img src={yellowImg} alt="" className="me-1" />
-        <p className="m-0">50%-100% median depth.</p>
+        <p className="m-0">Watch</p>
       </div>
       <div className="d-flex align-items-center mb-1">
         <img src={brownImg} alt="" className="me-1" />
-        <p className="m-0">3%-50% median depth.</p>
+        <p className="m-0">Alert</p>
       </div>
       <div className="d-flex align-items-center mb-1">
         <img src={redImg} alt="" className="me-1" />
-        <p className="m-0">Less than 3% median depth.</p>
+        <p className="m-0">Near-dry</p>
       </div>
       <div className="d-flex align-items-center mb-1">
         <img src={grayImg} alt="" className="me-1" />
-        <p className="m-0">Seasonally unavailable</p>
+        <p className="m-0">Seasonally-dry</p>
       </div>
     </div>
   );

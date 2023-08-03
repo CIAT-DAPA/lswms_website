@@ -63,6 +63,7 @@ function Visualization() {
           const monitoredData = responses.map((response) => {
             const lastData = response.data;
             lastData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            console.log(lastData[0]);
             return lastData[0];
           });
           setMonitored(monitoredData);
@@ -100,7 +101,7 @@ function Visualization() {
             ? yellowIcon
             : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
             ? brownIcon
-            : scaledDepthValue.value < 3
+            : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
             ? redIcon
             : grayIcon
         }
@@ -108,7 +109,10 @@ function Visualization() {
       >
         <Popup>
           <div>
-            <h6 className="fw-medium">Waterpoint {wp.name} Overview</h6>
+            <h6 className="fw-medium mb-0">Waterpoint {wp.name} Overview</h6>
+            <p className="mt-0 mb-2">
+              Date: {monitoredData.date.split("T")[0]}
+            </p>
           </div>
           <table className="fs-6">
             <tbody>
@@ -125,7 +129,8 @@ function Visualization() {
                         : scaledDepthValue.value < 50 &&
                           scaledDepthValue.value >= 3
                         ? "td-brown"
-                        : scaledDepthValue.value < 3
+                        : scaledDepthValue.value < 3 &&
+                          scaledDepthValue.value > 0
                         ? "td-red"
                         : "td-gray"
                     }`}
@@ -148,6 +153,17 @@ function Visualization() {
               </tr>
             </tbody>
           </table>
+          <p className="fs-6 mt-0">
+            {scaledDepthValue.value > 100
+              ? "Mora than 100% median depth."
+              : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
+              ? "50%-100% median depth."
+              : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
+              ? "3%-50% median depth."
+              : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
+              ? "Less than 3% median depth."
+              : "Seasonally unavailable"}
+          </p>
           <div className="d-flex justify-content-between mt-3">
             <Link
               type="button"

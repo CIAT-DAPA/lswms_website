@@ -23,6 +23,9 @@ function Waterprofile() {
   const [listSeason, setListSeason] = useState(null);
   const [listWater, setListWater] = useState(null);
   const [livestock, setLivestock] = useState(null);
+  const [crops, setCrops] = useState(null);
+  const [livelihood, setLivelihood] = useState(null);
+  const [gender, setGender] = useState(null);
 
   const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}`;
   useEffect(() => {
@@ -51,6 +54,13 @@ function Waterprofile() {
           (e) => e.title === "agriculture context livestock"
         )
       );
+      setCrops(
+        wpProfile.contents_wp.find(
+          (e) => e.title === "agriculture context crops"
+        )
+      );
+      setLivelihood(wpProfile.contents_wp.find((e) => e.title === "livehood"));
+      setGender(wpProfile.contents_wp.find((e) => e.title === "gender"));
     }
   }, [wpProfile]);
 
@@ -95,8 +105,12 @@ function Waterprofile() {
                     <h1 className="fw-normal my-4">{wpProfile.name}</h1>
                     <p className="fw-normal">
                       Area: {wpProfile.area} ha <br /> Population:{" "}
-                      {wpProfile.contents_wp[7].values[0].male} <br />{" "}
-                      {wpProfile.lat}, {wpProfile.lon}
+                      {
+                        wpProfile.contents_wp
+                          .find((e) => e.title === "general")
+                          .values.find((e) => "population" in e)["population"]
+                      }{" "}
+                      <br /> {wpProfile.lat}, {wpProfile.lon}
                     </p>
                   </Col>
                 </Row>
@@ -132,10 +146,12 @@ function Waterprofile() {
                   )}
 
                   {listSeason && (
-                    <WaterpointItem item={listSeason} type="list" />
+                    <WaterpointItem item={listSeason} type={listSeason.type} />
                   )}
 
-                  {listWater && <WaterpointItem item={listWater} type="list" />}
+                  {listWater && (
+                    <WaterpointItem item={listWater} type={listWater.type} />
+                  )}
 
                   {wpProfile && (
                     <WaterpointItem
@@ -147,8 +163,15 @@ function Waterprofile() {
                       title="Waterpoint description"
                     />
                   )}
+                  {livelihood && (
+                    <WaterpointItem item={livelihood} type={livelihood.type} />
+                  )}
                   {livestock && (
-                    <WaterpointItem item={livestock} type="icon-y" />
+                    <WaterpointItem item={livestock} type={livestock.type} />
+                  )}
+                  {crops && <WaterpointItem item={crops} type={crops.type} />}
+                  {gender && (
+                    <WaterpointItem item={gender} type={gender.type} />
                   )}
                 </Col>
               </Row>

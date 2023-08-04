@@ -33,17 +33,17 @@ function ForecastItem(props) {
   };
   return (
     <>
-      <h6 class="text-center">2023</h6>
-      <h5 class="text-center">October - November - December</h5>
-      <h6 class="text-center">Precipitation probabilities (%)</h6>
+      <h6 className="text-center">2023</h6>
+      <h5 className="text-center">October - November - December</h5>
+      <h6 className="text-center">Precipitation probabilities (%)</h6>
       <Doughnut data={data} />
-      <p class="text-justify">
+      <p className="text-justify">
         For the quarter
-        <span class="fw-medium"> October - November - December </span>
+        <span className="fw-medium"> October - November - December </span>
         In the municipality
-        <span class="fw-medium"> Yopal </span>
+        <span className="fw-medium"> Yopal </span>
         the climate forecast suggests that precipitation is most likely{" "}
-        <span class="fw-medium"> above normal</span>.
+        <span className="fw-medium"> above normal</span>.
       </p>
     </>
   );

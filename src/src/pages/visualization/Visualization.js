@@ -55,15 +55,13 @@ function Visualization() {
       //Call to API to get each monitored data for each wp
       const idsWp = waterpoints.map((item) => item.id);
       const requests = idsWp.map((id) =>
-        axios.get(`${Configuration.get_url_api_base()}/monitored/${id}`)
+        axios.get(`${Configuration.get_url_api_base()}/lastmonitored/${id}`)
       );
 
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => {
-            const lastData = response.data;
-            lastData.sort((a, b) => new Date(b.date) - new Date(a.date));
-            return lastData[0];
+            return response.data[0];
           });
           setMonitored(monitoredData);
           setLoading(false);

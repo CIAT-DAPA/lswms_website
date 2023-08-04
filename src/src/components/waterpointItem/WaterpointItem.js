@@ -74,9 +74,9 @@ function WaterpointItem(props) {
       return acc + value;
     }, 0);
     return (
-      <div className="col col-12 mt-3">
+      <div className="col mt-3">
         <h6 className="text-capitalize mb-3">{props.item.title}</h6>
-        <div className="d-flex justify-content-between flex-column gap-2">
+        <div className="d-flex justify-content-between flex-row flex-wrap flex-md-column flex-md-nowrap  gap-2">
           {props.item.values.map((item, index) => {
             const [key, value] = Object.entries(item)[0];
             return (

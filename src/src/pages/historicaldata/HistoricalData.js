@@ -2,34 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import "chartjs-adapter-moment";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
+import ReactApexChart from "react-apexcharts";
 
 function HistoricalData() {
-  ChartJS.register(
-    TimeScale,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-  );
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
   const [loading, setLoading] = useState(true);
@@ -40,12 +18,60 @@ function HistoricalData() {
   const location = useLocation();
   const idWp = location.state?.idWater;
   let uniqueYears;
-  let dataDepth;
-  let dataRain;
-  let dataEvap;
-  let optionsDepth;
-  let optionsRain;
-  let optionsEvap;
+  const chartOptionsDepth = {
+    chart: {
+      id: "depth",
+      group: "chart",
+    },
+    xaxis: {
+      type: "datetime",
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+      },
+      title: {
+        text: "%",
+      },
+    },
+    tooltip: {
+      shared: true,
+      y: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+      },
+    },
+  };
+  const chartOptionsRain = {
+    chart: {
+      id: "rainevap",
+      group: "chart",
+    },
+    xaxis: {
+      type: "datetime",
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+      },
+      title: {
+        text: "mm",
+      },
+    },
+    tooltip: {
+      shared: true,
+      y: {
+        formatter: function (val) {
+          return val.toFixed(2);
+        },
+      },
+    },
+  };
 
   const handleFilterYear = (event) => {
     const selectedYear = event?.target?.value || event;
@@ -57,6 +83,7 @@ function HistoricalData() {
         x: new Date(item.date),
         y: item.values.find((value) => value.type === "depth")?.value || 0,
       }));
+    filteredDepthData.sort((a, b) => a.x - b.x);
     setDepthData(filteredDepthData);
 
     const filteredScaledDepthData = wpData
@@ -69,6 +96,7 @@ function HistoricalData() {
           item.values.find((value) => value.type === "scaled_depth")?.value ||
           0,
       }));
+    filteredScaledDepthData.sort((a, b) => a.x - b.x);
     setScaledDepthData(filteredScaledDepthData);
 
     const filteredRain = wpData
@@ -79,6 +107,7 @@ function HistoricalData() {
         x: new Date(item.date),
         y: item.values.find((value) => value.type === "rain")?.value || 0,
       }));
+    filteredRain.sort((a, b) => a.x - b.x);
     setRain(filteredRain);
 
     const filteredEvap = wpData
@@ -89,6 +118,7 @@ function HistoricalData() {
         x: new Date(item.date),
         y: item.values.find((value) => value.type === "evp")?.value || 0,
       }));
+    filteredEvap.sort((a, b) => a.x - b.x);
     setEvap(filteredEvap);
   };
 
@@ -130,90 +160,6 @@ function HistoricalData() {
       ...new Set(wpData.map((item) => new Date(item.date).getFullYear())),
     ];
     uniqueYears.sort((a, b) => b - a);
-    dataDepth = {
-      datasets: [
-        {
-          label: "Depth",
-          data: depthData,
-          fill: false,
-          borderColor: "blue",
-        },
-        {
-          label: "Scaled Depth",
-          data: scaledDepthData,
-          fill: false,
-          borderColor: "green",
-        },
-      ],
-    };
-    dataRain = {
-      datasets: [
-        {
-          label: "Rain",
-          data: rain,
-          fill: false,
-          borderColor: "blue",
-        }
-      ],
-    };
-    dataEvap = {
-      datasets: [
-        {
-          label: "Evaporation",
-          data: evap,
-          fill: false,
-          borderColor: "blue",
-        }
-      ],
-    };
-    optionsDepth = {
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "day",
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: "Depth in %",
-          },
-        },
-      },
-    };
-    optionsRain = {
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "day",
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: "Rain in mm",
-          },
-        },
-      },
-    };
-    optionsEvap = {
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "day",
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: "Evap in mm",
-          },
-        },
-      },
-    };
   }
 
   return (
@@ -242,15 +188,15 @@ function HistoricalData() {
               <Row className="mt-3 ">
                 <Col className="">
                   <h5>Monitored data</h5>
-                  <h6>Depth and Scaled Depth</h6>
                   <p>
-                    This plot shows the historical values of rainfall,
-                    evapotransporation and water level. You can filter the year
-                    that you want
+                    See how the rain gives life to the earth, evaporates
+                    mysteriously and then returns in depth. The numbers in a
+                    visual graph that connects you to the very essence of
+                    nature.. You can filter the year that you want
                   </p>
-                  <p>Year</p>
+                  <p className="mb-0">Year</p>
                   <select
-                    className="form-select w-25"
+                    className="form-select w-50"
                     aria-label="Default select example"
                     onChange={handleFilterYear}
                   >
@@ -260,27 +206,42 @@ function HistoricalData() {
                       </option>
                     ))}
                   </select>
-                  <Line options={optionsDepth} data={dataDepth} />
+                  <h6 className="mt-2">Depth and Scaled Depth</h6>
+                  {depthData.length > 0 && scaledDepthData.length > 0 && (
+                    <ReactApexChart
+                      options={chartOptionsDepth}
+                      series={[
+                        { name: "Depth", data: depthData },
+                        { name: "Scaled depth", data: scaledDepthData },
+                      ]}
+                      type="line"
+                      height={350}
+                    />
+                  )}
                 </Col>
               </Row>
               <Row>
                 <Col className="col-12 col-lg-6">
                   <h6>Rain</h6>
-                  <p>
-                    This plot shows the historical values of rainfall,
-                    evapotransporation and water level. You can filter the year
-                    that you want
-                  </p>
-                  <Line options={optionsRain} data={dataRain} />
+                  {rain.length > 0 && (
+                    <ReactApexChart
+                      options={chartOptionsRain}
+                      series={[{ name: "Rain", data: rain }]}
+                      type="line"
+                      height={350}
+                    />
+                  )}
                 </Col>
                 <Col className="col-12 col-lg-6">
                   <h6>Evaporation</h6>
-                  <p>
-                    This plot shows the historical values of rainfall,
-                    evapotransporation and water level. You can filter the year
-                    that you want
-                  </p>
-                  <Line options={optionsEvap} data={dataEvap} />
+                  {evap.length > 0 && (
+                    <ReactApexChart
+                      options={chartOptionsRain}
+                      series={[{ name: "Evaporation", data: evap }]}
+                      type="line"
+                      height={350}
+                    />
+                  )}
                 </Col>
               </Row>
               <Row className="mt-3">
@@ -290,16 +251,16 @@ function HistoricalData() {
                   evapotransporation and water level. You can filter the year
                   that you want
                 </p>
-                <Col>
+                <Col className="col-12 col-md-6 col-xxl-3">
                   <ForecastItem />
                 </Col>
-                <Col>
+                <Col className="col-12 col-md-6 col-xxl-3">
                   <ForecastItem />
                 </Col>
-                <Col>
+                <Col className="col-12 col-md-6 col-xxl-3">
                   <ForecastItem />
                 </Col>
-                <Col>
+                <Col className="col-12 col-md-6 col-xxl-3">
                   <ForecastItem />
                 </Col>
               </Row>

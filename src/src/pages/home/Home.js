@@ -43,7 +43,7 @@ function Home() {
           </Row>
         </Container>
         <div className="divider">
-          <div class="scroll-down-link scroll-down-arrow"></div>
+          <div className="scroll-down-link scroll-down-arrow"></div>
         </div>
       </div>
 

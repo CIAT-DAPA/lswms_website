@@ -1,0 +1,7 @@
+.label-y {
+  position: relative;
+  transform: rotate(-90deg);
+  left: 10px;
+  top: -200px;
+  transform-origin: left center;
+}

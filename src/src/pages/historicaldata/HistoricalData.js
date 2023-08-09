@@ -6,129 +6,86 @@ import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
 import ReactApexChart from "react-apexcharts";
+import "./HistoricalData.css";
 
 function HistoricalData() {
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
+  const [climatology, setClimatology] = useState();
   const [loading, setLoading] = useState(true);
   const [depthData, setDepthData] = useState([]);
+  const [climaDepthData, setClimaDepthData] = useState([]);
   const [scaledDepthData, setScaledDepthData] = useState([]);
+  const [climaScaledDepthData, setClimaScaledDepthData] = useState([]);
   const [rain, setRain] = useState([]);
+  const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
+  const [climaEvap, setClimaEvap] = useState([]);
   const location = useLocation();
   const idWp = location.state?.idWater;
   let uniqueYears;
-  const chartOptionsDepth = {
-    chart: {
-      id: "depth",
-      group: "chart",
-    },
-    xaxis: {
-      type: "datetime",
-    },
-    yaxis: {
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-      },
-      title: {
-        text: "%",
-      },
-    },
-    tooltip: {
-      shared: true,
-      y: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-      },
-    },
-  };
-  const chartOptionsRain = {
-    chart: {
-      id: "rainevap",
-      group: "chart",
-    },
-    xaxis: {
-      type: "datetime",
-    },
-    yaxis: {
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-      },
-      title: {
-        text: "mm",
-      },
-    },
-    tooltip: {
-      shared: true,
-      y: {
-        formatter: function (val) {
-          return val.toFixed(2);
-        },
-      },
-    },
+  const typeNames = ["depth", "scaled_depth", "rain", "evp"];
+
+  const filterData = (data, type, year) => {
+    const filteredData = data
+      .filter((item) => new Date(item.date).getFullYear() === Number(year))
+      .map((item) => ({
+        x: new Date(item.date),
+        y:
+          item.values.find((value) => value.type === type)?.value.toFixed(2) ||
+          0,
+      }));
+    filteredData.sort((a, b) => a.x - b.x);
+    return filteredData;
   };
 
   const handleFilterYear = (event) => {
     const selectedYear = event?.target?.value || event;
-    const filteredDepthData = wpData
-      .filter(
-        (item) => new Date(item.date).getFullYear() === Number(selectedYear)
-      )
-      .map((item) => ({
-        x: new Date(item.date),
-        y: item.values.find((value) => value.type === "depth")?.value || 0,
-      }));
-    filteredDepthData.sort((a, b) => a.x - b.x);
-    setDepthData(filteredDepthData);
+    setDepthData(filterData(wpData, "depth", selectedYear));
+    setScaledDepthData(filterData(wpData, "scaled_depth", selectedYear));
+    setRain(filterData(wpData, "rain", selectedYear));
+    setEvap(filterData(wpData, "evp", selectedYear));
 
-    const filteredScaledDepthData = wpData
-      .filter(
-        (item) => new Date(item.date).getFullYear() === Number(selectedYear)
-      )
-      .map((item) => ({
-        x: new Date(item.date),
-        y:
-          item.values.find((value) => value.type === "scaled_depth")?.value ||
-          0,
-      }));
-    filteredScaledDepthData.sort((a, b) => a.x - b.x);
-    setScaledDepthData(filteredScaledDepthData);
+    const result = typeNames.map((type) => {
+      return climatology.climatology.flatMap((monthData) => {
+        return monthData.map((dayData) => {
+          const month = dayData.month.toString().padStart(2, "0");
+          const day = dayData.day.toString().padStart(2, "0");
+          const date = new Date(
+            `${selectedYear}-${month}-${day}T05:00:00.000Z`
+          );
+          const value = dayData.values
+            .find((entry) => entry.type === type)
+            .value.toFixed(2);
+          return { x: date, y: value };
+        });
+      });
+    });
 
-    const filteredRain = wpData
-      .filter(
-        (item) => new Date(item.date).getFullYear() === Number(selectedYear)
-      )
-      .map((item) => ({
-        x: new Date(item.date),
-        y: item.values.find((value) => value.type === "rain")?.value || 0,
-      }));
-    filteredRain.sort((a, b) => a.x - b.x);
-    setRain(filteredRain);
-
-    const filteredEvap = wpData
-      .filter(
-        (item) => new Date(item.date).getFullYear() === Number(selectedYear)
-      )
-      .map((item) => ({
-        x: new Date(item.date),
-        y: item.values.find((value) => value.type === "evp")?.value || 0,
-      }));
-    filteredEvap.sort((a, b) => a.x - b.x);
-    setEvap(filteredEvap);
+    setClimaDepthData(result[0].sort((a, b) => a.x - b.x));
+    setClimaScaledDepthData(result[1].sort((a, b) => a.x - b.x));
+    setClimaRain(result[2].sort((a, b) => a.x - b.x));
+    setClimaEvap(result[3].sort((a, b) => a.x - b.x));
   };
 
   const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWp}`;
+  const urlClimatology = `${Configuration.get_url_api_base()}/waterpoints/${idWp}`;
   useEffect(() => {
-    //Call to API to get waterpoints
+    //Call to API to get waterpoint
     axios
       .get(urlWp)
       .then((response) => {
         setWp(response.data[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //Call to API to get climatology
+    axios
+      .get(urlClimatology)
+      .then((response) => {
+        setClimatology(response.data[0]);
       })
       .catch((error) => {
         console.log(error);
@@ -189,10 +146,10 @@ function HistoricalData() {
                 <Col className="">
                   <h5>Monitored data</h5>
                   <p>
-                    See how the rain gives life to the earth, evaporates
-                    mysteriously and then returns in depth. The numbers in a
-                    visual graph that connects you to the very essence of
-                    nature.. You can filter the year that you want
+                    Explore a variety of charts covering depth of field, depth
+                    scale, precipitation and evapotranspiration. Customise your
+                    experience by filtering these graphs according to your
+                    preferred year.
                   </p>
                   <p className="mb-0">Year</p>
                   <select
@@ -206,41 +163,111 @@ function HistoricalData() {
                       </option>
                     ))}
                   </select>
-                  <h6 className="mt-2">Depth and Scaled Depth</h6>
-                  {depthData.length > 0 && scaledDepthData.length > 0 && (
-                    <ReactApexChart
-                      options={chartOptionsDepth}
-                      series={[
-                        { name: "Depth", data: depthData },
-                        { name: "Scaled depth", data: scaledDepthData },
-                      ]}
-                      type="line"
-                      height={350}
-                    />
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">Depth</h6>
+                  {depthData?.length > 0 && (
+                    <>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "depth",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: "Depth", data: depthData },
+                          { name: "Climatology", data: climaDepthData },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">m</p>
+                    </>
                   )}
+                </Col>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">Scaled Depth</h6>
+                  <div id="line-scaled">
+                    {scaledDepthData?.length > 0 && (
+                      <>
+                        <ReactApexChart
+                          options={{
+                            chart: {
+                              id: "scaled",
+                              group: "historical",
+                            },
+                            xaxis: {
+                              type: "datetime",
+                            },
+                          }}
+                          series={[
+                            { name: "Scaled depth", data: scaledDepthData },
+                            { name: "Climatology", data: climaScaledDepthData },
+                          ]}
+                          type="line"
+                          height={350}
+                        />
+                        <p className="label-y">%</p>
+                      </>
+                    )}
+                  </div>
                 </Col>
               </Row>
               <Row>
                 <Col className="col-12 col-lg-6">
                   <h6>Rain</h6>
-                  {rain.length > 0 && (
-                    <ReactApexChart
-                      options={chartOptionsRain}
-                      series={[{ name: "Rain", data: rain }]}
-                      type="line"
-                      height={350}
-                    />
+                  {rain?.length > 0 && (
+                    <>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "rain",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: "Rain", data: rain },
+                          { name: "Climatology", data: climaRain },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
                   )}
                 </Col>
                 <Col className="col-12 col-lg-6">
                   <h6>Evaporation</h6>
-                  {evap.length > 0 && (
-                    <ReactApexChart
-                      options={chartOptionsRain}
-                      series={[{ name: "Evaporation", data: evap }]}
-                      type="line"
-                      height={350}
-                    />
+                  {evap?.length > 0 && (
+                    <>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "evap",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: "Evaporation", data: evap },
+                          { name: "Climatology", data: climaEvap },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
                   )}
                 </Col>
               </Row>

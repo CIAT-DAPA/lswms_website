@@ -21,6 +21,9 @@ function HistoricalData() {
   const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
   const [climaEvap, setClimaEvap] = useState([]);
+  const [aclimateId, setAclimateId] = useState(null);
+  const [subseasonal, setSubseasonal] = useState([]);
+  const [seasonal, setSeasonal] = useState([]);
   const location = useLocation();
   const idWp = location.state?.idWater;
   let uniqueYears;
@@ -86,6 +89,7 @@ function HistoricalData() {
       .get(urlClimatology)
       .then((response) => {
         setClimatology(response.data[0]);
+        setAclimateId(response.data[0].aclimate_id);
       })
       .catch((error) => {
         console.log(error);
@@ -111,6 +115,31 @@ function HistoricalData() {
       handleFilterYear(uniqueYears[0]);
     }
   }, [wpData]);
+
+  useEffect(() => {
+    if (aclimateId) {
+      const urlSubseasonal = `${Configuration.get_url_api_aclimate()}/Forecast/SubseasonalWS/${aclimateId}/json`;
+      const urlSeasonal = `${Configuration.get_url_api_aclimate()}/Forecast/Climate/${aclimateId}/true/json`;
+      //Call to API to get forecast
+      axios
+        .get(urlSubseasonal)
+        .then((response) => {
+          setSubseasonal(response.data.subseasonal[0].data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      axios
+        .get(urlSeasonal)
+        .then((response) => {
+          setSeasonal(response.data.climate[0].data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [aclimateId]);
 
   if (wpData && wpData.length > 0) {
     uniqueYears = [
@@ -274,22 +303,48 @@ function HistoricalData() {
               <Row className="mt-3">
                 <h5>Sub-seasonal forecast</h5>
                 <p>
-                  This plot shows the historical values of rainfall,
-                  evapotransporation and water level. You can filter the year
-                  that you want
+                  The climate prediction is given in percentage of probability
+                  with respect to the normal range of precipitation of an area
+                  and a specific month. Below, you can find the most probable
+                  category for the selected municipality and the forecast month.
                 </p>
-                <Col className="col-12 col-md-6 col-xxl-3">
-                  <ForecastItem />
-                </Col>
-                <Col className="col-12 col-md-6 col-xxl-3">
-                  <ForecastItem />
-                </Col>
-                <Col className="col-12 col-md-6 col-xxl-3">
-                  <ForecastItem />
-                </Col>
-                <Col className="col-12 col-md-6 col-xxl-3">
-                  <ForecastItem />
-                </Col>
+                {subseasonal &&
+                  subseasonal.map((week, i) => {
+                    return (
+                      <Col className="col-12 col-md-3">
+                        <ForecastItem
+                          year={week.year}
+                          month={week.month}
+                          week={week.week}
+                          probabilities={week.probabilities}
+                          name={wp.name}
+                        />
+                      </Col>
+                    );
+                  })}
+              </Row>
+              <Row className="mt-3 justify-content-around ">
+                <h5>Seasonal forecast</h5>
+                <p>
+                  The climate prediction is given in percentage of probability
+                  with respect to the normal range of precipitation of an area
+                  and a specific quarter. Below, you can find the most probable
+                  category for the selected municipality and the forecast
+                  quarter.
+                </p>
+                {seasonal &&
+                  seasonal.map((month, i) => {
+                    return (
+                      <Col className="col-12 col-md-4">
+                        <ForecastItem
+                          year={month.year}
+                          month={month.month}
+                          probabilities={month.probabilities}
+                          name={wp.name}
+                        />
+                      </Col>
+                    );
+                  })}
               </Row>
             </Container>
           </>

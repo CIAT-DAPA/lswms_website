@@ -14,17 +14,17 @@ function Circle({ percentage, img, color, gender }) {
       : "green";
 
   return (
-    <div class="single-chart me-1">
-      <svg viewBox="0 0 36 36" class={`circular-chart ${circleClass}`}>
+    <div className="single-chart me-1">
+      <svg viewBox="0 0 36 36" className={`circular-chart ${circleClass}`}>
         <path
-          class="circle-bg"
+          className="circle-bg"
           d="M18 2.0845
           a 15.9155 15.9155 0 0 1 0 31.831
           a 15.9155 15.9155 0 0 1 0 -31.831"
         />
         <path
-          class="circle"
-          stroke-dasharray={`${percentage}, 100`}
+          className="circle"
+          strokeDasharray={`${percentage}, 100`}
           d="M18 2.0845
           a 15.9155 15.9155 0 0 1 0 31.831
           a 15.9155 15.9155 0 0 1 0 -31.831"

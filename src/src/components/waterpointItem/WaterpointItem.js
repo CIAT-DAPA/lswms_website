@@ -24,10 +24,10 @@ import Circle from "../circle/Circle";
 function WaterpointItem(props) {
   const itemIconX = () => {
     return (
-      <div className="col col-12 col-lg-5 mt-3">
+      <div className="col col-12 mt-3">
         <h6 className="text-capitalize mb-3">{props.item.title}</h6>
 
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-around">
           {props.item.values &&
             props.item.values.map((item, index) => {
               const value = Object.values(item)[0];
@@ -112,7 +112,7 @@ function WaterpointItem(props) {
                   }
                   percentage={(value * 100) / totalSum}
                   color={props.item.title}
-                  gender ={key}
+                  gender={key}
                 />
                 {props.item.title.toLowerCase() ===
                   "agriculture context livestock" ||
@@ -134,11 +134,17 @@ function WaterpointItem(props) {
   const itemText = () => {
     return (
       <>
-        <h5>{props.item.type_content.name}</h5>
-        <h6>{props.item.content.title}</h6>
-        {Object.values(props.item.content.values).map((value, index) => (
-          <p key={index}>{value}</p>
-        ))}
+        {props.item.values.map((item, index) => {
+          const key = Object.keys(item)[0]; // Obtiene la clave (por ejemplo: 'topography', 'hidrology', 'demography')
+          const value = item[key]; // Obtiene el valor correspondiente
+
+          return (
+            <div key={index}>
+              <h6 className="text-capitalize ">{key}</h6>
+              <p>{value}</p>
+            </div>
+          );
+        })}
       </>
     );
   };
@@ -146,7 +152,6 @@ function WaterpointItem(props) {
   const itemTable = () => {
     return (
       <>
-        <h5 className="text-capitalize ">{props.title}</h5>
         <table className="fs-6 w-100">
           <tbody>
             {props.title === "Watershed description"
@@ -156,7 +161,7 @@ function WaterpointItem(props) {
                     <td className="text-end text-capitalize">{`${value}`}</td>
                   </tr>
                 ))
-              : props.item.map((item, index) => {
+              : props.item.values.map((item, index) => {
                   const [key, value] = Object.entries(item)[0];
                   return (
                     <tr key={index} className="tr-table">

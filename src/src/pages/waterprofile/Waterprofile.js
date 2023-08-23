@@ -6,8 +6,6 @@ import emailImg from "../../assets/svg/email.svg";
 import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import "./Waterprofile.css";
 import { MapContainer, TileLayer } from "react-leaflet";
-import WatershedContent from "../../components/watershedContent/WatershedContent";
-import WaterpointContent from "../../components/waterpointContent/WaterpointContent";
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -20,16 +18,15 @@ function Waterprofile() {
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
-  const [listSeason, setListSeason] = useState(null);
-  const [listWater, setListWater] = useState(null);
-  const [livestock, setLivestock] = useState(null);
-  const [crops, setCrops] = useState(null);
-  const [livelihood, setLivelihood] = useState(null);
-  const [gender, setGender] = useState(null);
+
+  const [wsLeft, setWsLeft] = useState(null);
+  const [wsRight, setWsRight] = useState(null);
+  const [wpLeft, setWpLeft] = useState(null);
+  const [wpRight, setWpRight] = useState(null);
 
   const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}`;
   useEffect(() => {
-    //Call to API to get waterpoints
+    //Call to API to get waterpoint
     axios
       .get(urlWp)
       .then((response) => {
@@ -43,24 +40,20 @@ function Waterprofile() {
 
   useEffect(() => {
     if (wpProfile) {
+      setWsLeft(
+        wpProfile.contents_ws.filter((item) => item.position === "left")
+      );
+      setWsRight(
+        wpProfile.contents_ws.filter((item) => item.position === "right")
+      );
+      setWpLeft(
+        wpProfile.contents_wp.filter((item) => item.position === "left")
+      );
+      setWpRight(
+        wpProfile.contents_wp.filter((item) => item.position === "right")
+      );
       const { adm1, adm2, adm3, watershed_name } = wpProfile;
       setWsTable({ adm1, adm2, adm3, watershed_name });
-      setListSeason(wpProfile.contents_ws.find((e) => e.title === "seasons"));
-      setListWater(
-        wpProfile.contents_ws.find((e) => e.title === "water sources")
-      );
-      setLivestock(
-        wpProfile.contents_wp.find(
-          (e) => e.title === "agriculture context livestock"
-        )
-      );
-      setCrops(
-        wpProfile.contents_wp.find(
-          (e) => e.title === "agriculture context crops"
-        )
-      );
-      setLivelihood(wpProfile.contents_wp.find((e) => e.title === "livehood"));
-      setGender(wpProfile.contents_wp.find((e) => e.title === "gender"));
     }
   }, [wpProfile]);
 
@@ -133,10 +126,23 @@ function Waterprofile() {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                   </MapContainer>
-                  <WatershedContent contentWs={wpProfile.contents_ws} />
-                  <WaterpointContent contentWp={wpProfile.contents_wp} />
+                  <h5 className="mt-4 mb-3">Watershed</h5>
+                  {wsLeft?.length > 0 &&
+                    wsLeft.map((e, index) => {
+                      return (
+                        <WaterpointItem type={e.type} item={e} key={index} />
+                      );
+                    })}
+                  <h5 className="mt-4 mb-3">Waterpoint</h5>
+                  {wpLeft?.length > 0 &&
+                    wpLeft.map((e, index) => {
+                      return (
+                        <WaterpointItem type={e.type} item={e} key={index} />
+                      );
+                    })}
                 </Col>
                 <Col className="col-12 col-md-4">
+                  <h5 className="text-capitalize ">Watershed description</h5>
                   {wsTable && (
                     <WaterpointItem
                       item={wsTable}
@@ -144,35 +150,19 @@ function Waterprofile() {
                       title="Watershed description"
                     />
                   )}
-
-                  {listSeason && (
-                    <WaterpointItem item={listSeason} type={listSeason.type} />
-                  )}
-
-                  {listWater && (
-                    <WaterpointItem item={listWater} type={listWater.type} />
-                  )}
-
-                  {wpProfile && (
-                    <WaterpointItem
-                      item={
-                        wpProfile.contents_wp.find((e) => e.title === "general")
-                          .values
-                      }
-                      type="table"
-                      title="Waterpoint description"
-                    />
-                  )}
-                  {livelihood && (
-                    <WaterpointItem item={livelihood} type={livelihood.type} />
-                  )}
-                  {livestock && (
-                    <WaterpointItem item={livestock} type={livestock.type} />
-                  )}
-                  {crops && <WaterpointItem item={crops} type={crops.type} />}
-                  {gender && (
-                    <WaterpointItem item={gender} type={gender.type} />
-                  )}
+                  {wsRight?.length > 0 &&
+                    wsRight.map((e, index) => {
+                      return (
+                        <WaterpointItem type={e.type} item={e} key={index} />
+                      );
+                    })}
+                  <h5 className="text-capitalize ">Waterpoint description</h5>
+                  {wpRight?.length > 0 &&
+                    wpRight.map((e, index) => {
+                      return (
+                        <WaterpointItem type={e.type} item={e} key={index} />
+                      );
+                    })}
                 </Col>
               </Row>
               <div className="mb-5 mt-4">

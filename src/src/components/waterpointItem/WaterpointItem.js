@@ -8,17 +8,17 @@ import unknowImg from "../../assets/img/unknowImg.png";
 import "./WaterpointItem.css";
 import seasonImg from "../../assets/img/seasonsImg.png";
 import sourcesImg from "../../assets/svg/sources.svg";
-import cowImg from "../../assets/svg/cow.svg";
-import donkeyImg from "../../assets/svg/donkey.svg";
+import cowImg from "../../assets/img/cow.png";
+import donkeyImg from "../../assets/img/donkey.png";
 import sheepImg from "../../assets/img/sheep.png";
 import goatImg from "../../assets/img/goat.png";
 import wheatImg from "../../assets/img/wheat.png";
 import maizeImg from "../../assets/img/maize.png";
 import livestockImg from "../../assets/img/livestock.png";
 import agricultureImg from "../../assets/img/agriculture.png";
-import camelImg from "../../assets/svg/camel.svg";
-import maleImg from "../../assets/svg/male.svg";
-import femaleImg from "../../assets/svg/female.svg";
+import camelImg from "../../assets/img/camel.png";
+import maleImg from "../../assets/img/male.png";
+import femaleImg from "../../assets/img/female.png";
 import Circle from "../circle/Circle";
 
 function WaterpointItem(props) {

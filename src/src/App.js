@@ -6,6 +6,7 @@ import Visualization from "./pages/visualization/Visualization";
 import Waterprofile from "./pages/waterprofile/Waterprofile";
 import Footer from "./components/footer/Footer";
 import HistoricalData from "./pages/historicaldata/HistoricalData";
+import NotFound from "./pages/notFound/NotFound";
 
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
         <Route path="/visualization" element={<Visualization />} />
         <Route path="/waterprofile" element={<Waterprofile />} />
         <Route path="/historicaldata" element={<HistoricalData />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </Router>
   );
 }

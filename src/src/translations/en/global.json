@@ -1,0 +1,27 @@
+{
+    "menu": {
+        "monitoring":"Monitoring",
+        "about-us":"About Us"
+    },
+    "footer":{
+        "partners": "Partners"
+    },
+    "home":{
+        "title": "Making informed decisions",
+        "title-description": "Empowering vital decisions to make the right water management choices for you.",
+        "button": "Go to viewer",
+        "title2": "We also change the lives of pastoralists.",
+        "title2-description": "Empowering pastoralist communities with access to information, find out how we are changing their reality.",
+        "feature1": "Interactive Map",
+        "feature1-description": "Explore our interactive map and view the location of each waterpoint in Ethiopia. Get detailed data on existing infrastructure.",
+        "feature2": "Waterpoint overview",
+        "feature2-description": "Discover the past and future of water. Access historical waterpoint, temperature and rainfall data, along with forecasts for smarter and more efficient management.",
+        "feature3": "Dashboard waterpoint",
+        "feature3-description": "Our Dashboard provides real-time information on waterpoints and resources for effective decisions. Decide with confidence!",
+        "feature4": "Routes",
+        "feature4-description": "Find your way to the water! With our routing module, getting to the waterpoint has never been easier"
+    },
+    "monitoring": {
+        
+    }
+}

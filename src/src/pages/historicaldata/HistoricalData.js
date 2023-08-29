@@ -7,8 +7,10 @@ import Configuration from "../../conf/Configuration";
 import axios from "axios";
 import ReactApexChart from "react-apexcharts";
 import "./HistoricalData.css";
+import { useTranslation } from "react-i18next";
 
 function HistoricalData() {
+  const [t, i18n] = useTranslation("global");
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
   const [climatology, setClimatology] = useState();
@@ -173,14 +175,9 @@ function HistoricalData() {
               </Row>
               <Row className="mt-3 ">
                 <Col className="">
-                  <h5>Monitored data</h5>
-                  <p>
-                    Explore a variety of charts covering depth of field, depth
-                    scale, precipitation and evapotranspiration. Customise your
-                    experience by filtering these graphs according to your
-                    preferred year.
-                  </p>
-                  <p className="mb-0">Year</p>
+                  <h5>{t("data.monitored")}</h5>
+                  <p>{t("data.monitored-d")}</p>
+                  <p className="mb-0">{t("data.year")}</p>
                   <select
                     className="form-select w-50"
                     aria-label="Default select example"
@@ -196,7 +193,7 @@ function HistoricalData() {
               </Row>
               <Row>
                 <Col className="col-12 col-lg-6">
-                  <h6 className="mt-2">Depth</h6>
+                  <h6 className="mt-2">{t("data.depth")}</h6>
                   {depthData?.length > 0 && (
                     <>
                       <ReactApexChart
@@ -221,7 +218,7 @@ function HistoricalData() {
                   )}
                 </Col>
                 <Col className="col-12 col-lg-6">
-                  <h6 className="mt-2">Scaled Depth</h6>
+                  <h6 className="mt-2">{t("data.scaled")}</h6>
                   <div id="line-scaled">
                     {scaledDepthData?.length > 0 && (
                       <>
@@ -250,7 +247,7 @@ function HistoricalData() {
               </Row>
               <Row>
                 <Col className="col-12 col-lg-6">
-                  <h6>Rain</h6>
+                  <h6>{t("data.rain")}</h6>
                   {rain?.length > 0 && (
                     <>
                       <ReactApexChart
@@ -275,7 +272,7 @@ function HistoricalData() {
                   )}
                 </Col>
                 <Col className="col-12 col-lg-6">
-                  <h6>Evaporation</h6>
+                  <h6>{t("data.evap")}</h6>
                   {evap?.length > 0 && (
                     <>
                       <ReactApexChart
@@ -301,13 +298,8 @@ function HistoricalData() {
                 </Col>
               </Row>
               <Row className="mt-3">
-                <h5>Sub-seasonal forecast</h5>
-                <p>
-                  The climate prediction is given in percentage of probability
-                  with respect to the normal range of precipitation of an area
-                  and a specific month. Below, you can find the most probable
-                  category for the selected municipality and the forecast month.
-                </p>
+                <h5>{t("data.subseasonal")}</h5>
+                <p>{t("data.subseasonal-d")}</p>
                 {subseasonal &&
                   subseasonal.map((week, i) => {
                     return (
@@ -318,20 +310,15 @@ function HistoricalData() {
                           week={week.week}
                           probabilities={week.probabilities}
                           name={wp.name}
+                          key={i}
                         />
                       </Col>
                     );
                   })}
               </Row>
               <Row className="mt-3 justify-content-around ">
-                <h5>Seasonal forecast</h5>
-                <p>
-                  The climate prediction is given in percentage of probability
-                  with respect to the normal range of precipitation of an area
-                  and a specific quarter. Below, you can find the most probable
-                  category for the selected municipality and the forecast
-                  quarter.
-                </p>
+                <h5>{t("data.seasonal")}</h5>
+                <p>{t("data.seasonal-d")}</p>
                 {seasonal &&
                   seasonal.map((month, i) => {
                     return (
@@ -341,6 +328,7 @@ function HistoricalData() {
                           month={month.month}
                           probabilities={month.probabilities}
                           name={wp.name}
+                          key={i}
                         />
                       </Col>
                     );

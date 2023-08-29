@@ -1,0 +1,79 @@
+{
+    "menu": {
+        "monitoring":"",
+        "about-us":""
+    },
+    "footer":{
+        "partners": ""
+    },
+    "home":{
+        "title": "",
+        "title-description": "",
+        "button": "",
+        "title2": "",
+        "title2-description": "",
+        "feature1": "",
+        "feature1-description": "",
+        "feature2": "",
+        "feature2-description": "",
+        "feature3": "",
+        "feature3-description": "",
+        "feature4": "",
+        "feature4-description": ""
+    },
+    "monitoring": {
+        "legend": "",
+        "good": "",
+        "watch": "",
+        "alert": "",
+        "near": "",
+        "seasonally": "",
+        "waterpoint": "",
+        "overview": "",
+        "date": "",
+        "name": "",
+        "depth": "",
+        "median-depth": "",
+        "area": "",
+        "good-m": "",
+        "watch-m": "",
+        "alert-m": "",
+        "near-m": "",
+        "seasonally-m": "",
+        "profile": "",
+        "data": ""
+    },
+    "profile": {
+        "area": "",
+        "population": "",
+        "map": "",
+        "watershed": "",
+        "waterpoint": "",
+        "download": "",
+        "watershed-d": "",
+        "waterpoint-d": ""
+    },
+    "data": {
+        "monitored":"",
+        "monitored-d": "",
+        "year": "",
+        "depth": "",
+        "scaled": "",
+        "rain": "",
+        "evap": "",
+        "subseasonal": "",
+        "subseasonal-d": "",
+        "precipitation":"",
+        "week": "",
+        "forecast-sub-1a":"",
+        "forecast-sub-1b":"",
+        "forecast-seasonal-1":"",
+        "forecast-2":"",
+        "forecast-3":"",
+        "lower":"",
+        "normal":"",
+        "upper":"",
+        "seasonal": "",
+        "seasonal-d": ""
+    }
+}

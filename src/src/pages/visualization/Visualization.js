@@ -9,8 +9,10 @@ import Configuration from "../../conf/Configuration";
 import axios from "axios";
 import { Modal, Spinner } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
+import { useTranslation } from "react-i18next";
 
 function Visualization() {
+  const [t, i18n] = useTranslation("global");
   //Options for leaflet map
   const greenIcon = new L.Icon({
     iconUrl: require(`../../assets/img/greenMarker.png`),
@@ -106,15 +108,17 @@ function Visualization() {
       >
         <Popup>
           <div>
-            <h6 className="fw-medium mb-0">Waterpoint {wp.name} Overview</h6>
+            <h6 className="fw-medium mb-0">
+              {t("monitoring.waterpoint")} {wp.name} {t("monitoring.overview")}
+            </h6>
             <p className="mt-0 mb-2">
-              Date: {monitoredData.date.split("T")[0]}
+              {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
             </p>
           </div>
           <table className="fs-6">
             <tbody>
               <tr>
-                <td>Name:</td>
+                <td>{t("monitoring.name")}:</td>
                 <td>
                   <div
                     className={`td-name text-center fw-medium ${
@@ -137,29 +141,29 @@ function Visualization() {
                 </td>
               </tr>
               <tr>
-                <td>Depth (%):</td>
+                <td>{t("monitoring.depth")} (%):</td>
                 <td>{depthValue.value}</td>
               </tr>
               <tr>
-                <td>Median Depth (%):</td>
+                <td>{t("monitoring.median-depth")} (%):</td>
                 <td>{scaledDepthValue.value}</td>
               </tr>
               <tr>
-                <td>Area (ha):</td>
+                <td>{t("monitoring.area")} (ha):</td>
                 <td>{wp.area}</td>
               </tr>
             </tbody>
           </table>
           <p className="fs-6 mt-0">
             {scaledDepthValue.value > 100
-              ? "Mora than 100% median depth."
+              ? t("monitoring.good-m")
               : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
-              ? "50%-100% median depth."
+              ? t("monitoring.watch-m")
               : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
-              ? "3%-50% median depth."
+              ? t("monitoring.alert-m")
               : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
-              ? "Less than 3% median depth."
-              : "Seasonally unavailable"}
+              ? t("monitoring.near-m")
+              : t("monitoring.seasonally-m")}
           </p>
           <div className="d-flex justify-content-between mt-3">
             <Link
@@ -171,7 +175,7 @@ function Visualization() {
               state={{ idWater: wp.id }}
             >
               <img src={profileIcon} alt="" className="me-3" />
-              Profile
+              {t("monitoring.profile")}
             </Link>
 
             <Link
@@ -181,7 +185,7 @@ function Visualization() {
               state={{ idWater: wp.id }}
             >
               <img src={dataIcon} alt="" className="me-3" />
-              Data
+              {t("monitoring.data")}
             </Link>
           </div>
         </Popup>

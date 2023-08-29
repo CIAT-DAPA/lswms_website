@@ -1,11 +1,25 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import "./Menu.css";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function Menu() {
+  const [t, i18n] = useTranslation("global");
+  const [language, setLanguage] = useState(
+    window.localStorage.getItem("language") || "en"
+  );
+  useEffect(() => {
+    window.localStorage.setItem("language", language);
+    i18n.changeLanguage(language);
+  }, [language, i18n]);
+  const handleLanguageChange = (language) => {
+    setLanguage(language);
+  };
+
   const [opacity, setOpacity] = useState(1);
 
   const changeNavbarOpacity = () => {
@@ -38,11 +52,32 @@ function Menu() {
         >
           <Nav className="justify-content-end">
             <Link className="nav-link text-black" to="/visualization">
-              Monitoring
+              {t("menu.monitoring")}
             </Link>
             <Link className="nav-link text-black" to="/aboutUs">
-              About Us
+              {t("menu.about-us")}
             </Link>
+            {/* <Dropdown as={ButtonGroup} className="d-block">
+              <Button
+                variant="outline-secondary"
+                className="text-uppercase disabled"
+              >
+                {window.localStorage.getItem("language") || "es"}
+              </Button>
+              <Dropdown.Toggle
+                variant="outline-secondary"
+                split
+                id="dropdown-split-basic"
+              />
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => handleLanguageChange("en")}>
+                  EN
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleLanguageChange("am")}>
+                  AM
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

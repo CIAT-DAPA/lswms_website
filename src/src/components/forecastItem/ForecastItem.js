@@ -1,8 +1,10 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 function ForecastItem({ year, month, week, probabilities, name }) {
+  const [t, i18n] = useTranslation("global");
   ChartJS.register(ArcElement, Tooltip, Legend);
   const data = {
     labels: ["Lower", "Normal", "Upper"],
@@ -67,23 +69,25 @@ function ForecastItem({ year, month, week, probabilities, name }) {
     <>
       <h6 className="text-center">{year}</h6>
       <h5 className="text-center">{getMonthName(month)}</h5>
-      <h6 className="text-center">Precipitation probabilities (%)</h6>
-      {week && <h5 className="text-center">Week {week}</h5>}
+      <h6 className="text-center">{t("data.precipitation")} (%)</h6>
+      {week && <h5 className="text-center">{t("data.week")} {week}</h5>}
       <Doughnut data={data} />
       <p className="text-center">
-        {week ? `For the week ${week} in the month` : `For the month`}
+        {week
+          ? t("data.forecast-sub-1a") + ` ${week} ` + t("data.forecast-sub-1b")
+          : t("data.forecast-seasonal-1")}
         <span className="fw-medium"> {getMonthName(month)} </span>
-        In the waterpoint
+        {t("data.forecast-2")}
         <span className="fw-medium"> {name} </span>
-        the climate forecast suggests that precipitation is most likely{" "}
+        {t("data.forecast-3")}{" "}
         <span className="fw-medium">
           {" "}
           {maxKey === "lower"
-            ? "lower than normal"
+            ? t("data.lower")
             : maxKey === "normal"
-            ? "normal"
+            ? t("data.normal")
             : maxKey === "upper"
-            ? "above than normal"
+            ? t("data.upper")
             : ""}
         </span>
         .

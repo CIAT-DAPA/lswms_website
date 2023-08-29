@@ -11,8 +11,10 @@ import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function Waterprofile() {
+  const [t, i18n] = useTranslation("global");
   const location = useLocation();
   const idWater = location.state?.idWater;
   const [wpProfile, setWpProfile] = useState();
@@ -102,7 +104,8 @@ function Waterprofile() {
                       <h5 className="fw-medium">{`${wpProfile.adm1}, ${wpProfile.adm2}, ${wpProfile.adm3}, ${wpProfile.watershed_name}`}</h5>
                       <h1 className="fw-normal my-4">{wpProfile.name}</h1>
                       <p className="fw-normal">
-                        Area: {wpProfile.area} ha <br /> Population:{" "}
+                        {t("profile.area")}: {wpProfile.area} ha <br />{" "}
+                        {t("profile.population")}:{" "}
                         {
                           wpProfile.contents_wp
                             .find((e) => e.title === "general")
@@ -117,7 +120,7 @@ function Waterprofile() {
               <Container className="mt-3">
                 <Row>
                   <Col className="col-12 col-md-8">
-                    <h5 className="fw-medium">Map</h5>
+                    <h5 className="fw-medium">{t("profile.map")}</h5>
                     <MapContainer
                       center={[wpProfile.lat, wpProfile.lon]}
                       zoom={7}
@@ -131,14 +134,14 @@ function Waterprofile() {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
                     </MapContainer>
-                    <h5 className="mt-4 mb-3">Watershed</h5>
+                    <h5 className="mt-4 mb-3">{t("profile.watershed")}</h5>
                     {wsLeft?.length > 0 &&
                       wsLeft.map((e, index) => {
                         return (
                           <WaterpointItem type={e.type} item={e} key={index} />
                         );
                       })}
-                    <h5 className="mt-4 mb-3">Waterpoint</h5>
+                    <h5 className="mt-4 mb-3">{t("profile.waterpoint")}</h5>
                     {wpLeft?.length > 0 &&
                       wpLeft.map((e, index) => {
                         return (
@@ -147,7 +150,9 @@ function Waterprofile() {
                       })}
                   </Col>
                   <Col className="col-12 col-md-4">
-                    <h5 className="text-capitalize ">Watershed description</h5>
+                    <h5 className="text-capitalize ">
+                      {t("profile.watershed-d")}
+                    </h5>
                     {wsTable && (
                       <WaterpointItem
                         item={wsTable}
@@ -161,7 +166,9 @@ function Waterprofile() {
                           <WaterpointItem type={e.type} item={e} key={index} />
                         );
                       })}
-                    <h5 className="text-capitalize ">Waterpoint description</h5>
+                    <h5 className="text-capitalize ">
+                      {t("profile.waterpoint-d")}
+                    </h5>
                     {wpRight?.length > 0 &&
                       wpRight.map((e, index) => {
                         return (
@@ -175,7 +182,7 @@ function Waterprofile() {
             <Container className="mb-5 mt-2">
               <Button className="me-5 rounded-4" onClick={downloadProfileAsPdf}>
                 <img src={downloadImg} alt="" className="me-3" />
-                Download profile
+                {t("profile.download")}
               </Button>
               {/* <Button disabled={true}>
           <img src={emailImg} className="me-3" />

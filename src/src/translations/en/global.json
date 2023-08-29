@@ -9,7 +9,7 @@
     "home":{
         "title": "Making informed decisions",
         "title-description": "Empowering vital decisions to make the right water management choices for you.",
-        "button": "Go to viewer",
+        "button": "Go to Viewer",
         "title2": "We also change the lives of pastoralists.",
         "title2-description": "Empowering pastoralist communities with access to information, find out how we are changing their reality.",
         "feature1": "Interactive Map",
@@ -22,6 +22,58 @@
         "feature4-description": "Find your way to the water! With our routing module, getting to the waterpoint has never been easier"
     },
     "monitoring": {
-        
+        "legend": "Legend",
+        "good": "Good",
+        "watch": "Watch",
+        "alert": "Alert",
+        "near": "Near-dry",
+        "seasonally": "Seasonally-dry",
+        "waterpoint": "Waterpoint",
+        "overview": "Overview",
+        "date": "Date",
+        "name": "Name",
+        "depth": "Depth",
+        "median-depth": "Median Depth",
+        "area": "Area",
+        "good-m": "Mora than 100% median depth.",
+        "watch-m": "50%-100% median depth.",
+        "alert-m": "3%-50% median depth.",
+        "near-m": "Less than 3% median depth.",
+        "seasonally-m": "Seasonally unavailable",
+        "profile": "Profile",
+        "data": "Data"
+    },
+    "profile": {
+        "area": "Area",
+        "population": "Population",
+        "map": "Map",
+        "watershed": "Watershed",
+        "waterpoint": "Waterpoint",
+        "download": "Download profile",
+        "watershed-d": "Watershed Description",
+        "waterpoint-d": "Waterpoint Description"
+    },
+    "data": {
+        "monitored":"Monitored data",
+        "monitored-d": "Explore a variety of charts covering depth of field, depth scale, precipitation and evapotranspiration. Customise your experience by filtering these graphs according to your preferred year.",
+        "year": "Year",
+        "depth": "Depth",
+        "scaled": "Scaled Depth",
+        "rain": "Rain",
+        "evap": "Evaporation",
+        "subseasonal": "Sub-seasonal forecast",
+        "subseasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific month. Below, you can find the most probable category for the selected municipality and the forecast month.",
+        "precipitation":"Precipitation probabilities",
+        "week": "Week",
+        "forecast-sub-1a":"For the week",
+        "forecast-sub-1b":"in the month",
+        "forecast-seasonal-1":"For the month",
+        "forecast-2":"In the waterpoint",
+        "forecast-3":"the climate forecast suggests that precipitation is most likely",
+        "lower":"lower than normal",
+        "normal":"normal",
+        "upper":"above than normal",
+        "seasonal": "Seasonal forecast",
+        "seasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific quarter. Below, you can find the most probable category for the selected municipality and the forecast quarter."
     }
 }

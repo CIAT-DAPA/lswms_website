@@ -134,12 +134,13 @@ function WaterpointItem(props) {
   const itemText = () => {
     return (
       <>
+      <h5 className="text-capitalize ">{props.item.title}</h5>
         {props.item.values.map((item, index) => {
           const key = Object.keys(item)[0]; // Obtiene la clave (por ejemplo: 'topography', 'hidrology', 'demography')
           const value = item[key]; // Obtiene el valor correspondiente
-
           return (
             <div key={index}>
+              
               <h6 className="text-capitalize ">{key}</h6>
               <p>{value}</p>
             </div>

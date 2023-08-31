@@ -41,7 +41,8 @@
         "near-m": "Less than 3% median depth.",
         "seasonally-m": "Seasonally unavailable",
         "profile": "Profile",
-        "data": "Data"
+        "data": "Data",
+        "loading":"Getting the waterpoints..."
     },
     "profile": {
         "area": "Area",
@@ -51,7 +52,10 @@
         "waterpoint": "Waterpoint",
         "download": "Download profile",
         "watershed-d": "Watershed Description",
-        "waterpoint-d": "Waterpoint Description"
+        "waterpoint-d": "Waterpoint Description",
+        "loading": "Getting the waterpoint profile...",
+        "notFound-title": "No water ID was provided.",
+        "notFound-d": "Try to get the profile from the waterpoints display."
     },
     "data": {
         "monitored":"Monitored data",
@@ -74,6 +78,12 @@
         "normal":"normal",
         "upper":"above than normal",
         "seasonal": "Seasonal forecast",
-        "seasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific quarter. Below, you can find the most probable category for the selected municipality and the forecast quarter."
+        "seasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific quarter. Below, you can find the most probable category for the selected municipality and the forecast quarter.",
+        "notFound-title": "No aclimate ID was provided.",
+        "notFound-d": "Try to get the data from the waterpoints display."
+    },
+    "notFound":{
+        "title":"Oops! Looks like you've ventured into uncharted territory.",
+        "description": "The page you are looking for could not be found on our digital map."
     }
 }

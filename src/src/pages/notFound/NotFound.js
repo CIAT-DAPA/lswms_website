@@ -1,7 +1,9 @@
 import React from "react";
 import img404 from "../../assets/img/404.png";
+import { useTranslation } from "react-i18next";
 
 function NotFound() {
+  const [t, i18n] = useTranslation("global");
   return (
     <div
       style={{ height: "100vh" }}
@@ -9,10 +11,8 @@ function NotFound() {
     >
       <img src={img404} alt="" />
       <div>
-        <h1>Oops! Looks like you've ventured into uncharted territory.</h1>
-        <p>
-          The page you are looking for could not be found on our digital map.
-        </p>
+        <h1>{t("notFound.title")}</h1>
+        <p>{t("notFound.description")}</p>
       </div>
     </div>
   );

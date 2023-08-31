@@ -204,7 +204,7 @@ function Visualization() {
       >
         <Modal.Body className="d-flex align-items-center ">
           <Spinner animation="border" role="status" className="me-2" />
-          Getting the waterpoints...
+          {t("monitoring.loading")}
         </Modal.Body>
       </Modal>
       <MapContainer

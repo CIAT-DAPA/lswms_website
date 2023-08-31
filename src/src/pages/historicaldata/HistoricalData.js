@@ -344,8 +344,8 @@ function HistoricalData() {
         >
           <img src={img404} alt="" />
           <div>
-            <h1>No aclimate ID was provided.</h1>
-            <p>Try to get the profile from the waterpoints display.</p>
+            <h1>{t("data.notFound-title")}</h1>
+            <p>{t("data.notFound-d")}</p>
           </div>
         </div>
       )}

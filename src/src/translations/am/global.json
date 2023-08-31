@@ -41,7 +41,8 @@
         "near-m": "",
         "seasonally-m": "",
         "profile": "",
-        "data": ""
+        "data": "",
+        "loading":""
     },
     "profile": {
         "area": "",
@@ -51,7 +52,10 @@
         "waterpoint": "",
         "download": "",
         "watershed-d": "",
-        "waterpoint-d": ""
+        "waterpoint-d": "",
+        "loading": "",
+        "notFound-title": "",
+        "notFound-d": ""
     },
     "data": {
         "monitored":"",
@@ -74,6 +78,12 @@
         "normal":"",
         "upper":"",
         "seasonal": "",
-        "seasonal-d": ""
+        "seasonal-d": "",
+        "notFound-title": "",
+        "notFound-title-d": ""
+    },
+    "notFound":{
+        "title":"",
+        "description": ""
     }
 }

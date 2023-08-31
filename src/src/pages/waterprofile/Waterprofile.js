@@ -91,7 +91,7 @@ function Waterprofile() {
           >
             <Modal.Body className="d-flex align-items-center ">
               <Spinner animation="border" role="status" className="me-2" />
-              Getting the waterpoint profile...
+              {t("profile.loading")}
             </Modal.Body>
           </Modal>
         ) : (
@@ -198,8 +198,8 @@ function Waterprofile() {
         >
           <img src={img404} alt="" />
           <div>
-            <h1>No water ID was provided.</h1>
-            <p>Try to get the profile from the waterpoints display.</p>
+            <h1>{t("profile.notFound-title")}</h1>
+            <p>{t("profile.notFound-d")}</p>
           </div>
         </div>
       )}

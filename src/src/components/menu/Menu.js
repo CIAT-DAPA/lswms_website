@@ -54,8 +54,11 @@ function Menu() {
             <Link className="nav-link text-black" to="/visualization">
               {t("menu.monitoring")}
             </Link>
-            <Link className="nav-link text-black" to="/aboutUs">
+            <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}
+            </Link>
+            <Link className="nav-link text-black" to="/userprofile">
+              User Profile
             </Link>
             {/* <Dropdown as={ButtonGroup} className="d-block">
               <Button

@@ -14,3 +14,7 @@
   position: relative;
   top: 20vh;
 }
+
+.editIconBlack{
+  filter: invert(1);
+}

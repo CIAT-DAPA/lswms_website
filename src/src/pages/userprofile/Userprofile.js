@@ -3,7 +3,6 @@ import "./Userprofile.css";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import userImg from "../../assets/img/userTest.png";
 import editIcon from "../../assets/svg/edit.svg";
-import editBlackIcon from "../../assets/svg/editBlack.svg";
 import smsIcon from "../../assets/svg/sms.svg";
 import emailIcon from "../../assets/svg/emailChannel.svg";
 import unsubscribeIcon from "../../assets/svg/unsubscribe.svg";
@@ -39,39 +38,49 @@ function Userprofile() {
       <Container className="mt-5">
         <Row className="">
           <Col className="col-12 col-md-8 mt-4">
-            <h5 className="fw-medium">Subscribed waterpoints</h5>
             {subscriptions ? (
-              <Row className="justify-content-between align-items-baseline mb-3">
-                <Col className="col-auto">
-                  <div className="d-flex align-items-stretch ">
-                    <div
-                      className={`td-name text-center fw-medium px-4 me-2 td-brown`}
-                    >
-                      Burra
+              <>
+                <h5 className="fw-medium">Subscribed waterpoints</h5>
+                <Row className="justify-content-between align-items-baseline mb-3">
+                  <Col className="col-auto">
+                    <div className="d-flex align-items-stretch ">
+                      <div
+                        className={`td-name text-center fw-medium px-4 me-2 td-brown`}
+                      >
+                        Burra
+                      </div>
+                      <img src={emailIcon} alt="email" className="me-2" />
+                      <img
+                        src={smsIcon}
+                        alt="sms"
+                        style={{ minWidth: "16px" }}
+                      />
                     </div>
-                    <img src={emailIcon} alt="email" className="me-2" />
-                    <img src={smsIcon} alt="sms" style={{ minWidth: "16px" }} />
-                  </div>
-                  <div>Borena, Yabelo, Tsadim</div>
-                </Col>
-                <Col className="col-auto">
-                  <p>Depth: 3.50%</p>
-                </Col>
-                <Col className="d-flex col-auto">
-                  <Button className="me-4 rounded-4 btn-warning text-black">
-                    <img src={editBlackIcon} alt="edit" className="me-2" />
-                    Edit Subscribe
-                  </Button>
-                  <Button className=" rounded-4 btn-danger ">
-                    <img
-                      src={unsubscribeIcon}
-                      alt="Unsubscribe"
-                      className="me-2"
-                    />
-                    Unsubscribe
-                  </Button>
-                </Col>
-              </Row>
+                    <div>Borena, Yabelo, Tsadim</div>
+                  </Col>
+                  <Col className="col-auto">
+                    <p>Depth: 3.50%</p>
+                  </Col>
+                  <Col className="d-flex col-auto">
+                    <Button className="me-4 rounded-4 btn-warning text-black">
+                      <img
+                        src={editIcon}
+                        alt="edit"
+                        className="me-2 editIconBlack"
+                      />
+                      Edit Subscribe
+                    </Button>
+                    <Button className=" rounded-4 btn-danger ">
+                      <img
+                        src={unsubscribeIcon}
+                        alt="Unsubscribe"
+                        className="me-2"
+                      />
+                      Unsubscribe
+                    </Button>
+                  </Col>
+                </Row>
+              </>
             ) : (
               <>
                 <h3 className="text-center mb-1 ">

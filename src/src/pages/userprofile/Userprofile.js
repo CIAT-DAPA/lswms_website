@@ -16,12 +16,12 @@ function Userprofile() {
       <div className="user-bg">
         <Container className="container-user">
           <Row className="text-white align-items-center ">
-            <Col className="col-2 text-center">
+            <Col className="col-3 col-md-2 text-center">
               <img
                 src={userImg}
                 alt="user profile"
                 className="img-fluid border border-5 border-white rounded-circle position-relative"
-                style={{ bottom: "30px" }}
+                style={{ bottom: "15px" }}
               />
             </Col>
             <Col className="pb-5">
@@ -91,7 +91,7 @@ function Userprofile() {
                   <Link to="/visualization">waterpoint display</Link> and
                   subscribing to a waterpoint
                 </p>
-                <img src={noSubscriptionImg} alt="no subscriptions" />
+                <img src={noSubscriptionImg} alt="no subscriptions" className="img-fluid"/>
               </>
             )}
           </Col>

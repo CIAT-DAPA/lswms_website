@@ -5,7 +5,7 @@ import downloadImg from "../../assets/svg/download.svg";
 import emailImg from "../../assets/svg/email.svg";
 import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import "./Waterprofile.css";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, WMSTileLayer } from "react-leaflet";
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
@@ -132,6 +132,13 @@ function Waterprofile() {
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                        <WMSTileLayer
+                        url={"https://isa.ciat.cgiar.org/geoserver2/wms"}
+                        layers={`gap_analysis:prueba`}
+                        format="image/png"
+                        transparent={true}
+                        zIndex={1000}
                       />
                     </MapContainer>
                     <h5 className="mt-4 mb-3">{t("profile.watershed")}</h5>

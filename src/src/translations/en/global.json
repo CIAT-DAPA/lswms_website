@@ -4,22 +4,23 @@
         "about-us":"About Us"
     },
     "footer":{
-        "partners": "Partners"
+        "partners": "Partners",
+        "rights": "CIAT and Alliance of Bioversity International rights reserved"
     },
     "home":{
         "title": "Making informed decisions",
         "title-description": "Empowering vital decisions to make the right water management choices for you.",
-        "button": "Go to Viewer",
+        "button": "Go to Monitoring",
         "title2": "We also change the lives of pastoralists.",
         "title2-description": "Empowering pastoralist communities with access to information, find out how we are changing their reality.",
-        "feature1": "Interactive Map",
+        "feature1": "Monitoring View",
         "feature1-description": "Explore our interactive map and view the location of each waterpoint in Ethiopia. Get detailed data on existing infrastructure.",
-        "feature2": "Waterpoint overview",
-        "feature2-description": "Discover the past and future of water. Access historical waterpoint, temperature and rainfall data, along with forecasts for smarter and more efficient management.",
+        "feature2": "Waterpoint profile",
+        "feature2-description": "Explore key characteristics of this waterpoint's surroundings and community.",
         "feature3": "Dashboard waterpoint",
-        "feature3-description": "Our Dashboard provides real-time information on waterpoints and resources for effective decisions. Decide with confidence!",
+        "feature3-description": "Access comprehensive water point data, drill down into historical temperature and precipitation records, and take advantage of seasonal and sub-seasonal forecasts to make informed decisions.",
         "feature4": "Routes",
-        "feature4-description": "Find your way to the water! With our routing module, getting to the waterpoint has never been easier"
+        "feature4-description": "Find your path to the water! With our routing module, getting to the waterpoint has never been easier"
     },
     "monitoring": {
         "legend": "Legend",
@@ -41,7 +42,7 @@
         "near-m": "Less than 3% median depth.",
         "seasonally-m": "Seasonally unavailable",
         "profile": "Profile",
-        "data": "Data",
+        "data": "Dashboard",
         "loading":"Getting the waterpoints..."
     },
     "profile": {

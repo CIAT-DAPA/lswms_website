@@ -7,7 +7,14 @@ import { Link } from "react-router-dom";
 import "./Visualization.css";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
-import { Modal, Spinner } from "react-bootstrap";
+import {
+  Modal,
+  Spinner,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+  Badge,
+} from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
 
@@ -35,7 +42,7 @@ function Visualization() {
     iconSize: [32, 32],
   });
 
-  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles`;
+  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/en`;
   const [waterpoints, setWaterpoints] = useState([]);
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -141,11 +148,40 @@ function Visualization() {
                 </td>
               </tr>
               <tr>
-                <td>{t("monitoring.depth")} (%):</td>
+                <td>
+                  {" "}
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip id={`tooltip-left`}>
+                        Depth means ........
+                      </Tooltip>
+                    }
+                  >
+                    <Badge pill className="fw-semibold me-1">
+                      i
+                    </Badge>
+                  </OverlayTrigger>
+                  {t("monitoring.depth")} (%) :
+                </td>
                 <td>{depthValue.value}</td>
               </tr>
               <tr>
-                <td>{t("monitoring.median-depth")} (%):</td>
+                <td>
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={
+                      <Tooltip id={`tooltip-left`}>
+                        Median Depth means ........
+                      </Tooltip>
+                    }
+                  >
+                    <Badge pill className="fw-semibold me-1">
+                      i
+                    </Badge>
+                  </OverlayTrigger>
+                  {t("monitoring.median-depth")} (%):
+                </td>
                 <td>{scaledDepthValue.value}</td>
               </tr>
               <tr>

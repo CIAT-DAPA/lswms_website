@@ -57,10 +57,10 @@ function Menu() {
             <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}
             </Link>
-            <Link className="nav-link text-black" to="/userprofile">
+            {/* <Link className="nav-link text-black" to="/userprofile">
               User Profile
-            </Link>
-            {/* <Dropdown as={ButtonGroup} className="d-block">
+            </Link> */}
+            <Dropdown as={ButtonGroup} className="d-block">
               <Button
                 variant="outline-secondary"
                 className="text-uppercase disabled"
@@ -80,7 +80,7 @@ function Menu() {
                   AM
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown> */}
+            </Dropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>

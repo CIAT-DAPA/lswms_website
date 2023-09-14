@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
+import bgImg from "../../assets/img/profilebg.jpg";
 import downloadImg from "../../assets/svg/download.svg";
 import emailImg from "../../assets/svg/email.svg";
-import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Carousel,
+  Col,
+  Container,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import "./Waterprofile.css";
 import { MapContainer, TileLayer, WMSTileLayer } from "react-leaflet";
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
@@ -26,7 +35,7 @@ function Waterprofile() {
   const [wpLeft, setWpLeft] = useState(null);
   const [wpRight, setWpRight] = useState(null);
 
-  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}`;
+  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}/en`;
   useEffect(() => {
     //Call to API to get waterpoint
     axios
@@ -98,6 +107,14 @@ function Waterprofile() {
           <>
             <div id="profile">
               <div className="profile-bg">
+                <Carousel fade controls={false} interval={3000} pause={false}>
+                  <Carousel.Item>
+                    <img src={bgImg} />
+                  </Carousel.Item>
+                  <Carousel.Item>
+                    <img src={bgImg} style={{filter:"grayscale(1)"}}/>
+                  </Carousel.Item>
+                </Carousel>
                 <Container className="container-profile">
                   <Row className="text-white ">
                     <Col className="col-12 text-center">
@@ -123,7 +140,7 @@ function Waterprofile() {
                     <h5 className="fw-medium">{t("profile.map")}</h5>
                     <MapContainer
                       center={[wpProfile.lat, wpProfile.lon]}
-                      zoom={7}
+                      zoom={8}
                       style={{
                         height: "400px",
                         width: "100%",
@@ -133,9 +150,9 @@ function Waterprofile() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
-                        <WMSTileLayer
-                        url={"https://isa.ciat.cgiar.org/geoserver2/wms"}
-                        layers={`gap_analysis:prueba`}
+                      <WMSTileLayer
+                        url={"http://localhost:8080/geoserver/wpProject/wms"}
+                        layers={`wpProject:Burra`}
                         format="image/png"
                         transparent={true}
                         zIndex={1000}

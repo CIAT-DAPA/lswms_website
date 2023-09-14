@@ -15,21 +15,21 @@ function Footer() {
       <Container>
         <Row className="justify-content-between align-items-center py-3">
           <Col className="col-lg-4">
-            <p className="">CIAT All Rights reserved</p>
+            <p className="">{t("footer.rights")}</p>
             <a
               href="mailto: J.R.Villegas@cgiar.org"
               className="text-decoration-none text-white"
             >
-              Email: J.R.Villegas@cgiar.org{" "}
+              Email: S.alemayehu@cgiar.org{" "}
             </a>
           </Col>
 
           <Col className="d-flex flex-column flex-md-row align-items-center justify-content-between mt-3 d-lg-block col-lg-auto mt-lg-0">
             <p>{t("footer.partners")}:</p>
-            <img src={partner1} alt="partner EIAR" className="me-3 mb-2 mb-md-0" />
             <img src={partner2} alt="partner Alliance" className="mx-3 my-2 my-md-0" />
-            <img src={partner3} alt="partner Bill & Melinda Gates" className="mx-3 my-2 my-md-0" />
             <img src={partner4} alt="partner Minister" className="mx-3 my-2 my-md-0" />
+            <img src={partner1} alt="partner EIAR" className="me-3 mb-2 mb-md-0" />
+            <img src={partner3} alt="partner Bill & Melinda Gates" className="mx-3 my-2 my-md-0" />     
             <img src={partner5} alt="partner CGIAR" className="mx-3 my-2 my-md-0" />
           </Col>
         </Row>

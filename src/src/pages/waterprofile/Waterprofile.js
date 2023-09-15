@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
 import downloadImg from "../../assets/svg/download.svg";
+import dataIcon from "../../assets/svg/data.svg";
 import emailImg from "../../assets/svg/email.svg";
 import {
   Button,
@@ -14,7 +15,12 @@ import {
   Spinner,
 } from "react-bootstrap";
 import "./Waterprofile.css";
-import { MapContainer, TileLayer, WMSTileLayer } from "react-leaflet";
+import {
+  LayersControl,
+  MapContainer,
+  TileLayer,
+  WMSTileLayer,
+} from "react-leaflet";
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
@@ -107,19 +113,18 @@ function Waterprofile() {
           <>
             <div id="profile">
               <div className="profile-bg">
-                <Carousel fade controls={false} interval={3000} pause={false}>
+                <Carousel
+                  fade
+                  controls={false}
+                  interval={1000}
+                  pause={false}
+                  className="w-100"
+                >
                   <Carousel.Item>
-                    <img src={bgImg} />
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img src={bgImg} style={{filter:"grayscale(1)"}}/>
-                  </Carousel.Item>
-                </Carousel>
-                <Container className="container-profile">
-                  <Row className="text-white ">
-                    <Col className="col-12 text-center">
+                    <img src={bgImg} className="w-100 img-carousel" />
+                    <Carousel.Caption>
                       <h5 className="fw-medium">{`${wpProfile.adm1}, ${wpProfile.adm2}, ${wpProfile.adm3}, ${wpProfile.watershed_name}`}</h5>
-                      <h1 className="fw-normal my-4">{wpProfile.name}</h1>
+                      <h1 className="fw-normal my-2">{wpProfile.name}</h1>
                       <p className="fw-normal">
                         {t("profile.area")}: {wpProfile.area} ha <br />{" "}
                         {t("profile.population")}:{" "}
@@ -128,11 +133,48 @@ function Waterprofile() {
                             .find((e) => e.title === "general")
                             .values.find((e) => "population" in e)["population"]
                         }{" "}
-                        <br /> {wpProfile.lat}, {wpProfile.lon}
+                        <br /> Lat: {wpProfile.lat}, Lon: {wpProfile.lon}
                       </p>
-                    </Col>
-                  </Row>
-                </Container>
+                      <div className="d-flex justify-content-end ">
+                        <Button
+                          className="rounded-4"
+                          onClick={downloadProfileAsPdf}
+                        >
+                          <img src={downloadImg} alt="" className="" />
+                        </Button>
+                      </div>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                    <img
+                      src={bgImg}
+                      style={{ filter: "grayscale(1)" }}
+                      className="w-100 img-carousel"
+                    />
+                    <Carousel.Caption>
+                      <h5 className="fw-medium">{`${wpProfile.adm1}, ${wpProfile.adm2}, ${wpProfile.adm3}, ${wpProfile.watershed_name}`}</h5>
+                      <h1 className="fw-normal my-2">{wpProfile.name}</h1>
+                      <p className="fw-normal">
+                        {t("profile.area")}: {wpProfile.area} ha <br />{" "}
+                        {t("profile.population")}:{" "}
+                        {
+                          wpProfile.contents_wp
+                            .find((e) => e.title === "general")
+                            .values.find((e) => "population" in e)["population"]
+                        }{" "}
+                        <br /> Lat: {wpProfile.lat}, Lon: {wpProfile.lon}
+                      </p>
+                      <div className="d-flex justify-content-end ">
+                        <Button
+                          className="rounded-4"
+                          onClick={downloadProfileAsPdf}
+                        >
+                          <img src={downloadImg} alt="" className="" />
+                        </Button>
+                      </div>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                </Carousel>
               </div>
               <Container className="mt-3">
                 <Row>
@@ -150,13 +192,19 @@ function Waterprofile() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
-                      <WMSTileLayer
-                        url={"http://localhost:8080/geoserver/wpProject/wms"}
-                        layers={`wpProject:Burra`}
-                        format="image/png"
-                        transparent={true}
-                        zIndex={1000}
-                      />
+                      <LayersControl position="topright">
+                        <LayersControl.Overlay name="Show watershred" checked>
+                          <WMSTileLayer
+                            url={
+                              "http://localhost:8080/geoserver/wpProject/wms"
+                            }
+                            layers={`wpProject:Burra`}
+                            format="image/png"
+                            transparent={true}
+                            zIndex={1000}
+                          />
+                        </LayersControl.Overlay>
+                      </LayersControl>
                     </MapContainer>
                     <h5 className="mt-4 mb-3">{t("profile.watershed")}</h5>
                     {wsLeft?.length > 0 &&
@@ -212,6 +260,15 @@ function Waterprofile() {
           <img src={emailImg} className="me-3" />
           Send profile
         </Button> */}
+              <Link
+                type="button"
+                className="btn btn-primary me-5 rounded-4"
+                to="/historicaldata"
+                state={{ idWater: wpProfile.id }}
+              >
+                <img src={dataIcon} alt="" className="me-3" />
+                {t("monitoring.data")}
+              </Link>
             </Container>
           </>
         )

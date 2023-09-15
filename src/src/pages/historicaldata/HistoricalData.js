@@ -153,7 +153,7 @@ function HistoricalData() {
   return (
     <div>
       {idWp ? (
-        loading ? (
+        loading || !wp ? (
           <Modal
             show={loading}
             backdrop="static"

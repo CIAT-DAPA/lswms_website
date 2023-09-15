@@ -8,6 +8,19 @@ class Configuration {
   get_url_api_aclimate() {
     return ACLIMATE_API;
   }
+  set_format_administrative_level(adm_level) {
+    if (adm_level === "adm1") {
+      return "Zone";
+    } else if (adm_level === "adm2") {
+      return "Woreda";
+    } else if (adm_level === "adm3") {
+      return "Kebele";
+    } else if (adm_level === "watershed_name") {
+      return "Watershed name";
+    } else {
+      return adm_level;
+    }
+  }
 }
 
 export default new Configuration();

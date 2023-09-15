@@ -10,7 +10,6 @@ import axios from "axios";
 import {
   Modal,
   Spinner,
-  Button,
   OverlayTrigger,
   Tooltip,
   Badge,
@@ -250,6 +249,7 @@ function Visualization() {
           height: "100vh",
           width: "100%",
         }}
+        className="map-monitoring"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

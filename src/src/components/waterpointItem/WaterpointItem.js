@@ -20,6 +20,7 @@ import camelImg from "../../assets/img/camel.png";
 import maleImg from "../../assets/img/male.png";
 import femaleImg from "../../assets/img/female.png";
 import Circle from "../circle/Circle";
+import Configuration from "../../conf/Configuration";
 
 function WaterpointItem(props) {
   const itemIconX = () => {
@@ -134,13 +135,12 @@ function WaterpointItem(props) {
   const itemText = () => {
     return (
       <>
-      <h5 className="text-capitalize ">{props.item.title}</h5>
+        <h5 className="text-capitalize ">{props.item.title}</h5>
         {props.item.values.map((item, index) => {
           const key = Object.keys(item)[0]; // Obtiene la clave (por ejemplo: 'topography', 'hidrology', 'demography')
           const value = item[key]; // Obtiene el valor correspondiente
           return (
             <div key={index}>
-              
               <h6 className="text-capitalize ">{key}</h6>
               <p>{value}</p>
             </div>
@@ -158,7 +158,9 @@ function WaterpointItem(props) {
             {props.title === "Watershed description"
               ? Object.entries(props.item).map(([key, value]) => (
                   <tr key={key} className="tr-table">
-                    <td className="text-capitalize ">{`${key}:`}</td>
+                    <td className="text-capitalize ">{`${Configuration.set_format_administrative_level(
+                      key
+                    )}:`}</td>
                     <td className="text-end text-capitalize">{`${value}`}</td>
                   </tr>
                 ))

@@ -3,8 +3,7 @@ import { useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
-import Configuration from "../../conf/Configuration";
-import axios from "axios";
+import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
 import "./HistoricalData.css";
 import { useTranslation } from "react-i18next";
@@ -74,38 +73,32 @@ function HistoricalData() {
     setClimaEvap(result[3].sort((a, b) => a.x - b.x));
   };
 
-  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWp}`;
-  const urlClimatology = `${Configuration.get_url_api_base()}/waterpoints/${idWp}`;
   useEffect(() => {
     //Call to API to get waterpoint
-    axios
-      .get(urlWp)
+    Services.get_waterpoints_profile(idWp, i18n.language)
       .then((response) => {
-        setWp(response.data[0]);
+        setWp(response[0]);
       })
       .catch((error) => {
         console.log(error);
       });
 
     //Call to API to get climatology
-    axios
-      .get(urlClimatology)
+    Services.get_one_waterpoints(idWp)
       .then((response) => {
-        setClimatology(response.data[0]);
-        setAclimateId(response.data[0].aclimate_id);
+        setClimatology(response[0]);
+        setAclimateId(response[0].aclimate_id);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
-  const urlWpData = `${Configuration.get_url_api_base()}/monitored/${idWp}`;
   useEffect(() => {
     //Call to API to get monitored data waterpoints
-    axios
-      .get(urlWpData)
+    Services.get_data_monitored(idWp)
       .then((response) => {
-        setWpData(response.data);
+        setWpData(response);
         setLoading(false);
       })
       .catch((error) => {
@@ -121,22 +114,18 @@ function HistoricalData() {
 
   useEffect(() => {
     if (aclimateId) {
-      const urlSubseasonal = `${Configuration.get_url_api_aclimate()}/Forecast/SubseasonalWS/${aclimateId}/json`;
-      const urlSeasonal = `${Configuration.get_url_api_aclimate()}/Forecast/Climate/${aclimateId}/true/json`;
       //Call to API to get forecast
-      axios
-        .get(urlSubseasonal)
+      Services.get_subseasonal(aclimateId)
         .then((response) => {
-          setSubseasonal(response.data.subseasonal[0].data);
+          setSubseasonal(response);
         })
         .catch((error) => {
           console.log(error);
         });
 
-      axios
-        .get(urlSeasonal)
+      Services.get_seasonal(aclimateId)
         .then((response) => {
-          setSeasonal(response.data.climate[0].data);
+          setSeasonal(response);
         })
         .catch((error) => {
           console.log(error);

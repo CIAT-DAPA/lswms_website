@@ -24,8 +24,7 @@ import {
 import WaterpointItem from "../../components/waterpointItem/WaterpointItem";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
-import Configuration from "../../conf/Configuration";
-import axios from "axios";
+import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
 
 function Waterprofile() {
@@ -41,13 +40,11 @@ function Waterprofile() {
   const [wpLeft, setWpLeft] = useState(null);
   const [wpRight, setWpRight] = useState(null);
 
-  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/${idWater}/en`;
   useEffect(() => {
     //Call to API to get waterpoint
-    axios
-      .get(urlWp)
+    Services.get_waterpoints_profile(idWater, i18n.language)
       .then((response) => {
-        setWpProfile(response.data[0]);
+        setWpProfile(response[0]);
         setLoading(false);
       })
       .catch((error) => {

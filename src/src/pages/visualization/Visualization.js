@@ -5,8 +5,7 @@ import profileIcon from "../../assets/svg/profile.svg";
 import dataIcon from "../../assets/svg/data.svg";
 import { Link } from "react-router-dom";
 import "./Visualization.css";
-import Configuration from "../../conf/Configuration";
-import axios from "axios";
+import Services from "../../services/apiService";
 import {
   Modal,
   Spinner,
@@ -40,18 +39,16 @@ function Visualization() {
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
   });
-
-  const urlWp = `${Configuration.get_url_api_base()}/waterpointsprofiles/en`;
   const [waterpoints, setWaterpoints] = useState([]);
+  const [profiles, setProfiles] = useState();
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     //Call to API to get waterpoints
-    axios
-      .get(urlWp)
+    Services.get_all_waterpoints()
       .then((response) => {
-        setWaterpoints(response.data);
+        setWaterpoints(response);
       })
       .catch((error) => {
         console.log(error);
@@ -62,9 +59,17 @@ function Visualization() {
     if (waterpoints.length > 0) {
       //Call to API to get each monitored data for each wp
       const idsWp = waterpoints.map((item) => item.id);
-      const requests = idsWp.map((id) =>
-        axios.get(`${Configuration.get_url_api_base()}/lastmonitored/${id}`)
-      );
+
+      const idString = idsWp.join(",");
+      Services.get_waterpoints_profile(idString, "en")
+        .then((response) => {
+          setProfiles(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      const requests = idsWp.map((id) => Services.get_last_data(id));
 
       Promise.all(requests)
         .then((responses) => {
@@ -92,9 +97,9 @@ function Visualization() {
     const scaledDepthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;
-
     // If there is wp content or not
-    const hasContentsWp = wp.contents_wp.length > 0;
+    const profileWp = profiles.find((profile) => profile.id === wp.id);
+    const hasContentsWp = profileWp.contents_wp.length > 0;
 
     return (
       <Marker
@@ -255,9 +260,10 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {waterpoints.map((wp, i) => {
-          return <div key={i}>{loading ? <></> : popupData(wp)}</div>;
-        })}
+        {profiles !== undefined &&
+          waterpoints.map((wp, i) => (
+            <div key={i}>{loading ? <></> : popupData(wp)}</div>
+          ))}
       </MapContainer>
       <Legend />
     </>

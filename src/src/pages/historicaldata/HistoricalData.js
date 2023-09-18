@@ -15,6 +15,7 @@ function HistoricalData() {
   const [wpData, setWpData] = useState();
   const [climatology, setClimatology] = useState();
   const [loading, setLoading] = useState(true);
+  const [year, setYear] = useState();
   const [depthData, setDepthData] = useState([]);
   const [climaDepthData, setClimaDepthData] = useState([]);
   const [scaledDepthData, setScaledDepthData] = useState([]);
@@ -50,7 +51,7 @@ function HistoricalData() {
     setScaledDepthData(filterData(wpData, "scaled_depth", selectedYear));
     setRain(filterData(wpData, "rain", selectedYear));
     setEvap(filterData(wpData, "evp", selectedYear));
-
+    setYear(selectedYear);
     const result = typeNames.map((type) => {
       return climatology.climatology.flatMap((monthData) => {
         return monthData.map((dayData) => {
@@ -196,6 +197,10 @@ function HistoricalData() {
                   <h6 className="mt-2">{t("data.depth")}</h6>
                   {depthData?.length > 0 && (
                     <>
+                      <p>
+                        {t("data.depth-description")} {wp.name},{" "}
+                        {t("data.depth-year")} {year}.
+                      </p>
                       <ReactApexChart
                         options={{
                           chart: {
@@ -222,6 +227,10 @@ function HistoricalData() {
                   <div id="line-scaled">
                     {scaledDepthData?.length > 0 && (
                       <>
+                        <p>
+                          {t("data.scaled-description")} {wp.name},{" "}
+                          {t("data.depth-year")} {year}.
+                        </p>
                         <ReactApexChart
                           options={{
                             chart: {
@@ -250,6 +259,10 @@ function HistoricalData() {
                   <h6>{t("data.rain")}</h6>
                   {rain?.length > 0 && (
                     <>
+                      <p>
+                        {t("data.rain-description")} {wp.name},{" "}
+                        {t("data.depth-year")} {year}.
+                      </p>
                       <ReactApexChart
                         options={{
                           chart: {
@@ -275,6 +288,10 @@ function HistoricalData() {
                   <h6>{t("data.evap")}</h6>
                   {evap?.length > 0 && (
                     <>
+                      <p>
+                        {t("data.evap-description")} {wp.name},{" "}
+                        {t("data.depth-year")} {year}.
+                      </p>
                       <ReactApexChart
                         options={{
                           chart: {

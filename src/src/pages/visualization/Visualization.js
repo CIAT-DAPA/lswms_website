@@ -158,7 +158,7 @@ function Visualization() {
                     placement="left"
                     overlay={
                       <Tooltip id={`tooltip-left`}>
-                        Depth means ........
+                        {t("monitoring.depth-info")}
                       </Tooltip>
                     }
                   >
@@ -176,7 +176,7 @@ function Visualization() {
                     placement="left"
                     overlay={
                       <Tooltip id={`tooltip-left`}>
-                        Median Depth means ........
+                        {t("monitoring.median-depth-info")}
                       </Tooltip>
                     }
                   >

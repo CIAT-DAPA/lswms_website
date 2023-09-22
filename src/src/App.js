@@ -8,6 +8,7 @@ import Footer from "./components/footer/Footer";
 import HistoricalData from "./pages/historicaldata/HistoricalData";
 import NotFound from "./pages/notFound/NotFound";
 import Userprofile from "./pages/userprofile/Userprofile";
+import AboutUs from "./pages/aboutUs/AboutUs";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/waterprofile" element={<Waterprofile />} />
         <Route path="/historicaldata" element={<HistoricalData />} />
         <Route path="/userprofile" element={<Userprofile />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

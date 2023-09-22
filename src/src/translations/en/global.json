@@ -93,5 +93,9 @@
   "notFound": {
     "title": "Oops! Looks like you've ventured into uncharted territory.",
     "description": "The page you are looking for could not be found on our digital map."
+  },
+  "aboutUs":{
+    "title":"About Us",
+    "description":"In progress...."
   }
 }

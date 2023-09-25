@@ -1,0 +1,10 @@
+.searchBar {
+  position: absolute;
+  top: 70px;
+  z-index: 1000;
+  left: 20px;
+}
+
+.form-control:not(:focus) + .button-search {
+    display: none;
+}

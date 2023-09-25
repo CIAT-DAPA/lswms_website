@@ -31,6 +31,7 @@ import ItemText from "../../components/itemText/ItemText";
 import ItemTable from "../../components/itemTable/ItemTable";
 import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
+import Configuration from "../../conf/Configuration";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -204,10 +205,8 @@ function Waterprofile() {
                       <LayersControl position="topright">
                         <LayersControl.Overlay name="Show watershred" checked>
                           <WMSTileLayer
-                            url={
-                              "http://localhost:8080/geoserver/wpProject/wms"
-                            }
-                            layers={`wpProject:Burra`}
+                            url={Configuration.get_url_geoserver()}
+                            layers={`wp:Burra`}
                             format="image/png"
                             transparent={true}
                             zIndex={1000}

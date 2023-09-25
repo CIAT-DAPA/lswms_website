@@ -1,7 +1,11 @@
 const WP_API_BASE = "http://127.0.0.1:5001/api/v1";
 const ACLIMATE_API = "https://webapi.aclimate.org/api";
+const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
 
 class Configuration {
+  get_url_geoserver() {
+    return GEOSERVER_URL;
+  }
   get_url_api_base() {
     return WP_API_BASE;
   }

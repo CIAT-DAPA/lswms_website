@@ -1,5 +1,5 @@
 table {
-  width: 300px;
+  width: 350px;
 }
 
 .td-name {
@@ -24,7 +24,7 @@ table {
 
 .td-red {
   background: rgba(255, 0, 0, 0.2);
-  color: #5C0000;
+  color: #5c0000;
 }
 
 .td-gray {
@@ -37,7 +37,7 @@ table {
 }
 
 .leaflet-popup-content {
-  min-width: 300px;
+  min-width: 350px;
 }
 
 .leaflet-popup-content-wrapper {

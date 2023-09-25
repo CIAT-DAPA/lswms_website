@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import L from "leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  ZoomControl,
+} from "react-leaflet";
+import L, { Icon } from "leaflet";
 import profileIcon from "../../assets/svg/profile.svg";
 import dataIcon from "../../assets/svg/data.svg";
 import { Link } from "react-router-dom";
@@ -12,9 +18,12 @@ import {
   OverlayTrigger,
   Tooltip,
   Badge,
+  Button,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
+import SearchBar from "../../components/searchBar/SearchBar";
+import { IconWalk } from "@tabler/icons-react";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -227,10 +236,21 @@ function Visualization() {
               <img src={dataIcon} alt="" className="me-3" />
               {t("monitoring.data")}
             </Link>
+            <Button
+              className="btn-svg"
+              variant="outline-primary"
+              onClick={() => getRoute(wp.lat, wp.lon)}
+            >
+              <IconWalk style={{ position: "inherit" }} />
+            </Button>
           </div>
         </Popup>
       </Marker>
     );
+  };
+
+  const getRoute = (lat, lon) => {
+    console.log(lat, lon);
   };
 
   return (
@@ -255,7 +275,9 @@ function Visualization() {
           width: "100%",
         }}
         className="map-monitoring"
+        zoomControl={false}
       >
+        <ZoomControl position="topright" />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -265,6 +287,7 @@ function Visualization() {
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
+      {/* <SearchBar /> */}
       <Legend />
     </>
   );

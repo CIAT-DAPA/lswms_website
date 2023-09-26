@@ -55,8 +55,7 @@ function Visualization() {
   const [loading, setLoading] = useState(true);
   const [path, setPath] = useState();
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
+  const [wpActual, setWpActual] = useState();
 
   useEffect(() => {
     //Call to API to get waterpoints
@@ -246,8 +245,7 @@ function Visualization() {
               variant="outline-primary"
               onClick={() => {
                 setShowSearchBar(true);
-                setLatitude(wp.lat);
-                setLongitude(wp.lon);
+                setWpActual(wp);
               }}
             >
               <IconWalk style={{ position: "inherit" }} />
@@ -306,7 +304,7 @@ function Visualization() {
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
-      {/* {showSearchBar && <SearchBar latitude={latitude} longitude={longitude} />} */}
+      {showSearchBar && <SearchBar wp={wpActual} />}
       <Legend />
     </>
   );

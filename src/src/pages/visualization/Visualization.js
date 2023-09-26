@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
+  Polyline,
   Popup,
   TileLayer,
   ZoomControl,
@@ -52,6 +53,10 @@ function Visualization() {
   const [profiles, setProfiles] = useState();
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [path, setPath] = useState();
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
 
   useEffect(() => {
     //Call to API to get waterpoints
@@ -236,22 +241,35 @@ function Visualization() {
               <img src={dataIcon} alt="" className="me-3" />
               {t("monitoring.data")}
             </Link>
-            <Button
+            {/* <Button
               className="btn-svg"
               variant="outline-primary"
-              onClick={() => getRoute(wp.lat, wp.lon)}
+              onClick={() => {
+                setShowSearchBar(true);
+                setLatitude(wp.lat);
+                setLongitude(wp.lon);
+              }}
             >
               <IconWalk style={{ position: "inherit" }} />
-            </Button>
+            </Button> */}
           </div>
         </Popup>
       </Marker>
     );
   };
 
-  const getRoute = (lat, lon) => {
-    console.log(lat, lon);
-  };
+  // const getRoute = (final_lat, final_lon) => {
+  //   Services.get_route(final_lat, final_lon)
+  //     .then((response) => {
+  //       const pathInvertidas = response.paths[0].points.coordinates.map(
+  //         (coordinates) => [coordinates[1], coordinates[0]]
+  //       );
+  //       setPath(pathInvertidas);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   return (
     <>
@@ -282,12 +300,13 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {path && <Polyline color="lime" positions={path} weight={5} />}
         {profiles !== undefined &&
           waterpoints.map((wp, i) => (
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
-      {/* <SearchBar /> */}
+      {/* {showSearchBar && <SearchBar latitude={latitude} longitude={longitude} />} */}
       <Legend />
     </>
   );

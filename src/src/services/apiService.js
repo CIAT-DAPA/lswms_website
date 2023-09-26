@@ -78,6 +78,34 @@ class Services {
         console.log(error);
       });
   }
+
+  get_route(final_lat, final_lon) {
+    const url = `${Configuration.get_url_graphhopper()}/route?key=${
+      process.env.REACT_APP_KEY_GRAPHHOPER
+    }&point=4.895098486334106,38.09982605501463&point=${final_lat},${final_lon}&points_encoded=false&profile=foot`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  get_geocoding(text) {
+    const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
+      process.env.REACT_APP_KEY_GRAPHHOPER
+    }&q=${text}`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }
 
 export default new Services();

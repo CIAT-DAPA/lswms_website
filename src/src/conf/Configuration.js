@@ -1,6 +1,7 @@
 const WP_API_BASE = "http://127.0.0.1:5001/api/v1";
 const ACLIMATE_API = "https://webapi.aclimate.org/api";
 const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
+const GRAPHHOPPER_URL = "https://graphhopper.com/api/1"
 
 class Configuration {
   get_url_geoserver() {
@@ -11,6 +12,9 @@ class Configuration {
   }
   get_url_api_aclimate() {
     return ACLIMATE_API;
+  }
+  get_url_graphhopper() {
+    return GRAPHHOPPER_URL;
   }
   set_format_administrative_level(adm_level) {
     if (adm_level === "adm1") {

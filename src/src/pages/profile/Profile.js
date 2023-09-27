@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
 import downloadImg from "../../assets/svg/download.svg";
@@ -35,9 +35,7 @@ import Configuration from "../../conf/Configuration";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
-  const location = useLocation();
-  const idWater = location.state?.idWater;
-  console.log(location.state)
+  const { idWater } = useParams();
   const [wp, setWp] = useState();
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);

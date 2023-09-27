@@ -17,8 +17,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/monitoring" element={<Monitoring />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile/:idWater" element={<Profile />} />
+        <Route path="/dashboard/:idWp" element={<Dashboard />} />
         <Route path="/userprofile" element={<Userprofile />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="*" element={<NotFound />} />

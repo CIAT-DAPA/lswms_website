@@ -224,8 +224,7 @@ function Visualization() {
               className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
                 hasContentsWp ? "" : "disabled "
               }`}
-              to="/profile"
-              state={{ idWater: wp.id }}
+              to={`/profile/${wp.id}`}
             >
               <img src={profileIcon} alt="" className="me-3" />
               {t("monitoring.profile")}
@@ -234,13 +233,12 @@ function Visualization() {
             <Link
               type="button"
               className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-              to="/dashboard"
-              state={{ idWater: wp.id }}
+              to={`/dashboard/${wp.id}`}
             >
               <img src={dataIcon} alt="" className="me-3" />
               {t("monitoring.data")}
             </Link>
-            <Button
+            {/* <Button
               className="btn-svg"
               variant="outline-primary"
               onClick={() => {
@@ -250,7 +248,7 @@ function Visualization() {
               }}
             >
               <IconWalk style={{ position: "inherit" }} />
-            </Button>
+            </Button> */}
           </div>
         </Popup>
       </Marker>

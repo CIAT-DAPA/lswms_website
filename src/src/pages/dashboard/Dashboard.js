@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
@@ -26,8 +26,7 @@ function HistoricalData() {
   const [aclimateId, setAclimateId] = useState(null);
   const [subseasonal, setSubseasonal] = useState([]);
   const [seasonal, setSeasonal] = useState([]);
-  const location = useLocation();
-  const idWp = location.state?.idWater;
+  const { idWp } = useParams();
   let uniqueYears;
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
 

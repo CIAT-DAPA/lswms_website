@@ -14,7 +14,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import "./Waterprofile.css";
+import "./Profile.css";
 import {
   LayersControl,
   MapContainer,
@@ -37,6 +37,7 @@ function Waterprofile() {
   const [t, i18n] = useTranslation("global");
   const location = useLocation();
   const idWater = location.state?.idWater;
+  console.log(location.state)
   const [wp, setWp] = useState();
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);
@@ -393,7 +394,7 @@ function Waterprofile() {
               <Link
                 type="button"
                 className="btn btn-primary me-5 rounded-4"
-                to="/historicaldata"
+                to="/dashboard"
                 state={{ idWater: wp.id }}
               >
                 <img src={dataIcon} alt="" className="me-3" />

@@ -11,7 +11,7 @@ import L, { Icon } from "leaflet";
 import profileIcon from "../../assets/svg/profile.svg";
 import dataIcon from "../../assets/svg/data.svg";
 import { Link } from "react-router-dom";
-import "./Visualization.css";
+import "./Monitoring.css";
 import Services from "../../services/apiService";
 import {
   Modal,
@@ -224,7 +224,7 @@ function Visualization() {
               className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
                 hasContentsWp ? "" : "disabled "
               }`}
-              to="/waterprofile"
+              to="/profile"
               state={{ idWater: wp.id }}
             >
               <img src={profileIcon} alt="" className="me-3" />
@@ -234,40 +234,41 @@ function Visualization() {
             <Link
               type="button"
               className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-              to="/historicaldata"
+              to="/dashboard"
               state={{ idWater: wp.id }}
             >
               <img src={dataIcon} alt="" className="me-3" />
               {t("monitoring.data")}
             </Link>
-            {/* <Button
+            <Button
               className="btn-svg"
               variant="outline-primary"
               onClick={() => {
                 setShowSearchBar(true);
                 setWpActual(wp);
+                getRoute(wp.lat, wp.lon);
               }}
             >
               <IconWalk style={{ position: "inherit" }} />
-            </Button> */}
+            </Button>
           </div>
         </Popup>
       </Marker>
     );
   };
 
-  // const getRoute = (final_lat, final_lon) => {
-  //   Services.get_route(final_lat, final_lon)
-  //     .then((response) => {
-  //       const pathInvertidas = response.paths[0].points.coordinates.map(
-  //         (coordinates) => [coordinates[1], coordinates[0]]
-  //       );
-  //       setPath(pathInvertidas);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const getRoute = (final_lat, final_lon) => {
+    Services.get_route(final_lat, final_lon)
+      .then((response) => {
+        const pathInvertidas = response.paths[0].points.coordinates.map(
+          (coordinates) => [coordinates[1], coordinates[0]]
+        );
+        setPath(pathInvertidas);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>

@@ -5,7 +5,7 @@ import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
-import "./HistoricalData.css";
+import "./Dashboard.css";
 import { useTranslation } from "react-i18next";
 
 function HistoricalData() {

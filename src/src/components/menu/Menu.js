@@ -6,6 +6,7 @@ import "./Menu.css";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import logo from "../../assets/img/logo.png";
 
 function Menu() {
   const [t, i18n] = useTranslation("global");
@@ -41,17 +42,25 @@ function Menu() {
       }}
       className="position-fixed w-100 menu p-0"
     >
-      <Container className="py-2">
-        <Link className="navbar-brand d-flex align-items-center " to="/">
+      <Container className="py-1">
+        <Navbar.Brand href="/" className="d-flex align-items-center gap-3">
+          <img
+            alt=""
+            src={logo}
+            width="35"
+            height="35"
+            className="d-inline-block align-top"
+          />{" "}
           Waterpoint Monitoring System
-        </Link>
+        </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse
           className="justify-content-end"
           id="responsive-navbar-nav"
         >
           <Nav className="justify-content-end">
-            <Link className="nav-link text-black" to="/visualization">
+            <Link className="nav-link text-black" to="/monitoring">
               {t("menu.monitoring")}
             </Link>
             <Link className="nav-link text-black" to="/aboutus">

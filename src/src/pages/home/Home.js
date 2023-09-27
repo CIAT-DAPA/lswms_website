@@ -27,7 +27,7 @@ function Home() {
                 type="button"
                 className="btn btn-primary text-white rounded-5 py-2 px-4 fw-medium"
                 style={{ width: "fit-content" }}
-                to="/visualization"
+                to="/monitoring"
               >
                 {t("home.button")}
               </Link>

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Waterpoint monitoring system",
+  "name": "Empowering vital decisions to make the right water management choices for you.",
   "icons": [
     {
       "src": "favicon.ico",

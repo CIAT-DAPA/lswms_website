@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
-import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
+import {
+  Col,
+  Container,
+  Modal,
+  Row,
+  Spinner,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
@@ -162,183 +170,197 @@ function HistoricalData() {
                 <h1 className="pt-2 mb-0">{wp.name}</h1>
                 <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
               </Row>
-              <Row className="mt-3 ">
-                <Col className="">
-                  <h5>{t("data.monitored")}</h5>
-                  <p>{t("data.monitored-d")}</p>
-                  <p className="mb-0">{t("data.year")}</p>
-                  <select
-                    className="form-select w-50"
-                    aria-label="Default select example"
-                    onChange={handleFilterYear}
-                  >
-                    {uniqueYears.map((year) => (
-                      <option value={year} key={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-12 col-lg-6">
-                  <h6 className="mt-2">{t("data.depth")}</h6>
-                  {depthData?.length > 0 && (
-                    <>
-                      <p>
-                        {t("data.depth-description")} {wp.name},{" "}
-                        {t("data.depth-year")} {year}.
-                      </p>
-                      <ReactApexChart
-                        options={{
-                          chart: {
-                            id: "depth",
-                            group: "historical",
-                          },
-                          xaxis: {
-                            type: "datetime",
-                          },
-                        }}
-                        series={[
-                          { name: "Depth", data: depthData },
-                          { name: "Climatology", data: climaDepthData },
-                        ]}
-                        type="line"
-                        height={350}
-                      />
-                      <p className="label-y">m</p>
-                    </>
-                  )}
-                </Col>
-                <Col className="col-12 col-lg-6">
-                  <h6 className="mt-2">{t("data.scaled")}</h6>
-                  <div id="line-scaled">
-                    {scaledDepthData?.length > 0 && (
-                      <>
-                        <p>
-                          {t("data.scaled-description")} {wp.name},{" "}
-                          {t("data.depth-year")} {year}.
-                        </p>
-                        <ReactApexChart
-                          options={{
-                            chart: {
-                              id: "scaled",
-                              group: "historical",
-                            },
-                            xaxis: {
-                              type: "datetime",
-                            },
-                          }}
-                          series={[
-                            { name: "Scaled depth", data: scaledDepthData },
-                            { name: "Climatology", data: climaScaledDepthData },
-                          ]}
-                          type="line"
-                          height={350}
-                        />
-                        <p className="label-y">%</p>
-                      </>
-                    )}
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-12 col-lg-6">
-                  <h6>{t("data.rain")}</h6>
-                  {rain?.length > 0 && (
-                    <>
-                      <p>
-                        {t("data.rain-description")} {wp.name},{" "}
-                        {t("data.depth-year")} {year}.
-                      </p>
-                      <ReactApexChart
-                        options={{
-                          chart: {
-                            id: "rain",
-                            group: "historical",
-                          },
-                          xaxis: {
-                            type: "datetime",
-                          },
-                        }}
-                        series={[
-                          { name: "Rain", data: rain },
-                          { name: "Climatology", data: climaRain },
-                        ]}
-                        type="line"
-                        height={350}
-                      />
-                      <p className="label-y">mm</p>
-                    </>
-                  )}
-                </Col>
-                <Col className="col-12 col-lg-6">
-                  <h6>{t("data.evap")}</h6>
-                  {evap?.length > 0 && (
-                    <>
-                      <p>
-                        {t("data.evap-description")} {wp.name},{" "}
-                        {t("data.depth-year")} {year}.
-                      </p>
-                      <ReactApexChart
-                        options={{
-                          chart: {
-                            id: "evap",
-                            group: "historical",
-                          },
-                          xaxis: {
-                            type: "datetime",
-                          },
-                        }}
-                        series={[
-                          { name: "Evaporation", data: evap },
-                          { name: "Climatology", data: climaEvap },
-                        ]}
-                        type="line"
-                        height={350}
-                      />
-                      <p className="label-y">mm</p>
-                    </>
-                  )}
-                </Col>
-              </Row>
-              <Row className="mt-3">
-                <h5>{t("data.subseasonal")}</h5>
-                <p>{t("data.subseasonal-d")}</p>
-                {subseasonal &&
-                  subseasonal.map((week, i) => {
-                    return (
-                      <Col className="col-12 col-md-3">
-                        <ForecastItem
-                          year={week.year}
-                          month={week.month}
-                          week={week.week}
-                          probabilities={week.probabilities}
-                          name={wp.name}
-                          key={i}
-                        />
-                      </Col>
-                    );
-                  })}
-              </Row>
-              <Row className="mt-3 justify-content-around ">
-                <h5>{t("data.seasonal")}</h5>
-                <p>{t("data.seasonal-d")}</p>
-                {seasonal &&
-                  seasonal.map((month, i) => {
-                    return (
-                      <Col className="col-12 col-md-4">
-                        <ForecastItem
-                          year={month.year}
-                          month={month.month}
-                          probabilities={month.probabilities}
-                          name={wp.name}
-                          key={i}
-                        />
-                      </Col>
-                    );
-                  })}
-              </Row>
+              <Tabs
+                defaultActiveKey="Monitored-data"
+                id="fill-tab-example"
+                className="mb-3 bg-body-tertiary "
+                fill
+              >
+                <Tab eventKey="Monitored-data" title="Monitored data">
+                  <Row className="mt-3 ">
+                    <Col className="">
+                      <h5>{t("data.monitored")}</h5>
+                      <p>{t("data.monitored-d")}</p>
+                      <p className="mb-0">{t("data.year")}</p>
+                      <select
+                        className="form-select w-50"
+                        aria-label="Default select example"
+                        onChange={handleFilterYear}
+                      >
+                        {uniqueYears.map((year) => (
+                          <option value={year} key={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="col-12 col-lg-6">
+                      <h6 className="mt-2">{t("data.depth")}</h6>
+                      {depthData?.length > 0 && (
+                        <>
+                          <p>
+                            {t("data.depth-description")} {wp.name},{" "}
+                            {t("data.depth-year")} {year}.
+                          </p>
+                          <ReactApexChart
+                            options={{
+                              chart: {
+                                id: "depth",
+                                group: "historical",
+                              },
+                              xaxis: {
+                                type: "datetime",
+                              },
+                            }}
+                            series={[
+                              { name: "Depth", data: depthData },
+                              { name: "Climatology", data: climaDepthData },
+                            ]}
+                            type="line"
+                            height={350}
+                          />
+                          <p className="label-y">m</p>
+                        </>
+                      )}
+                    </Col>
+                    <Col className="col-12 col-lg-6">
+                      <h6 className="mt-2">{t("data.scaled")}</h6>
+                      <div id="line-scaled">
+                        {scaledDepthData?.length > 0 && (
+                          <>
+                            <p>
+                              {t("data.scaled-description")} {wp.name},{" "}
+                              {t("data.depth-year")} {year}.
+                            </p>
+                            <ReactApexChart
+                              options={{
+                                chart: {
+                                  id: "scaled",
+                                  group: "historical",
+                                },
+                                xaxis: {
+                                  type: "datetime",
+                                },
+                              }}
+                              series={[
+                                { name: "Scaled depth", data: scaledDepthData },
+                                {
+                                  name: "Climatology",
+                                  data: climaScaledDepthData,
+                                },
+                              ]}
+                              type="line"
+                              height={350}
+                            />
+                            <p className="label-y">%</p>
+                          </>
+                        )}
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="col-12 col-lg-6">
+                      <h6>{t("data.rain")}</h6>
+                      {rain?.length > 0 && (
+                        <>
+                          <p>
+                            {t("data.rain-description")} {wp.name},{" "}
+                            {t("data.depth-year")} {year}.
+                          </p>
+                          <ReactApexChart
+                            options={{
+                              chart: {
+                                id: "rain",
+                                group: "historical",
+                              },
+                              xaxis: {
+                                type: "datetime",
+                              },
+                            }}
+                            series={[
+                              { name: "Rain", data: rain },
+                              { name: "Climatology", data: climaRain },
+                            ]}
+                            type="line"
+                            height={350}
+                          />
+                          <p className="label-y">mm</p>
+                        </>
+                      )}
+                    </Col>
+                    <Col className="col-12 col-lg-6">
+                      <h6>{t("data.evap")}</h6>
+                      {evap?.length > 0 && (
+                        <>
+                          <p>
+                            {t("data.evap-description")} {wp.name},{" "}
+                            {t("data.depth-year")} {year}.
+                          </p>
+                          <ReactApexChart
+                            options={{
+                              chart: {
+                                id: "evap",
+                                group: "historical",
+                              },
+                              xaxis: {
+                                type: "datetime",
+                              },
+                            }}
+                            series={[
+                              { name: "Evaporation", data: evap },
+                              { name: "Climatology", data: climaEvap },
+                            ]}
+                            type="line"
+                            height={350}
+                          />
+                          <p className="label-y">mm</p>
+                        </>
+                      )}
+                    </Col>
+                  </Row>
+                </Tab>
+                <Tab eventKey="Forecast" title="Forecast">
+                  <Row className="mt-3">
+                    <h5>{t("data.subseasonal")}</h5>
+                    <p>{t("data.subseasonal-d")}</p>
+                    {subseasonal &&
+                      subseasonal.map((week, i) => {
+                        return (
+                          <Col className="col-12 col-md-3">
+                            <ForecastItem
+                              year={week.year}
+                              month={week.month}
+                              week={week.week}
+                              probabilities={week.probabilities}
+                              name={wp.name}
+                              key={i}
+                            />
+                          </Col>
+                        );
+                      })}
+                  </Row>
+                  <Row className="mt-3 justify-content-around ">
+                    <h5>{t("data.seasonal")}</h5>
+                    <p>{t("data.seasonal-d")}</p>
+                    {seasonal &&
+                      seasonal.map((month, i) => {
+                        return (
+                          <Col className="col-12 col-md-4">
+                            <ForecastItem
+                              year={month.year}
+                              month={month.month}
+                              probabilities={month.probabilities}
+                              name={wp.name}
+                              key={i}
+                            />
+                          </Col>
+                        );
+                      })}
+                  </Row>
+                </Tab>
+              </Tabs>
             </Container>
           </>
         )

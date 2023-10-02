@@ -4,3 +4,7 @@
   z-index: 1000;
   left: 20px;
 }
+
+.legend > div {
+  cursor: pointer;
+}

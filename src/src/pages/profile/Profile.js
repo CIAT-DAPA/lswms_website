@@ -392,8 +392,7 @@ function Waterprofile() {
               <Link
                 type="button"
                 className="btn btn-primary me-5 rounded-4"
-                to="/dashboard"
-                state={{ idWater: wp.id }}
+                to={`/dashboard/${wp.id}`}
               >
                 <img src={dataIcon} alt="" className="me-3" />
                 {t("monitoring.data")}

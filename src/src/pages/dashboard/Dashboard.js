@@ -321,7 +321,7 @@ function HistoricalData() {
                     </Col>
                   </Row>
                 </Tab>
-                <Tab eventKey="Forecast" title="Forecast">
+                <Tab eventKey="Climate Forecast" title="Climate Forecast">
                   <Row className="mt-3">
                     <h5>{t("data.subseasonal")}</h5>
                     <p>{t("data.subseasonal-d")}</p>

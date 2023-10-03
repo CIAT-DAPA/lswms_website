@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   MapContainer,
   Marker,
@@ -25,6 +25,7 @@ import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../components/searchBar/SearchBar";
 import { IconWalk } from "@tabler/icons-react";
+import SearchRoute from "../../components/searchRoute/SearchRoute";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -49,6 +50,7 @@ function Visualization() {
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
   });
+  const mapRef = useRef(null);
   const [waterpoints, setWaterpoints] = useState([]);
   const [profiles, setProfiles] = useState();
   const [monitored, setMonitored] = useState([]);
@@ -282,6 +284,11 @@ function Visualization() {
       });
   };
 
+  const handleWpClick = (wp) => {
+    const map = mapRef.current;
+    map.flyTo([wp.lat, wp.lon], 12);
+  };
+
   return (
     <>
       <Modal
@@ -305,6 +312,7 @@ function Visualization() {
         }}
         className="map-monitoring"
         zoomControl={false}
+        ref={mapRef}
       >
         <ZoomControl position="topright" />
         <TileLayer
@@ -317,7 +325,8 @@ function Visualization() {
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
-      {showSearchBar && <SearchBar wp={wpActual} />}
+      <SearchBar waterpoints={waterpoints} onWpClick={handleWpClick} />
+      {showSearchBar && <SearchRoute wp={wpActual} />}
       <Legend setFilter={setFilter} filter={filter} />
     </>
   );

@@ -88,6 +88,9 @@ function Menu() {
                 <Dropdown.Item onClick={() => handleLanguageChange("am")}>
                   AM
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleLanguageChange("or")}>
+                  OR
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Nav>

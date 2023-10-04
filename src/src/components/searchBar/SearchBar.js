@@ -1,8 +1,10 @@
 import { IconSearch, IconDropletFilled } from "@tabler/icons-react";
 import React, { useState } from "react";
 import "./SearchBar.css";
+import { useTranslation } from "react-i18next";
 
 function SearchBar({ waterpoints, onWpClick }) {
+  const [t, i18n] = useTranslation("global");
   const [filterText, setFilterText] = useState("");
   const [selectedWaterpoint, setSelectedWaterpoint] = useState("");
 
@@ -33,7 +35,7 @@ function SearchBar({ waterpoints, onWpClick }) {
           type="search"
           className="form-control form-control-sm border-0 text-input"
           aria-label="Search waterpoint"
-          placeholder="Search waterpoint"
+          placeholder={t("monitoring.placeholder-search")}
           onChange={handleFilterChange}
           value={selectedWaterpoint || filterText}
           autoFocus

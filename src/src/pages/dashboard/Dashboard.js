@@ -176,7 +176,7 @@ function HistoricalData() {
                 className="mb-3 bg-body-tertiary "
                 fill
               >
-                <Tab eventKey="Monitored-data" title="Monitored data">
+                <Tab eventKey="Monitored-data" title={t("data.monitored")}>
                   <Row className="mt-3 ">
                     <Col className="">
                       <h5>{t("data.monitored")}</h5>
@@ -215,8 +215,11 @@ function HistoricalData() {
                               },
                             }}
                             series={[
-                              { name: "Depth", data: depthData },
-                              { name: "Climatology", data: climaDepthData },
+                              { name: t("data.depth"), data: depthData },
+                              {
+                                name: t("data.climatology"),
+                                data: climaDepthData,
+                              },
                             ]}
                             type="line"
                             height={350}
@@ -245,9 +248,12 @@ function HistoricalData() {
                                 },
                               }}
                               series={[
-                                { name: "Scaled depth", data: scaledDepthData },
                                 {
-                                  name: "Climatology",
+                                  name: t("data.scaled"),
+                                  data: scaledDepthData,
+                                },
+                                {
+                                  name: t("data.climatology"),
                                   data: climaScaledDepthData,
                                 },
                               ]}
@@ -280,8 +286,8 @@ function HistoricalData() {
                               },
                             }}
                             series={[
-                              { name: "Rain", data: rain },
-                              { name: "Climatology", data: climaRain },
+                              { name: t("data.rain"), data: rain },
+                              { name: t("data.climatology"), data: climaRain },
                             ]}
                             type="line"
                             height={350}
@@ -309,8 +315,8 @@ function HistoricalData() {
                               },
                             }}
                             series={[
-                              { name: "Evaporation", data: evap },
-                              { name: "Climatology", data: climaEvap },
+                              { name: t("data.evap"), data: evap },
+                              { name: t("data.climatology"), data: climaEvap },
                             ]}
                             type="line"
                             height={350}
@@ -321,7 +327,7 @@ function HistoricalData() {
                     </Col>
                   </Row>
                 </Tab>
-                <Tab eventKey="Climate Forecast" title="Climate Forecast">
+                <Tab eventKey="Climate Forecast" title={t("data.climate")}>
                   <Row className="mt-3">
                     <h5>{t("data.subseasonal")}</h5>
                     <p>{t("data.subseasonal-d")}</p>

@@ -47,7 +47,7 @@
     "profile": "Profile",
     "data": "Dashboard",
     "loading": "Getting the waterpoints...",
-    "placeholder-search": "Search by waterpoint"
+    "placeholder-search": "Search by waterpoint, woreda, zone or region"
   },
   "profile": {
     "area": "Area",
@@ -103,7 +103,7 @@
   "aboutUs": {
     "title": "About Us",
     "description": "The Alliance of Biodiversity International and International Center for Tropical Agriculture (ABC) delivers research-based solutions that harness agricultural biodiversity and sustainably transform food systems to improve people's lives in a climate crisis.",
-    "about-project": "About the project ",
+    "about-project": "About the project",
     "about-project-d": "ABC in collaboration with Ministry of Agriculture (MoA), Ethiopian Agricultural Research Institute (EIAR), Oromia Agricultural Research Institute (OARI), United States Geological Survey (USGS), along with other key national and local institutions has been implementing a Livestock Water Monitoring and Risk Management System (LWMRMS) Project through financial support from the Bill and Melinda Gates Foundation (BMGF). The project aims at providing a near real-time surface water information that are gender and socially inclusive in pastoral areas of Ethiopia. The project developed a digital LWMRMS platform to improve pastoralists’ drought management and build climate resilience of climate-induced risks, and thereby improve their livelihoods. The digital LWMRMS is an innovative web-platform for providing near real time water availability and level information. The platform can also be used to disseminate information to support livestock producers and/or organizations to make climate-resilient decisions. The platform will contribute to build climate resilient agriculture in Ethiopia by providing a near time water availability and level information for effective decision making and action.",
     "product": "Products and services",
     "product-d": "Digital LWMRMS provide surface water information for agricultural producers who lack access to the information in pastoral areas of Ethiopia. The platform provide a near real time information on 1) geographical location of water-points, including geospatial information and characteristics of water-points; 2) rainfall; 3) evaporation; 4) scaled water depth; and 5) condition of the water-points. This web-platform is also used to disseminate the information daily in near-real time base. Pastoral and agro-pastoral communities are highly vulnerable to climate variability and changes. Thus, this digital platform is a first in its kind and key decision support tools to manage climate risk and enhance pastoralists’ and agro-pastoralists’ adaptive capacity. The platform can also be used by governmental organizations, non-governmental organizations, and other stakeholders for early warning and decision making."

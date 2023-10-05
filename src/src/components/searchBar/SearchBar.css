@@ -28,3 +28,11 @@
 .text-input:focus{
   box-shadow: none !important; 
 }
+
+.hint-div{
+  cursor: pointer;
+}
+
+.hint-div:hover{
+  background-color: rgb(235, 235, 235);
+}

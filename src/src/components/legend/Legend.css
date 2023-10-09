@@ -5,6 +5,10 @@
   left: 20px;
 }
 
+.legend > div > p {
+  user-select: none;
+}
+
 .legend > div {
   cursor: pointer;
 }

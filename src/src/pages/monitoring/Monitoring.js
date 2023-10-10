@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   MapContainer,
   Marker,
@@ -25,6 +25,7 @@ import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../components/searchBar/SearchBar";
 import { IconWalk } from "@tabler/icons-react";
+import SearchRoute from "../../components/searchRoute/SearchRoute";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -49,6 +50,7 @@ function Visualization() {
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
   });
+  const mapRef = useRef(null);
   const [waterpoints, setWaterpoints] = useState([]);
   const [profiles, setProfiles] = useState();
   const [monitored, setMonitored] = useState([]);
@@ -56,6 +58,13 @@ function Visualization() {
   const [path, setPath] = useState();
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [wpActual, setWpActual] = useState();
+  const [filter, setFilter] = useState({
+    green: true,
+    yellow: true,
+    brown: true,
+    red: true,
+    gray: true,
+  });
 
   useEffect(() => {
     //Call to API to get waterpoints
@@ -113,8 +122,15 @@ function Visualization() {
     // If there is wp content or not
     const profileWp = profiles.find((profile) => profile.id === wp.id);
     const hasContentsWp = profileWp.contents_wp.length > 0;
-
-    return (
+    return !filter.green &&
+      scaledDepthValue.value > 100 ? null : !filter.yellow &&
+      scaledDepthValue.value <= 100 &&
+      scaledDepthValue.value >= 50 ? null : !filter.brown &&
+      scaledDepthValue.value < 50 &&
+      scaledDepthValue.value >= 3 ? null : !filter.red &&
+      scaledDepthValue.value < 3 &&
+      scaledDepthValue.value > 0 ? null : !filter.gray &&
+      scaledDepthValue.value == 0 ? null : (
       <Marker
         position={[wp.lat, wp.lon]}
         icon={
@@ -268,6 +284,11 @@ function Visualization() {
       });
   };
 
+  const handleWpClick = (wp) => {
+    const map = mapRef.current;
+    map.flyTo([wp.lat, wp.lon], 12);
+  };
+
   return (
     <>
       <Modal
@@ -291,6 +312,7 @@ function Visualization() {
         }}
         className="map-monitoring"
         zoomControl={false}
+        ref={mapRef}
       >
         <ZoomControl position="topright" />
         <TileLayer
@@ -303,8 +325,9 @@ function Visualization() {
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
-      {showSearchBar && <SearchBar wp={wpActual} />}
-      <Legend />
+      <SearchBar waterpoints={waterpoints} onWpClick={handleWpClick} />
+      {showSearchBar && <SearchRoute wp={wpActual} />}
+      <Legend setFilter={setFilter} filter={filter} />
     </>
   );
 }

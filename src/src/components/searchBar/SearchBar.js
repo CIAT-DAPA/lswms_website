@@ -1,68 +1,69 @@
+import { IconSearch, IconDropletFilled } from "@tabler/icons-react";
 import React, { useState } from "react";
 import "./SearchBar.css";
-import { Button, FormControl, InputGroup } from "react-bootstrap";
-import {
-  IconSearch,
-  IconMapPin,
-  IconCurrentLocation,
-  IconCircle,
-  IconDotsVertical,
-} from "@tabler/icons-react";
-import Services from "../../services/apiService";
+import { useTranslation } from "react-i18next";
 
-function SearchBar({ wp }) {
-  const [hits, setHits] = useState();
+function SearchBar({ waterpoints, onWpClick }) {
+  const [t, i18n] = useTranslation("global");
+  const [filterText, setFilterText] = useState("");
+  const [selectedWaterpoint, setSelectedWaterpoint] = useState("");
+
+  const handleFilterChange = (e) => {
+    setFilterText(e.target.value);
+    setSelectedWaterpoint("");
+  };
+
+  const filteredWaterpoints = waterpoints.filter((wp) =>
+    [wp.name, wp.adm1, wp.adm2, wp.adm3].some((prop) =>
+      prop.toLowerCase().includes(filterText.toLowerCase())
+    )
+  );
+
+  const handleWpClick = (wp) => {
+    onWpClick(wp);
+    setSelectedWaterpoint(`${wp.name}, ${wp.adm3}, ${wp.adm2}, ${wp.adm1}`);
+  };
 
   return (
-    <div className="searchBar bg-white px-2 py-3 rounded-4">
-      <div>
-        <InputGroup className="mb-4 align-items-center ">
-          <IconCircle
-            size={20}
-            className="me-1"
-            style={{ marginLeft: "0.8px" }}
-          />
-          <IconDotsVertical style={{ position: "absolute", bottom: "-20px" }} />
-          <FormControl
-            placeholder="Search for a location"
-            aria-label="Search for a location"
-            aria-describedby="basic-addon2"
-            size="sm"
-            onChange={(event) => {
-              Services.get_geocoding(event.target.value)
-                .then((response) => {
-                  setHits(response.hits);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }}
-          />
-          <Button
-            variant="outline-primary"
-            id="button-addon1"
-            className="button-search"
-            size="sm"
-          >
-            <IconSearch />
-          </Button>
-        </InputGroup>
-        <InputGroup className="align-items-center border-bottom mb-2 pb-2">
-          <IconMapPin className="me-1" />
-          <p className="mb-0 small">{`Waterpoint ${wp.name}`}</p>
-        </InputGroup>
+    <div className="bar-hints">
+      <div
+        className={`search-bar d-flex px-3 py-2 bg-white align-items-center border-bottom ${
+          filterText === "" || filterText.length < 3
+            ? "search-bar-unfocused "
+            : "search-bar-focused "
+        }`}
+      >
+        <input
+          type="search"
+          className="form-control form-control-sm border-0 text-input"
+          style={{ width: "350px" }}
+          aria-label="Search waterpoint"
+          placeholder={t("monitoring.placeholder-search")}
+          onChange={handleFilterChange}
+          value={selectedWaterpoint || filterText}
+          autoFocus
+        />
+        <IconSearch />
       </div>
-      <div>
-        {hits &&
-          hits.map((e, i) => {
+      {filterText !== "" && filterText.length >= 3 && (
+        <div className="bg-white waterpoints-search px-3 py-1">
+          {filteredWaterpoints.map((wp, i) => {
             return (
-              <div className="mb-2 small" key={i}>
-                <IconMapPin color="#4d4d4d" />
-                {e.name}
+              <div
+                className="py-1 small hint-div text-capitalize "
+                key={i}
+                onClick={() => handleWpClick(wp)}
+              >
+                <IconDropletFilled
+                  className="me-3"
+                  style={{ color: "#6ecdeb" }}
+                />
+                {`${wp.name.toLowerCase()}, ${wp.adm3.toLowerCase()}, ${wp.adm2.toLowerCase()}, ${wp.adm1.toLowerCase()}`}
               </div>
             );
           })}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

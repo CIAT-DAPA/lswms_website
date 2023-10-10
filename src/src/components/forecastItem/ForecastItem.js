@@ -7,10 +7,10 @@ function ForecastItem({ year, month, week, probabilities, name }) {
   const [t, i18n] = useTranslation("global");
   ChartJS.register(ArcElement, Tooltip, Legend);
   const data = {
-    labels: ["Lower", "Normal", "Upper"],
+    labels: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],
     datasets: [
       {
-        label: "Precipitation probabilities",
+        label: t("data.precipitation"),
         data: [
           probabilities[0].lower * 100,
           probabilities[0].normal * 100,

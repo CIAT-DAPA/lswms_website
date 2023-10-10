@@ -20,7 +20,7 @@ function Footer() {
               href="mailto: J.R.Villegas@cgiar.org"
               className="text-decoration-none text-white"
             >
-              Email: S.alemayehu@cgiar.org{" "}
+              {t("footer.email")}: S.alemayehu@cgiar.org{" "}
             </a>
           </Col>
 

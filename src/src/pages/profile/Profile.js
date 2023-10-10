@@ -42,7 +42,24 @@ function Waterprofile() {
   const [wsTable, setWsTable] = useState(null);
 
   useEffect(() => {
-    //Call to API to get waterpoint
+    fetchWaterProfile();
+  }, []);
+
+  useEffect(() => {
+    console.log("cambio");
+    fetchWaterProfile();
+  }, [i18n.language]);
+
+  useEffect(() => {
+    if (wp) {
+      const { adm1, adm2, adm3, watershed_name } = wp;
+      setWsTable({ adm1, adm2, adm3, watershed_name });
+    }
+  }, [wp]);
+
+  // Función para obtener los datos del perfil del agua
+  const fetchWaterProfile = () => {
+    setLoading(true);
     Services.get_waterpoints_profile(idWater, i18n.language)
       .then((response) => {
         setWp(response[0]);
@@ -54,15 +71,27 @@ function Waterprofile() {
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
-  }, []);
+  };
 
-  useEffect(() => {
-    if (wp) {
-      const { adm1, adm2, adm3, watershed_name } = wp;
-      setWsTable({ adm1, adm2, adm3, watershed_name });
+  const getPopulationByLanguage = () => {
+    if (i18n.language === "en") {
+      return wp.contents_wp
+        .find((e) => e.title === "general")
+        ?.values?.find((e) => "population" in e)?.population;
+    } else if (i18n.language === "am") {
+      return wp.contents_wp
+        .find((e) => e.title === "አጠቃላይ")
+        ?.values?.find((e) => "የህዝብ ብዛት" in e)?.["የህዝብ ብዛት"];
+    } else if (i18n.language === "or") {
+      return wp.contents_wp
+        .find((e) => e.title === "Waliigala")
+        ?.values?.find((e) => "Baay'ina uummataa" in e)?.["Baay'ina uummataa"];
+    } else {
+      return "";
     }
-  }, [wp]);
+  };
 
   // Generate the pdf based on a component
   const downloadProfileAsPdf = async () => {
@@ -136,12 +165,7 @@ function Waterprofile() {
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
                         {t("profile.area")}: {wp.area} ha <br />{" "}
-                        {t("profile.population")}:{" "}
-                        {
-                          wp.contents_wp
-                            .find((e) => e.title === "general")
-                            .values.find((e) => "population" in e)["population"]
-                        }{" "}
+                        {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
@@ -165,12 +189,7 @@ function Waterprofile() {
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
                         {t("profile.area")}: {wp.area} ha <br />{" "}
-                        {t("profile.population")}:{" "}
-                        {
-                          wp.contents_wp
-                            .find((e) => e.title === "general")
-                            .values.find((e) => "population" in e)["population"]
-                        }{" "}
+                        {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">

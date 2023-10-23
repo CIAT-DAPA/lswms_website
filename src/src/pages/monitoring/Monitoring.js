@@ -52,7 +52,9 @@ function Visualization() {
   });
   const mapRef = useRef(null);
   const [waterpoints, setWaterpoints] = useState([]);
-  const [profiles, setProfiles] = useState();
+  const [profilesEn, setProfilesEn] = useState();
+  const [profilesAm, setProfilesAm] = useState();
+  const [profilesOr, setProfilesOr] = useState();
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
   const [path, setPath] = useState();
@@ -65,6 +67,10 @@ function Visualization() {
     red: true,
     gray: true,
   });
+  const [showWarning, setShowWarning] = useState(false);
+
+  const handleClose = () => setShowWarning(false);
+  const handleShow = () => setShowWarning(true);
 
   useEffect(() => {
     //Call to API to get waterpoints
@@ -85,7 +91,23 @@ function Visualization() {
       const idString = idsWp.join(",");
       Services.get_waterpoints_profile(idString, "en")
         .then((response) => {
-          setProfiles(response);
+          setProfilesEn(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      Services.get_waterpoints_profile(idString, "am")
+        .then((response) => {
+          setProfilesAm(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      Services.get_waterpoints_profile(idString, "or")
+        .then((response) => {
+          setProfilesOr(response);
         })
         .catch((error) => {
           console.log(error);
@@ -120,7 +142,25 @@ function Visualization() {
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;
     // If there is wp content or not
-    const profileWp = profiles.find((profile) => profile.id === wp.id);
+    const currentLanguage = i18n.language;
+    const currentProfile =
+      (currentLanguage === "en" &&
+        profilesEn.find((profile) => profile.id === wp.id)) ||
+      (currentLanguage === "am" &&
+        profilesAm.find((profile) => profile.id === wp.id)) ||
+      (currentLanguage === "or" &&
+        profilesOr.find((profile) => profile.id === wp.id));
+
+    const defaultProfile =
+      profilesEn.find((profile) => profile.id === wp.id) ||
+      profilesAm.find((profile) => profile.id === wp.id) ||
+      profilesOr.find((profile) => profile.id === wp.id);
+
+    const profileWp =
+      currentProfile && currentProfile.contents_wp.length > 0
+        ? currentProfile
+        : defaultProfile;
+
     const hasContentsWp = profileWp.contents_wp.length > 0;
     return !filter.green &&
       scaledDepthValue.value > 100 ? null : !filter.yellow &&
@@ -131,130 +171,189 @@ function Visualization() {
       scaledDepthValue.value < 3 &&
       scaledDepthValue.value > 0 ? null : !filter.gray &&
       scaledDepthValue.value == 0 ? null : (
-      <Marker
-        position={[wp.lat, wp.lon]}
-        icon={
-          scaledDepthValue.value > 100
-            ? greenIcon
-            : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
-            ? yellowIcon
-            : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
-            ? brownIcon
-            : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
-            ? redIcon
-            : grayIcon
-        }
-        key={wp.id}
-      >
-        <Popup>
-          <div>
-            <h6 className="fw-medium mb-0">
-              {t("monitoring.waterpoint")} {wp.name} {t("monitoring.overview")}
-            </h6>
-            <p className="mt-0 mb-2">
-              {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
-            </p>
-          </div>
-          <table className="fs-6">
-            <tbody>
-              <tr>
-                <td>{t("monitoring.name")}:</td>
-                <td>
-                  <div
-                    className={`td-name text-center fw-medium ${
-                      scaledDepthValue.value > 100
-                        ? "td-green"
-                        : scaledDepthValue.value <= 100 &&
-                          scaledDepthValue.value >= 50
-                        ? "td-yellow"
-                        : scaledDepthValue.value < 50 &&
-                          scaledDepthValue.value >= 3
-                        ? "td-brown"
-                        : scaledDepthValue.value < 3 &&
-                          scaledDepthValue.value > 0
-                        ? "td-red"
-                        : "td-gray"
-                    }`}
-                  >
-                    {wp.name}
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  {" "}
-                  <OverlayTrigger
-                    placement="left"
-                    overlay={
-                      <Tooltip id={`tooltip-left`}>
-                        {t("monitoring.depth-info")}
-                      </Tooltip>
-                    }
-                  >
-                    <Badge pill className="fw-semibold me-1">
-                      i
-                    </Badge>
-                  </OverlayTrigger>
-                  {t("monitoring.depth")} (%) :
-                </td>
-                <td>{depthValue.value}</td>
-              </tr>
-              <tr>
-                <td>
-                  <OverlayTrigger
-                    placement="left"
-                    overlay={
-                      <Tooltip id={`tooltip-left`}>
-                        {t("monitoring.median-depth-info")}
-                      </Tooltip>
-                    }
-                  >
-                    <Badge pill className="fw-semibold me-1">
-                      i
-                    </Badge>
-                  </OverlayTrigger>
-                  {t("monitoring.median-depth")} (%):
-                </td>
-                <td>{scaledDepthValue.value}</td>
-              </tr>
-              <tr>
-                <td>{t("monitoring.area")} (ha):</td>
-                <td>{wp.area}</td>
-              </tr>
-            </tbody>
-          </table>
-          <p className="fs-6 mt-0">
-            {scaledDepthValue.value > 100
-              ? t("monitoring.good-m")
-              : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
-              ? t("monitoring.watch-m")
-              : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
-              ? t("monitoring.alert-m")
-              : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
-              ? t("monitoring.near-m")
-              : t("monitoring.seasonally-m")}
-          </p>
-          <div className="d-flex justify-content-between mt-3">
-            <Link
-              type="button"
-              className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                hasContentsWp ? "" : "disabled "
-              }`}
-              to={`/profile/${wp.id}`}
-            >
-              <img src={profileIcon} alt="" className="me-3" />
-              {t("monitoring.profile")}
-            </Link>
+      <>
+        {hasContentsWp && (
+          <Modal
+            show={showWarning}
+            onHide={handleClose}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Warning</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              The waterpoint profile is not available in the language
+              selected, only in{" "}
+              <strong>
+                {profileWp.contents_wp[0].language == "en"
+                  ? "English"
+                  : profileWp.contents_wp[0].language == "am"
+                  ? "Amharic"
+                  : "Afaan Oromo"}
+              </strong>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Link
+                type="button"
+                className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
+                  hasContentsWp ? "" : "disabled "
+                }`}
+                to={`/profile/${wp.id}/${profileWp.contents_wp[0].language}`}
+              >
+                Continue to waterpoint profile
+              </Link>
+            </Modal.Footer>
+          </Modal>
+        )}
 
-            <Link
-              type="button"
-              className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-              to={`/dashboard/${wp.id}`}
-            >
-              <img src={dataIcon} alt="" className="me-3" />
-              {t("monitoring.data")}
-            </Link>
-            {/* <Button
+        <Marker
+          position={[wp.lat, wp.lon]}
+          icon={
+            scaledDepthValue.value > 100
+              ? greenIcon
+              : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
+              ? yellowIcon
+              : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
+              ? brownIcon
+              : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
+              ? redIcon
+              : grayIcon
+          }
+          key={wp.id}
+        >
+          <Popup>
+            <div>
+              <h6
+                className="fw-medium mb-0"
+                onClick={() => {
+                  console.log(
+                    `Profile Language: ${profileWp.contents_wp[0].language}`
+                  );
+                }}
+              >
+                {t("monitoring.waterpoint")} {wp.name}{" "}
+                {t("monitoring.overview")}
+              </h6>
+              <p className="mt-0 mb-2">
+                {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
+              </p>
+            </div>
+            <table className="fs-6">
+              <tbody>
+                <tr>
+                  <td>{t("monitoring.name")}:</td>
+                  <td>
+                    <div
+                      className={`td-name text-center fw-medium ${
+                        scaledDepthValue.value > 100
+                          ? "td-green"
+                          : scaledDepthValue.value <= 100 &&
+                            scaledDepthValue.value >= 50
+                          ? "td-yellow"
+                          : scaledDepthValue.value < 50 &&
+                            scaledDepthValue.value >= 3
+                          ? "td-brown"
+                          : scaledDepthValue.value < 3 &&
+                            scaledDepthValue.value > 0
+                          ? "td-red"
+                          : "td-gray"
+                      }`}
+                    >
+                      {wp.name}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {" "}
+                    <OverlayTrigger
+                      placement="left"
+                      overlay={
+                        <Tooltip id={`tooltip-left`}>
+                          {t("monitoring.depth-info")}
+                        </Tooltip>
+                      }
+                    >
+                      <Badge pill className="fw-semibold me-1">
+                        i
+                      </Badge>
+                    </OverlayTrigger>
+                    {t("monitoring.depth")} (%) :
+                  </td>
+                  <td>{depthValue.value}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <OverlayTrigger
+                      placement="left"
+                      overlay={
+                        <Tooltip id={`tooltip-left`}>
+                          {t("monitoring.median-depth-info")}
+                        </Tooltip>
+                      }
+                    >
+                      <Badge pill className="fw-semibold me-1">
+                        i
+                      </Badge>
+                    </OverlayTrigger>
+                    {t("monitoring.median-depth")} (%):
+                  </td>
+                  <td>{scaledDepthValue.value}</td>
+                </tr>
+                <tr>
+                  <td>{t("monitoring.area")} (ha):</td>
+                  <td>{wp.area}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="fs-6 mt-0">
+              {scaledDepthValue.value > 100
+                ? t("monitoring.good-m")
+                : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
+                ? t("monitoring.watch-m")
+                : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
+                ? t("monitoring.alert-m")
+                : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
+                ? t("monitoring.near-m")
+                : t("monitoring.seasonally-m")}
+            </p>
+            <div className="d-flex justify-content-between mt-3">
+              {hasContentsWp &&
+              profileWp.contents_wp[0].language !== currentLanguage ? (
+                <Button
+                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
+                    hasContentsWp ? "" : "disabled "
+                  }`}
+                  onClick={() => setShowWarning(true)}
+                >
+                  <img src={profileIcon} alt="" className="me-3" />
+                  {t("monitoring.profile")}
+                </Button>
+              ) : (
+                <Link
+                  type="button"
+                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
+                    hasContentsWp ? "" : "disabled "
+                  }`}
+                  to={`/profile/${wp.id}`}
+                >
+                  <img src={profileIcon} alt="" className="me-3" />
+                  {t("monitoring.profile")}
+                </Link>
+              )}
+
+              <Link
+                type="button"
+                className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
+                to={`/dashboard/${wp.id}`}
+              >
+                <img src={dataIcon} alt="" className="me-3" />
+                {t("monitoring.data")}
+              </Link>
+              {/* <Button
               className="btn-svg"
               variant="outline-primary"
               onClick={() => {
@@ -265,9 +364,10 @@ function Visualization() {
             >
               <IconWalk style={{ position: "inherit" }} />
             </Button> */}
-          </div>
-        </Popup>
-      </Marker>
+            </div>
+          </Popup>
+        </Marker>
+      </>
     );
   };
 
@@ -320,7 +420,9 @@ function Visualization() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {path && <Polyline color="lime" positions={path} weight={5} />}
-        {profiles !== undefined &&
+        {profilesEn !== undefined &&
+          profilesAm !== undefined &&
+          profilesOr !== undefined &&
           waterpoints.map((wp, i) => (
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}

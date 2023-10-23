@@ -13,6 +13,8 @@ import {
   Modal,
   Row,
   Spinner,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
 import "./Profile.css";
 import {
@@ -35,18 +37,22 @@ import Configuration from "../../conf/Configuration";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
-  const { idWater } = useParams();
+  const { idWater, language } = useParams();
   const [wp, setWp] = useState();
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     fetchWaterProfile();
   }, []);
 
   useEffect(() => {
-    console.log("cambio");
+    if (language && i18n.language !== language) {
+      setShow(true);
+    }
+
     fetchWaterProfile();
   }, [i18n.language]);
 
@@ -59,8 +65,9 @@ function Waterprofile() {
 
   // Función para obtener los datos del perfil del agua
   const fetchWaterProfile = () => {
+    const languageProfile = language || i18n.language;
     setLoading(true);
-    Services.get_waterpoints_profile(idWater, i18n.language)
+    Services.get_waterpoints_profile(idWater, languageProfile)
       .then((response) => {
         setWp(response[0]);
         setWpProfile({
@@ -149,6 +156,32 @@ function Waterprofile() {
           </Modal>
         ) : (
           <>
+            <ToastContainer
+              className="p-3 position-fixed "
+              position="bottom-end"
+              style={{ zIndex: 1 }}
+            >
+              <Toast
+                show={show}
+                onClose={() => setShow(false)}
+                autohide
+                delay={3000}
+              >
+                <Toast.Header>
+                  <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                  />
+                  <strong className="me-auto">Warning</strong>
+                </Toast.Header>
+                <Toast.Body>
+                  The waterpoint profile is not available in the language
+                  selected
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
             <div id="profile">
               <div className="profile-bg">
                 <Carousel

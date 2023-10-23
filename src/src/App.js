@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/monitoring" element={<Monitoring />} />
-        <Route path="/profile/:idWater" element={<Profile />} />
+        <Route path="/profile/:idWater/:language?" element={<Profile />} />
         <Route path="/dashboard/:idWp" element={<Dashboard />} />
         <Route path="/userprofile" element={<Userprofile />} />
         <Route path="/aboutus" element={<AboutUs />} />

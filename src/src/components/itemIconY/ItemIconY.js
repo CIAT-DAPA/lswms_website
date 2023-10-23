@@ -16,7 +16,7 @@ import Circle from "../circle/Circle";
 function ItemIconY(props) {
   const totalSum = props.item.values.reduce((acc, item) => {
     const value = Object.values(item)[0];
-    return acc + value;
+    return acc + parseInt(value);
   }, 0);
   return (
     <div className="col mt-3">
@@ -52,7 +52,7 @@ function ItemIconY(props) {
                     ? agricultureImg
                     : unknowImg
                 }
-                percentage={(value * 100) / totalSum}
+                percentage={(parseInt(value) * 100) / totalSum}
                 color={props.item.title}
                 gender={key}
               />

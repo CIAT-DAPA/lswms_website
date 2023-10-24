@@ -70,10 +70,12 @@ function Waterprofile() {
     Services.get_waterpoints_profile(idWater, languageProfile)
       .then((response) => {
         setWp(response[0]);
-        setWpProfile({
-          contents_wp: response[0].contents_wp,
-          contents_ws: response[0].contents_ws,
-        });
+        if (response[0].contents_wp.length > 0)
+          setWpProfile({
+            contents_wp: response[0].contents_wp,
+            contents_ws: response[0].contents_ws,
+          });
+        else setShow(true);
         setLoading(false);
       })
       .catch((error) => {
@@ -167,17 +169,19 @@ function Waterprofile() {
                 autohide
                 delay={3000}
               >
-                <Toast.Header>
+                <Toast.Header className="bg-warning-subtle">
                   <img
                     src="holder.js/20x20?text=%20"
                     className="rounded me-2"
                     alt=""
                   />
-                  <strong className="me-auto">Warning</strong>
+                  <strong className="me-auto">
+                    {t("profile.toast-title") || "Warning"}
+                  </strong>
                 </Toast.Header>
                 <Toast.Body>
-                  The waterpoint profile is not available in the language
-                  selected
+                  {t("profile.toast-body") ||
+                    "The waterpoint profile is not available in the language selected"}
                 </Toast.Body>
               </Toast>
             </ToastContainer>

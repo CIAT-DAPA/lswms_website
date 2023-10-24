@@ -47,7 +47,11 @@
     "profile": "Profile",
     "data": "Dashboard",
     "loading": "Getting the waterpoints...",
-    "placeholder-search": "Search by waterpoint, woreda, zone or region"
+    "placeholder-search": "Search by waterpoint, woreda, zone or region",
+    "modal-title": "Warning",
+    "modal-body": "The waterpoint profile is not available in the language selected, only in",
+    "modal-close": "Close",
+    "modal-continue": "Continue to waterpoint profile"
   },
   "profile": {
     "area": "Area",
@@ -60,7 +64,9 @@
     "waterpoint-d": "Waterpoint Description",
     "loading": "Getting the waterpoint profile...",
     "notFound-title": "No water ID was provided.",
-    "notFound-d": "Try to get the profile from the waterpoints display."
+    "notFound-d": "Try to get the profile from the waterpoints display.",
+    "toast-title": "Warning",
+    "toast-body": "The waterpoint profile is not available in the language selected"
   },
   "data": {
     "monitored": "Monitored data",

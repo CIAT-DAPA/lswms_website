@@ -173,17 +173,15 @@ function Visualization() {
       scaledDepthValue.value == 0 ? null : (
       <>
         {hasContentsWp && (
-          <Modal
-            show={showWarning}
-            onHide={handleClose}
-            centered
-          >
+          <Modal show={showWarning} onHide={handleClose} centered>
             <Modal.Header closeButton>
-              <Modal.Title>Warning</Modal.Title>
+              <Modal.Title>
+                {t("monitoring.modal-title") || "Warning"}
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              The waterpoint profile is not available in the language
-              selected, only in{" "}
+              {t("monitoring.modal-body") ||
+                "The waterpoint profile is not available in the language selected, only in"}{" "}
               <strong>
                 {profileWp.contents_wp[0].language == "en"
                   ? "English"
@@ -194,7 +192,7 @@ function Visualization() {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                {t("monitoring.modal-close") || "Close"}
               </Button>
               <Link
                 type="button"
@@ -203,7 +201,8 @@ function Visualization() {
                 }`}
                 to={`/profile/${wp.id}/${profileWp.contents_wp[0].language}`}
               >
-                Continue to waterpoint profile
+                {t("monitoring.modal-continue") ||
+                  "Continue to waterpoint profile"}
               </Link>
             </Modal.Footer>
           </Modal>

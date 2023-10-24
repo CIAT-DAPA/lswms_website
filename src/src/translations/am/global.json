@@ -47,7 +47,11 @@
     "profile": "መገለጫ",
     "data": "የመረጃ ሰሌዳ",
     "loading": "የኩሬዎች  መረጃ ማግኘት",
-    "placeholder-search": "በውሃ ነጥብ፣ በወረዳ፣ በዞን ወይም በክልል ይፈልጉ"
+    "placeholder-search": "በውሃ ነጥብ፣ በወረዳ፣ በዞን ወይም በክልል ይፈልጉ",
+    "modal-title": "ማስጠንቀቂያ",
+    "modal-body": "የኩሬው መገለጫ በተመረጠው ቋንቋ አይገኝም, ውስጥ ብቻ ነው የሚገኘው",
+    "modal-close": "",
+    "modal-continue": "ወደ ኩሬ መገለጫ ይቀጥሉ"
   },
   "profile": {
     "area": "ስፈት",
@@ -60,7 +64,9 @@
     "waterpoint-d": "የውሃ ነጥብ መግለጫ",
     "loading": "የውሃ ነጥብ መገለጫን ያግኙ",
     "notFound-title": "የውሃ ነጥብ መለያ አልተሰጠም።",
-    "notFound-d": "መገለጫውን ከውሃ ነጥቦች ማሳያ ለማግኘት ይሞክሩ"
+    "notFound-d": "መገለጫውን ከውሃ ነጥቦች ማሳያ ለማግኘት ይሞክሩ",
+    "toast-title":"ማስጠንቀቂያ",
+    "toast-body":"የኩሬው መገለጫ በተመረጠው ቋንቋ አይገኝም"
   },
   "data": {
     "monitored": "ክትትል የተደረገበት ዳታ",

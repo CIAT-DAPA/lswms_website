@@ -1,0 +1,24 @@
+.profile-bg {
+  /* background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.486) 0%,
+      rgba(201, 201, 201, 0.06) 100%
+    ),
+    url("../../assets/img/profilebg.jpg");
+  background-size: cover;
+  background-position: top; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-profile {
+  position: absolute;
+  z-index: 1000;
+  top: 40vh;
+}
+
+.img-carousel{
+  height: 55vh;
+  object-fit: cover;
+}

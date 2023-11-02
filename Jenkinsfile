@@ -30,7 +30,6 @@ pipeline {
             steps {
                 script {
                     sshCommand remote: remote, command: """
-                        cd /var/www/waterpointsFrontend/
                         ls
                     """
                 }

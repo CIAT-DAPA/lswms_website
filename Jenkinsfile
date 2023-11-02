@@ -39,8 +39,7 @@ pipeline {
             steps {
                 script {
                     sshCommand remote: remote, command: """
-                        cd /var/www/waterpointsFrontend/
-                        pm2 serve frontwaterpoints 3000 --name waterpoints --spa
+                        pm2 delete waterpoints
                     """
                 }
             }

@@ -6,10 +6,10 @@ pipeline {
     agent any
  
     environment {
-        user = credentials('fertalizer_user')
-        host = credentials('fertalizer_host')
-        name = credentials('fertalizer_name')
-        ssh_key = credentials('fertalizer_devops')
+        user = credentials('wp_user')
+        host = credentials('wp_host')
+        name = credentials('wp_name')
+        ssh_key = credentials('wp_devops')
     }
  
     stages {

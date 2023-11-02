@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     sshCommand remote: remote, command: """
-                        sudo ls
+                        la
                     """
                 }
             }

@@ -31,7 +31,7 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: """
                         cd /var/www/waterpointsFrontend/
-                        mkdir pruebaWeb
+                        ls
                     """
                 }
             }

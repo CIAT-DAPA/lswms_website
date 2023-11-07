@@ -29,12 +29,13 @@ pipeline {
                 script {
                     
                     sshCommand remote: remote, command: '''
-                        # Verify and create the api_SPCAT folder if it does not exist
-                        pm2 stop static-page-server-3000
+                        # Verify and create the wepapp_folder folder if it does not exist
+    
                         cd /var/www/waterpointsFrontend
-                        if [ ! -d webapp_SPCAT ]; then
-                            mkdir ./webapp_SPCAT
-                            cd ./webapp_SPCAT
+                        rm -rf webapp_SPCAT
+                        if [ ! -d webapp_WP ]; then
+                            mkdir ./webapp_WP
+                            cd ./webapp_WP
                         fi
                     '''
                     
@@ -48,7 +49,7 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Download the latest release f1081419031Nasa@rom GitHub
-                        cd ./webapp_SPCAT
+                        cd ./webapp_WP
                         rm -rf build
                         if [ ! -d build ]; then
                             mkdir ./build
@@ -67,7 +68,7 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Verify and control PM2 service
-                        cd ./webapp_SPCAT
+                        cd ./webapp_WP
                         if pm2 show waterpointsfrontend >/dev/null 2>&1; then
                             echo "stopping PM2 process..."
                             pm2 stop waterpointsfrontend

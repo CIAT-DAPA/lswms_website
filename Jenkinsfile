@@ -47,49 +47,10 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Download the latest release f1081419031Nasa@rom GitHub
-                        cd ./webapp_SPCAT
-                        rm -rf build
-                        if [ ! -d build ]; then
-                            mkdir ./build
-                        fi
-                        curl -LOk https://github.com/CIAT-DAPA/lswms_website/releases/latest/download/releaseFront.zip
-                        unzip releaseFront.zip -d build
-                        rm -r  releaseFront.zip
+                        pm2 stop static-page-server-3000                        
                     '''
                 }
             }
         }
 
 
-        stage('Verify and control PM2 service') {
-            steps {
-                script {
-                    sshCommand remote: remote, command: '''
-                        # Verify and control PM2 service
-                        cd ./webapp_SPCAT
-                        if pm2 show static-page-server-3000 >/dev/null 2>&1; then
-                            echo "stopping PM2 process..."
-                            pm2 stop static-page-server-3000
-                        fi
-                        echo "starting PM2 process..."
-                        pm2 serve build 3000 --spa
-                    '''
-                }
-            }
-        }
-    }
-
-    post {
-        failure {
-            script {
-                echo 'fail :c'
-            }
-        }
-
-        success {
-            script {
-                echo 'everything went very well!!'
-            }
-        }
-    }
-}

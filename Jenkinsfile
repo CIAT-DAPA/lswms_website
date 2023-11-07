@@ -30,6 +30,7 @@ pipeline {
                     
                     sshCommand remote: remote, command: '''
                         # Verify and create the api_SPCAT folder if it does not exist
+                        pm2 stop static-page-server-3000
                         cd /var/www/waterpointsFrontend
                         if [ ! -d webapp_SPCAT ]; then
                             mkdir ./webapp_SPCAT
@@ -47,10 +48,49 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Download the latest release f1081419031Nasa@rom GitHub
-                        pm2 stop static-page-server-3000                        
+                        cd ./webapp_SPCAT
+                        rm -rf build
+                        if [ ! -d build ]; then
+                            mkdir ./build
+                        fi
+                        curl -LOk https://github.com/CIAT-DAPA/lswms_website/releases/latest/download/releaseFront.zip
+                        unzip releaseFront.zip -d build
+                        rm -r  releaseFront.zip
                     '''
                 }
             }
         }
 
 
+        stage('Verify and control PM2 service') {
+            steps {
+                script {
+                    sshCommand remote: remote, command: '''
+                        # Verify and control PM2 service
+                        cd ./webapp_SPCAT
+                        if pm2 show waterpointsfrontend >/dev/null 2>&1; then
+                            echo "stopping PM2 process..."
+                            pm2 stop waterpointsfrontend
+                        fi
+                        echo "starting PM2 process..."
+                        pm2 serve build 5000 --name waterpointsfrontend --spa
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            script {
+                echo 'fail :c'
+            }
+        }
+
+        success {
+            script {
+                echo 'everything went very well!!'
+            }
+        }
+    }
+}

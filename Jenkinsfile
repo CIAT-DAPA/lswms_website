@@ -1,25 +1,27 @@
 // Define an empty map for storing remote SSH connection parameters
 def remote = [:]
-
+ 
 pipeline {
+ 
     agent any
-
+ 
     environment {
-        server_name = credentials('name_spcat')
-        server_host = credentials('host_spcat')
-        ssh_key = credentials('spcat_key')
+        host = credentials('wp_host')
+        name = credentials('wp_name')
+        ssh_key = credentials('wp_devops')
     }
-
+ 
     stages {
-        stage('Connection to AWS server') {
+        stage('Ssh to connect Bigelow server') {
             steps {
                 script {
                     // Set up remote SSH connection parameters
                     remote.allowAnyHosts = true
                     remote.identityFile = ssh_key
                     remote.user = ssh_key_USR
-                    remote.name = server_name
-                    remote.host = server_host
+                    remote.name = name
+                    remote.host = host
+                   
                 }
             }
         }
@@ -32,16 +34,27 @@ pipeline {
                 }
             }
         }
+        stage('Init Front End') {
+            steps {
+                script {
+                    sshCommand remote: remote, command: """
+                        pm2 delete waterpoints
+                    """
+                }
+            }
+        }
+    }
+   
     post {
         failure {
             script {
                 echo 'fail'
             }
         }
-
+ 
         success {
             script {
-                echo 'everything went very well!!'
+                echo 'frontend in production!!'
             }
         }
     }

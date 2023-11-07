@@ -6,7 +6,6 @@ pipeline {
     agent any
  
     environment {
-        user = credentials('wp_user')
         host = credentials('wp_host')
         name = credentials('wp_name')
         ssh_key = credentials('wp_devops')

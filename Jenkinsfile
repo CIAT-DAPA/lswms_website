@@ -48,6 +48,7 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Download the latest release f1081419031Nasa@rom GitHub
+                        ls
                         cd ./webapp_WP
                         rm -rf build
                         if [ ! -d build ]; then

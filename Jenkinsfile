@@ -32,7 +32,6 @@ pipeline {
                         # Verify and create the wepapp_folder folder if it does not exist
     
                         cd /var/www/waterpointsFrontend
-                        rm -rf webapp_SPCAT
                         if [ ! -d webapp_WP ]; then
                             mkdir ./webapp_WP
                             cd ./webapp_WP

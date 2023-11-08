@@ -48,12 +48,9 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Download the latest release f1081419031Nasa@rom GitHub
-                        ls
+                        cd /var/www/waterpointsFrontend
                         cd ./webapp_WP
                         rm -rf build
-                        if [ ! -d build ]; then
-                            mkdir ./build
-                        fi
                         curl -LOk https://github.com/CIAT-DAPA/lswms_website/releases/latest/download/releaseFront.zip
                         unzip releaseFront.zip -d build
                         rm -r  releaseFront.zip
@@ -68,6 +65,7 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Verify and control PM2 service
+                        cd /var/www/waterpointsFrontend
                         cd ./webapp_WP
                         if pm2 show waterpointsfrontend >/dev/null 2>&1; then
                             echo "stopping PM2 process..."

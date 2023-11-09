@@ -20,11 +20,14 @@ import {
   Tooltip,
   Badge,
   Button,
+  ButtonGroup,
+  DropdownButton,
+  Dropdown,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../components/searchBar/SearchBar";
-import { IconWalk } from "@tabler/icons-react";
+import { IconBike, IconCar, IconRoad, IconWalk } from "@tabler/icons-react";
 import SearchRoute from "../../components/searchRoute/SearchRoute";
 
 function Visualization() {
@@ -58,8 +61,6 @@ function Visualization() {
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
   const [path, setPath] = useState();
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [wpActual, setWpActual] = useState();
   const [filter, setFilter] = useState({
     green: true,
     yellow: true,
@@ -225,14 +226,7 @@ function Visualization() {
         >
           <Popup>
             <div>
-              <h6
-                className="fw-medium mb-0"
-                onClick={() => {
-                  console.log(
-                    `Profile Language: ${profileWp.contents_wp[0].language}`
-                  );
-                }}
-              >
+              <h6 className="fw-medium mb-0">
                 {t("monitoring.waterpoint")} {wp.name}{" "}
                 {t("monitoring.overview")}
               </h6>
@@ -334,7 +328,7 @@ function Visualization() {
               ) : (
                 <Link
                   type="button"
-                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
+                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
                     hasContentsWp ? "" : "disabled "
                   }`}
                   to={`/profile/${wp.id}`}
@@ -346,23 +340,90 @@ function Visualization() {
 
               <Link
                 type="button"
-                className="btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
                 to={`/dashboard/${wp.id}`}
               >
                 <img src={dataIcon} alt="" className="me-3" />
                 {t("monitoring.data")}
               </Link>
+              <Dropdown variant="sm">
+                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
+                  <IconRoad style={{ position: "inherit" }} />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    as="button"
+                    onClick={() => {
+                      getRoute(wp.lat, wp.lon, "foot");
+                    }}
+                  >
+                    <IconWalk
+                      style={{ position: "inherit" }}
+                      className="me-2"
+                    />
+                    Walking
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    as="button"
+                    onClick={() => {
+                      getRoute(wp.lat, wp.lon, "car");
+                    }}
+                  >
+                    <IconCar style={{ position: "inherit" }} className="me-2" />
+                    By car
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    as="button"
+                    onClick={() => {
+                      getRoute(wp.lat, wp.lon, "bike");
+                    }}
+                  >
+                    <IconBike
+                      style={{ position: "inherit" }}
+                      className="me-2"
+                    />
+                    By bike
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* <ButtonGroup size="sm" aria-label="Basic example">
+                <Button
+                  variant="outline-primary"
+                  className="rounded-start-3"
+                  onClick={() => {
+                    getRoute(wp.lat, wp.lon, "foot");
+                  }}
+                >
+                  <IconWalk style={{ position: "inherit" }} />
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    getRoute(wp.lat, wp.lon, "car");
+                  }}
+                >
+                  <IconCar style={{ position: "inherit" }} />
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  className="rounded-end-3"
+                  onClick={() => {
+                    getRoute(wp.lat, wp.lon, "bike");
+                  }}
+                >
+                  <IconBike style={{ position: "inherit" }} />
+                </Button>
+              </ButtonGroup> */}
               {/* <Button
-              className="btn-svg"
-              variant="outline-primary"
-              onClick={() => {
-                setShowSearchBar(true);
-                setWpActual(wp);
-                getRoute(wp.lat, wp.lon);
-              }}
-            >
-              <IconWalk style={{ position: "inherit" }} />
-            </Button> */}
+                className="btn-svg"
+                variant="outline-primary"
+                onClick={() => {
+                  getRoute(wp.lat, wp.lon);
+                }}
+              >
+                <IconRoad style={{ position: "inherit" }} />
+              </Button> */}
             </div>
           </Popup>
         </Marker>
@@ -370,8 +431,8 @@ function Visualization() {
     );
   };
 
-  const getRoute = (final_lat, final_lon) => {
-    Services.get_route(final_lat, final_lon)
+  const getRoute = (final_lat, final_lon, profile) => {
+    Services.get_route(final_lat, final_lon, profile)
       .then((response) => {
         const pathInvertidas = response.paths[0].points.coordinates.map(
           (coordinates) => [coordinates[1], coordinates[0]]
@@ -427,7 +488,6 @@ function Visualization() {
           ))}
       </MapContainer>
       <SearchBar waterpoints={waterpoints} onWpClick={handleWpClick} />
-      {showSearchBar && <SearchRoute wp={wpActual} />}
       <Legend setFilter={setFilter} filter={filter} />
     </>
   );

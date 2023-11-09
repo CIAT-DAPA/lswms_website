@@ -79,10 +79,10 @@ class Services {
       });
   }
 
-  get_route(final_lat, final_lon) {
+  get_route(final_lat, final_lon, profile) {
     const url = `${Configuration.get_url_graphhopper()}/route?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&point=4.895098486334106,38.09982605501463&point=${final_lat},${final_lon}&points_encoded=false&profile=foot`;
+    }&point=8.994027,38.738917&point=${final_lat},${final_lon}&points_encoded=false&profile=${profile}`;
     return axios
       .get(url)
       .then((response) => {
@@ -96,7 +96,7 @@ class Services {
   get_geocoding(text) {
     const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&q=${text}`;
+    }&q=${text}&limit=2`;
     return axios
       .get(url)
       .then((response) => {

@@ -1,14 +1,24 @@
-import { IconSearch, IconDropletFilled } from "@tabler/icons-react";
-import React, { useState } from "react";
+import { IconSearch, IconDropletFilled, IconMapPin } from "@tabler/icons-react";
+import React, { useEffect, useState } from "react";
 import "./SearchBar.css";
+import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
 
 function SearchBar({ waterpoints, onWpClick }) {
   const [t, i18n] = useTranslation("global");
   const [filterText, setFilterText] = useState("");
   const [selectedWaterpoint, setSelectedWaterpoint] = useState("");
+  const [hits, setHits] = useState("");
 
   const handleFilterChange = (e) => {
+    Services.get_geocoding(e.target.value)
+      .then((response) => {
+        setHits(response.hits);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     setFilterText(e.target.value);
     setSelectedWaterpoint("");
   };
@@ -62,6 +72,15 @@ function SearchBar({ waterpoints, onWpClick }) {
               </div>
             );
           })}
+          {hits &&
+            hits.map((e, i) => {
+              return (
+                <div className="py-1 small hint-div text-capitalize " key={i}>
+                  <IconMapPin color="#4d4d4d" />
+                  {e.name}, {e.country}
+                </div>
+              );
+            })}
         </div>
       )}
     </div>

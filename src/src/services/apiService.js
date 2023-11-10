@@ -79,24 +79,27 @@ class Services {
       });
   }
 
-  get_route(final_lat, final_lon) {
+  get_route(inicio_lat, inicio_lon, final_lat, final_lon, profile) {
     const url = `${Configuration.get_url_graphhopper()}/route?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&point=4.895098486334106,38.09982605501463&point=${final_lat},${final_lon}&points_encoded=false&profile=foot`;
+    }&point=${inicio_lat},${inicio_lon}&point=${final_lat},${final_lon}&points_encoded=false&profile=${profile}`;
     return axios
       .get(url)
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response && error.response.status === 400) {
+          throw new Error(error.response.data.message); // Lanza una excepción con el mensaje de error
+        }
+        console.log(error, error.response);
       });
   }
 
   get_geocoding(text) {
     const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&q=${text}`;
+    }&q=${text}&limit=2`;
     return axios
       .get(url)
       .then((response) => {

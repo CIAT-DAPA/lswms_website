@@ -23,11 +23,19 @@ import {
   ButtonGroup,
   DropdownButton,
   Dropdown,
+  Form,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../../components/searchBar/SearchBar";
-import { IconBike, IconCar, IconRoad, IconWalk } from "@tabler/icons-react";
+import {
+  IconAlertCircleFilled,
+  IconAlertTriangleFilled,
+  IconBike,
+  IconCar,
+  IconRoad,
+  IconWalk,
+} from "@tabler/icons-react";
 import SearchRoute from "../../components/searchRoute/SearchRoute";
 
 function Visualization() {
@@ -60,6 +68,10 @@ function Visualization() {
   const [profilesOr, setProfilesOr] = useState();
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [warning, setWarning] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [alertText, setAlertText] = useState("");
+  const [warningText, setWarningText] = useState("");
   const [path, setPath] = useState();
   const [filter, setFilter] = useState({
     green: true,
@@ -69,6 +81,7 @@ function Visualization() {
     gray: true,
   });
   const [showWarning, setShowWarning] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const handleClose = () => setShowWarning(false);
   const handleShow = () => setShowWarning(true);
@@ -346,7 +359,7 @@ function Visualization() {
                 <img src={dataIcon} alt="" className="me-3" />
                 {t("monitoring.data")}
               </Link>
-              <Dropdown variant="sm">
+              {/* <Dropdown variant="sm">
                 <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
                   <IconRoad style={{ position: "inherit" }} />
                 </Dropdown.Toggle>
@@ -386,7 +399,7 @@ function Visualization() {
                     By bike
                   </Dropdown.Item>
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown> */}
               {/* <ButtonGroup size="sm" aria-label="Basic example">
                 <Button
                   variant="outline-primary"
@@ -415,16 +428,20 @@ function Visualization() {
                   <IconBike style={{ position: "inherit" }} />
                 </Button>
               </ButtonGroup> */}
-              {/* <Button
-                className="btn-svg"
-                variant="outline-primary"
-                onClick={() => {
-                  getRoute(wp.lat, wp.lon);
-                }}
-              >
-                <IconRoad style={{ position: "inherit" }} />
-              </Button> */}
             </div>
+            <Form>
+              <div className="mt-3 fs-6">
+                <Form.Check
+                  reverse
+                  label="Start from a different location?"
+                  name="group1"
+                  type="checkbox"
+                  id={`reverse-checkbox-1`}
+                  checked={isCheckboxChecked}
+                  onChange={() => setIsCheckboxChecked(!isCheckboxChecked)}
+                />
+              </div>
+            </Form>
           </Popup>
         </Marker>
       </>
@@ -432,16 +449,74 @@ function Visualization() {
   };
 
   const getRoute = (final_lat, final_lon, profile) => {
-    Services.get_route(final_lat, final_lon, profile)
-      .then((response) => {
-        const pathInvertidas = response.paths[0].points.coordinates.map(
-          (coordinates) => [coordinates[1], coordinates[0]]
+    if (isCheckboxChecked) {
+      // El checkbox está seleccionado
+      console.log("Checkbox is selected");
+    } else {
+      if ("geolocation" in navigator) {
+        // El navegador admite geolocalización
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const inicio_lat = position.coords.latitude;
+            const inicio_lon = position.coords.longitude;
+            Services.get_route(
+              inicio_lat,
+              inicio_lon,
+              final_lat,
+              final_lon,
+              profile
+            )
+              .then((response) => {
+                const pathInvertidas = response.paths[0].points.coordinates.map(
+                  (coordinates) => [coordinates[1], coordinates[0]]
+                );
+                setPath(pathInvertidas);
+              })
+              .catch((error) => {
+                if (error instanceof Error) {
+                  setAlert(true);
+                  setAlertText(
+                    "We're unable to find a route between the starting point and the waterpoint."
+                  );
+                } else {
+                  console.log(error);
+                }
+              });
+          },
+          function (error) {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                setWarning(true);
+                setWarningText(
+                  "If you want to navigate to the waterpoint from your current location, please grant us access to your browser's location."
+                );
+                break;
+              case error.POSITION_UNAVAILABLE:
+                setWarning(true);
+                setWarningText(
+                  "We're sorry, but it's imposible access to your location information at the moment"
+                );
+                break;
+              case error.TIMEOUT:
+                setWarning(true);
+                setWarningText(
+                  "Sorry, we ran out of time trying to get your location."
+                );
+                break;
+              default:
+                setWarning(true);
+                setWarningText("Oops! An unknown error occurred.");
+                break;
+            }
+          }
         );
-        setPath(pathInvertidas);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } else {
+        setWarning(true);
+        setWarningText(
+          "Geolocation is not available in this browser. Please consider selecting your initial position from a different location."
+        );
+      }
+    }
   };
 
   const handleWpClick = (wp) => {
@@ -451,6 +526,24 @@ function Visualization() {
 
   return (
     <>
+      <Modal show={warning} onHide={() => setWarning(false)} centered>
+        <Modal.Body className="d-flex align-items-center ">
+          <IconAlertTriangleFilled
+            className="me-2 text-warning "
+            size={50}
+          ></IconAlertTriangleFilled>
+          {warningText}
+        </Modal.Body>
+      </Modal>
+      <Modal show={alert} onHide={() => setAlert(false)} centered>
+        <Modal.Body className="d-flex align-items-center ">
+          <IconAlertCircleFilled
+            className="me-2 text-danger"
+            size={50}
+          ></IconAlertCircleFilled>
+          {alertText}
+        </Modal.Body>
+      </Modal>
       <Modal
         show={loading}
         backdrop="static"

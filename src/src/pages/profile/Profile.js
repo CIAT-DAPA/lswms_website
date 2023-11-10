@@ -299,7 +299,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -337,7 +336,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -385,7 +383,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -424,7 +421,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}

@@ -261,7 +261,7 @@ function Waterprofile() {
                         <LayersControl.Overlay name="Show watershred" checked>
                           <WMSTileLayer
                             url={Configuration.get_url_geoserver()}
-                            layers={`wp:Burra`}
+                            layers={`waterpoints_et:Watershed_boundaries`}
                             format="image/png"
                             transparent={true}
                             zIndex={1000}

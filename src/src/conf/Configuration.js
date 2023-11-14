@@ -3,18 +3,21 @@ const ACLIMATE_API = "https://webapi.aclimate.org/api";
 const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
 const GRAPHHOPPER_URL = "https://graphhopper.com/api/1";
 const PRODUCTION_API_URL = process.env.REACT_APP_PRODUCTION_API_URL;
-const DEBUG = process.env.REACT_APP_DEBUG;
-console.log(process.env.DEBUG)
+const GEOSERVER_PRODUCTION_URL = "https://geo.aclimate.org/geoserver/waterpoints_et/wms";
+
 class Configuration {
   get_url_geoserver() {
-    return GEOSERVER_URL;
+    if (process.env.REACT_APP_DEBUG === "true") {
+      return GEOSERVER_URL;
+    } else {
+      return GEOSERVER_PRODUCTION_URL || GEOSERVER_URL;
+    }
+    
   }
   get_url_api_base() {
     if (process.env.REACT_APP_DEBUG === "true") {
-      console.log(DEBUG);
       return WP_API_BASE;
     } else {
-      console.log(DEBUG);
       return PRODUCTION_API_URL || WP_API_BASE;
     }
   }

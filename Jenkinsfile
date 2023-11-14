@@ -75,6 +75,7 @@ pipeline {
                             pm2 stop waterpointsfrontend
                         fi
                         echo "starting PM2 process..."
+                        export REACT_APP_DEBUG=false
                         pm2 serve build 5000 --name waterpointsfrontend --spa
                     '''
                 }

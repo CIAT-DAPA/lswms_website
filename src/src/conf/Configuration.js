@@ -10,8 +10,10 @@ class Configuration {
   }
   get_url_api_base() {
     if (process.env.REACT_APP_DEBUG === "true") {
+      console.log(process.env.REACT_APP_DEBUG);
       return WP_API_BASE;
     } else {
+      console.log(process.env.REACT_APP_DEBUG);
       return PRODUCTION_API_URL || WP_API_BASE;
     }
   }

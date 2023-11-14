@@ -4,7 +4,7 @@ const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
 const GRAPHHOPPER_URL = "https://graphhopper.com/api/1";
 const PRODUCTION_API_URL = process.env.REACT_APP_PRODUCTION_API_URL;
 const DEBUG = process.env.REACT_APP_DEBUG;
-
+console.log(process.env.DEBUG)
 class Configuration {
   get_url_geoserver() {
     return GEOSERVER_URL;

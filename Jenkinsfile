@@ -8,7 +8,9 @@ pipeline {
         server_name = credentials('wp_name')
         server_host = credentials('wp_host')
         ssh_key = credentials('wp_devops')
-    }
+        api_wp_url=credentials('api_wp_url')
+        key_graphhopper=credentials('key_graphhopper')
+        }
 
     stages {
         stage('Connection to AWS server') {
@@ -65,9 +67,6 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Verify and control PM2 service
-                        export REACT_APP_PRODUCTION_API_URL=${api_wp_url}
-                        export ALGO=false
-                        export REACT_APP_KEY_GRAPHHOPER=${key_graphhopper}
                         cd /var/www/waterpointsFrontend
                         cd ./webapp_WP
                         if pm2 show waterpointsfrontend >/dev/null 2>&1; then
@@ -75,6 +74,8 @@ pipeline {
                             pm2 stop waterpointsfrontend
                         fi
                         echo "starting PM2 process..."
+                        export REACT_APP_PRODUCTION_API_URL=${api_wp_url}
+                        export REACT_APP_KEY_GRAPHHOPER=${key_graphhopper}
                         export REACT_APP_DEBUG=false
                         pm2 serve build 5000 --name waterpointsfrontend --spa
                     '''

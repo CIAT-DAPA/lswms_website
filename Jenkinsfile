@@ -77,6 +77,7 @@ pipeline {
                         export REACT_APP_PRODUCTION_API_URL=${api_wp_url}
                         export REACT_APP_KEY_GRAPHHOPER=${key_graphhopper}
                         export REACT_APP_DEBUG=false
+                        sudo cat /proc/*/environ | tr '\0' '\n' | grep REACT_APP_DEBUG
                         pm2 serve build 5000 --name waterpointsfrontend --spa
                     '''
                 }

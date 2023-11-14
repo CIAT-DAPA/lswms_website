@@ -10,12 +10,16 @@ on:
 permissions:
   contents: read
  
+env:
+  REACT_APP_PRODUCTION_API_URL: ${{secrets.REACT_APP_PRODUCTION_API_URL}}
+  REACT_APP_DEBUG: "false"
+ 
 jobs:
  
  
  
 # ------- START FRONT PROCCESS -------- #
-
+ 
   InstallPackage:
     runs-on: ubuntu-latest
     steps:
@@ -26,7 +30,8 @@ jobs:
       - name: Install packages
         run: |
           cd ./src
-          ls
+          echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
+          echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
           npm install
          
  
@@ -111,12 +116,12 @@ jobs:
         prerelease: false
     # Upload Assets to release
     - name: Upload Release Asset Front
-      id: upload-front-release-asset 
+      id: upload-front-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ./src/build/releaseFront.zip
         asset_name: releaseFront.zip
         asset_content_type: application/zip

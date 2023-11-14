@@ -1,14 +1,19 @@
 const WP_API_BASE = "http://127.0.0.1:5001/api/v1";
 const ACLIMATE_API = "https://webapi.aclimate.org/api";
 const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
-const GRAPHHOPPER_URL = "https://graphhopper.com/api/1"
+const GRAPHHOPPER_URL = "https://graphhopper.com/api/1";
+const PRODUCTION_API_URL = process.env.REACT_APP_PRODUCTION_API_URL;
 
 class Configuration {
   get_url_geoserver() {
     return GEOSERVER_URL;
   }
   get_url_api_base() {
-    return WP_API_BASE;
+    if (process.env.REACT_APP_DEBUG === "true") {
+      return WP_API_BASE;
+    } else {
+      return PRODUCTION_API_URL || WP_API_BASE;
+    }
   }
   get_url_api_aclimate() {
     return ACLIMATE_API;

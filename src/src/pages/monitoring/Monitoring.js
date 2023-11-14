@@ -429,7 +429,7 @@ function Visualization() {
                 </Button>
               </ButtonGroup> */}
             </div>
-            <Form>
+            {/* <Form>
               <div className="mt-3 fs-6">
                 <Form.Check
                   reverse
@@ -441,7 +441,7 @@ function Visualization() {
                   onChange={() => setIsCheckboxChecked(!isCheckboxChecked)}
                 />
               </div>
-            </Form>
+            </Form> */}
           </Popup>
         </Marker>
       </>

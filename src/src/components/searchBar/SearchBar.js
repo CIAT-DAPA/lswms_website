@@ -11,13 +11,13 @@ function SearchBar({ waterpoints, onWpClick }) {
   const [hits, setHits] = useState("");
 
   const handleFilterChange = (e) => {
-    Services.get_geocoding(e.target.value)
-      .then((response) => {
-        setHits(response.hits);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // Services.get_geocoding(e.target.value)
+    //   .then((response) => {
+    //     setHits(response.hits);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
 
     setFilterText(e.target.value);
     setSelectedWaterpoint("");

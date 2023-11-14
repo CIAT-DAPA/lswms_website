@@ -65,9 +65,9 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Verify and control PM2 service
-                        export REACT_APP_PRODUCTION_API_URL = ${api_wp_url}
-                        export REACT_APP_DEBUG = false
-                        export REACT_APP_KEY_GRAPHHOPER = ${key_graphhopper}
+                        export REACT_APP_PRODUCTION_API_URL=${api_wp_url}
+                        export REACT_APP_DEBUG=false
+                        export REACT_APP_KEY_GRAPHHOPER=${key_graphhopper}
                         cd /var/www/waterpointsFrontend
                         cd ./webapp_WP
                         if pm2 show waterpointsfrontend >/dev/null 2>&1; then

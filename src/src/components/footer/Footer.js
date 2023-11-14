@@ -17,7 +17,7 @@ function Footer() {
           <Col className="col-lg-4">
             <p className="">{t("footer.rights")}</p>
             <a
-              href="mailto: J.R.Villegas@cgiar.org"
+              href="mailto: S.alemayehu@cgiar.org"
               className="text-decoration-none text-white"
             >
               {t("footer.email")}: S.alemayehu@cgiar.org{" "}

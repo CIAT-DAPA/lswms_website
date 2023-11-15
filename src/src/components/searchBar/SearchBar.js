@@ -4,23 +4,24 @@ import "./SearchBar.css";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
 
-function SearchBar({ waterpoints, onWpClick }) {
+function SearchBar({ waterpoints, onWpClick, type }) {
   const [t, i18n] = useTranslation("global");
   const [filterText, setFilterText] = useState("");
-  const [selectedWaterpoint, setSelectedWaterpoint] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
   const [hits, setHits] = useState("");
 
   const handleFilterChange = (e) => {
-    // Services.get_geocoding(e.target.value)
-    //   .then((response) => {
-    //     setHits(response.hits);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
+    if (type === "places") {
+      Services.get_geocoding(e.target.value)
+        .then((response) => {
+          setHits(response.hits);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     setFilterText(e.target.value);
-    setSelectedWaterpoint("");
+    setSelectedValue("");
   };
 
   const filteredWaterpoints = waterpoints.filter((wp) =>
@@ -31,7 +32,7 @@ function SearchBar({ waterpoints, onWpClick }) {
 
   const handleWpClick = (wp) => {
     onWpClick(wp);
-    setSelectedWaterpoint(`${wp.name}, ${wp.adm3}, ${wp.adm2}, ${wp.adm1}`);
+    setSelectedValue(`${wp.name}, ${wp.adm3}, ${wp.adm2}, ${wp.adm1}`);
   };
 
   return (
@@ -50,7 +51,7 @@ function SearchBar({ waterpoints, onWpClick }) {
           aria-label="Search waterpoint"
           placeholder={t("monitoring.placeholder-search")}
           onChange={handleFilterChange}
-          value={selectedWaterpoint || filterText}
+          value={selectedValue || filterText}
           autoFocus
         />
         <IconSearch />
@@ -62,7 +63,10 @@ function SearchBar({ waterpoints, onWpClick }) {
               <div
                 className="py-1 small hint-div text-capitalize "
                 key={i}
-                onClick={() => handleWpClick(wp)}
+                onClick={() => {
+                  if (type === "waterpoints") handleWpClick(wp);
+                  if (type === "places") onWpClick(wp.lat, wp.lon);
+                }}
               >
                 <IconDropletFilled
                   className="me-3"
@@ -75,8 +79,14 @@ function SearchBar({ waterpoints, onWpClick }) {
           {hits &&
             hits.map((e, i) => {
               return (
-                <div className="py-1 small hint-div text-capitalize " key={i}>
-                  <IconMapPin color="#4d4d4d" />
+                <div
+                  className="py-1 small hint-div text-capitalize "
+                  key={i}
+                  onClick={() => {
+                    if (type === "places") onWpClick(e.point.lat, e.point.lng);
+                  }}
+                >
+                  <IconMapPin color="#4d4d4d" className="me-3" />
                   {e.name}, {e.country}
                 </div>
               );

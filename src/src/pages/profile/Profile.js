@@ -247,7 +247,7 @@ function Waterprofile() {
                     <h4 className="fw-medium">{t("profile.map")}</h4>
                     <MapContainer
                       center={[wp.lat, wp.lon]}
-                      zoom={8}
+                      zoom={9}
                       style={{
                         height: "400px",
                         width: "100%",
@@ -264,6 +264,7 @@ function Waterprofile() {
                             layers={`waterpoints_et:Watershed_boundaries`}
                             format="image/png"
                             transparent={true}
+                            cql_filter={`Name='${wp.watershed_name}'`}
                             zIndex={1000}
                           />
                         </LayersControl.Overlay>

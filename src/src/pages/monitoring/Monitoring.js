@@ -596,8 +596,8 @@ function Visualization() {
         onHide={() => setShowSearchPlace(false)}
         centered
       >
-        <Modal.Body className="d-flex align-items-center ">
-          Where do you want start?
+        <Modal.Body className="d-flex flex-column">
+          <p>Where do you want start?</p>
           <SearchBar
             waterpoints={waterpoints}
             type="places"

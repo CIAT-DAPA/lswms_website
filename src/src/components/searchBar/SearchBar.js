@@ -36,7 +36,7 @@ function SearchBar({ waterpoints, onWpClick, type }) {
   };
 
   return (
-    <div className={`${type === "waterpoitns" ? "bar-hints " : ""}`}>
+    <div className={`${type === "waterpoints" ? "bar-hints " : ""}`}>
       <div
         className={`search-bar d-flex px-3 py-2 bg-white align-items-center border-bottom ${
           filterText === "" || filterText.length < 3

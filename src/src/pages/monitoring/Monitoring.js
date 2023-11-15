@@ -7,7 +7,7 @@ import {
   TileLayer,
   ZoomControl,
 } from "react-leaflet";
-import L, { Icon } from "leaflet";
+import L from "leaflet";
 import profileIcon from "../../assets/svg/profile.svg";
 import dataIcon from "../../assets/svg/data.svg";
 import { Link } from "react-router-dom";
@@ -20,8 +20,6 @@ import {
   Tooltip,
   Badge,
   Button,
-  ButtonGroup,
-  DropdownButton,
   Dropdown,
   Form,
 } from "react-bootstrap";
@@ -36,7 +34,6 @@ import {
   IconRoad,
   IconWalk,
 } from "@tabler/icons-react";
-import SearchRoute from "../../components/searchRoute/SearchRoute";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -72,6 +69,7 @@ function Visualization() {
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [warningText, setWarningText] = useState("");
+  const [showSearchPlace, setShowSearchPlace] = useState("");
   const [path, setPath] = useState();
   const [filter, setFilter] = useState({
     green: true,
@@ -82,9 +80,10 @@ function Visualization() {
   });
   const [showWarning, setShowWarning] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [profile, setProfile] = useState();
+  const [waterpointRoute, setWaterpointRoute] = useState();
 
   const handleClose = () => setShowWarning(false);
-  const handleShow = () => setShowWarning(true);
 
   useEffect(() => {
     //Call to API to get waterpoints
@@ -359,7 +358,7 @@ function Visualization() {
                 <img src={dataIcon} alt="" className="me-3" />
                 {t("monitoring.data")}
               </Link>
-              {/* <Dropdown variant="sm">
+              <Dropdown variant="sm">
                 <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
                   <IconRoad style={{ position: "inherit" }} />
                 </Dropdown.Toggle>
@@ -368,7 +367,13 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      getRoute(wp.lat, wp.lon, "foot");
+                      if (!isCheckboxChecked) {
+                        getRoute(wp.lat, wp.lon, "foot");
+                      } else {
+                        setShowSearchPlace(true);
+                        setProfile("foot");
+                        setWaterpointRoute(wp);
+                      }
                     }}
                   >
                     <IconWalk
@@ -380,7 +385,13 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      getRoute(wp.lat, wp.lon, "car");
+                      if (!isCheckboxChecked) {
+                        getRoute(wp.lat, wp.lon, "car");
+                      } else {
+                        setShowSearchPlace(true);
+                        setProfile("car");
+                        setWaterpointRoute(wp);
+                      }
                     }}
                   >
                     <IconCar style={{ position: "inherit" }} className="me-2" />
@@ -389,7 +400,13 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      getRoute(wp.lat, wp.lon, "bike");
+                      if (!isCheckboxChecked) {
+                        getRoute(wp.lat, wp.lon, "bike");
+                      } else {
+                        setShowSearchPlace(true);
+                        setProfile("bike");
+                        setWaterpointRoute(wp);
+                      }
                     }}
                   >
                     <IconBike
@@ -399,7 +416,7 @@ function Visualization() {
                     By bike
                   </Dropdown.Item>
                 </Dropdown.Menu>
-              </Dropdown> */}
+              </Dropdown>
               {/* <ButtonGroup size="sm" aria-label="Basic example">
                 <Button
                   variant="outline-primary"
@@ -429,7 +446,7 @@ function Visualization() {
                 </Button>
               </ButtonGroup> */}
             </div>
-            {/* <Form>
+            <Form>
               <div className="mt-3 fs-6">
                 <Form.Check
                   reverse
@@ -441,7 +458,7 @@ function Visualization() {
                   onChange={() => setIsCheckboxChecked(!isCheckboxChecked)}
                 />
               </div>
-            </Form> */}
+            </Form>
           </Popup>
         </Marker>
       </>
@@ -524,8 +541,36 @@ function Visualization() {
     map.flyTo([wp.lat, wp.lon], 12);
   };
 
+  const handlePlaceClick = (inicio_lat, inicio_lon) => {
+    Services.get_route(
+      inicio_lat,
+      inicio_lon,
+      waterpointRoute.lat,
+      waterpointRoute.lon,
+      profile
+    )
+      .then((response) => {
+        const pathInvertidas = response.paths[0].points.coordinates.map(
+          (coordinates) => [coordinates[1], coordinates[0]]
+        );
+        setPath(pathInvertidas);
+        setShowSearchPlace(false);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          setAlert(true);
+          setAlertText(
+            "We're unable to find a route between the starting point and the waterpoint."
+          );
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   return (
     <>
+      {/* Modal de warning de obtener ubicacion */}
       <Modal show={warning} onHide={() => setWarning(false)} centered>
         <Modal.Body className="d-flex align-items-center ">
           <IconAlertTriangleFilled
@@ -535,6 +580,7 @@ function Visualization() {
           {warningText}
         </Modal.Body>
       </Modal>
+      {/* Modal de alert de obtener ubicacion */}
       <Modal show={alert} onHide={() => setAlert(false)} centered>
         <Modal.Body className="d-flex align-items-center ">
           <IconAlertCircleFilled
@@ -544,6 +590,22 @@ function Visualization() {
           {alertText}
         </Modal.Body>
       </Modal>
+      {/* Modal de alert de obtener ubicacion */}
+      <Modal
+        show={showSearchPlace}
+        onHide={() => setShowSearchPlace(false)}
+        centered
+      >
+        <Modal.Body className="d-flex align-items-center ">
+          Where do you want start?
+          <SearchBar
+            waterpoints={waterpoints}
+            type="places"
+            onWpClick={handlePlaceClick}
+          />
+        </Modal.Body>
+      </Modal>
+      {/* Modal de loading */}
       <Modal
         show={loading}
         backdrop="static"
@@ -580,7 +642,11 @@ function Visualization() {
             <div key={i}>{loading ? <></> : popupData(wp)}</div>
           ))}
       </MapContainer>
-      <SearchBar waterpoints={waterpoints} onWpClick={handleWpClick} />
+      <SearchBar
+        waterpoints={waterpoints}
+        onWpClick={handleWpClick}
+        type="waterpoints"
+      />
       <Legend setFilter={setFilter} filter={filter} />
     </>
   );

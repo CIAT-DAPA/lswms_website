@@ -13,6 +13,7 @@ permissions:
 env:
   REACT_APP_PRODUCTION_API_URL: ${{secrets.REACT_APP_PRODUCTION_API_URL}}
   REACT_APP_DEBUG: "false"
+  REACT_APP_KEY_GRAPHHOPER: ${{secrets.REACT_APP_KEY_GRAPHHOPER}}
  
 jobs:
  
@@ -32,6 +33,7 @@ jobs:
           cd ./src
           echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
           echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
+          echo "REACT_APP_KEY_GRAPHHOPER=${{env.REACT_APP_KEY_GRAPHHOPER}}" >> .env
           npm install
          
  
@@ -77,6 +79,7 @@ jobs:
           cd ./src
           echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
           echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
+          echo "REACT_APP_KEY_GRAPHHOPER=${{env.REACT_APP_KEY_GRAPHHOPER}}" >> .env
           npm install
           npm run build
  

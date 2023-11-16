@@ -51,7 +51,7 @@ function Menu() {
             height="35"
             className="d-inline-block align-top"
           />{" "}
-          Waterpoint Monitoring System
+          Waterpoints Monitoring
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

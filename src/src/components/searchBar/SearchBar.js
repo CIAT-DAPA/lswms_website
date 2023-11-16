@@ -1,5 +1,5 @@
 import { IconSearch, IconDropletFilled, IconMapPin } from "@tabler/icons-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./SearchBar.css";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
@@ -38,7 +38,7 @@ function SearchBar({ waterpoints, onWpClick, type }) {
   return (
     <div className={`${type === "waterpoints" ? "bar-hints " : ""}`}>
       <div
-        className={`search-bar d-flex px-3 py-2 bg-white align-items-center border-bottom ${
+        className={`search-bar d-flex px-3 py-2 bg-white align-items-center border-bottom justify-content-between  ${
           filterText === "" || filterText.length < 3
             ? "search-bar-unfocused "
             : "search-bar-focused "
@@ -46,7 +46,7 @@ function SearchBar({ waterpoints, onWpClick, type }) {
       >
         <input
           type="search"
-          className="form-control form-control-sm border-0 text-input"
+          className="form-control form-control-sm border-0 text-input w-100"
           style={{ width: "350px" }}
           aria-label="Search waterpoint"
           placeholder={t("monitoring.placeholder-search")}

@@ -51,7 +51,18 @@
     "modal-title": "Warning",
     "modal-body": "The waterpoint profile is not available in the language selected, only in",
     "modal-close": "Close",
-    "modal-continue": "Continue to waterpoint profile"
+    "modal-continue": "Continue to waterpoint profile",
+    "diff-location": "Start from a different location?",
+    "walk": "Walking",
+    "car": "By car",
+    "bike": "By bike",
+    "alert-route": "We're unable to find a route between the starting point and the waterpoint.",
+    "warning-permission": "If you want to navigate to the waterpoint from your current location, please grant us access to your browser's location.",
+    "warning-position": "We're sorry, but it's imposible access to your location information at the moment",
+    "warning-timeout": "Sorry, we ran out of time trying to get your location.",
+    "warning-default": "Oops! An unknown error occurred.",
+    "warning-browser": "Geolocation is not available in this browser. Please consider selecting your initial position from a different location.",
+    "modal-search": "Where do you want start?"
   },
   "profile": {
     "area": "Area",

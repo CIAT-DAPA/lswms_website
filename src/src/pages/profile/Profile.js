@@ -434,7 +434,7 @@ function Waterprofile() {
               </Container>
             </div>
             <Container className="mb-5 mt-2">
-              <Button className="me-5 rounded-4" onClick={downloadProfileAsPdf}>
+              <Button className="me-5 rounded-4 mb-2 mb-sm-0" onClick={downloadProfileAsPdf}>
                 <img src={downloadImg} alt="" className="me-3" />
                 {t("profile.download")}
               </Button>

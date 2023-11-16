@@ -380,7 +380,7 @@ function Visualization() {
                       style={{ position: "inherit" }}
                       className="me-2"
                     />
-                    Walking
+                    {t("monitoring.walk")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as="button"
@@ -395,7 +395,7 @@ function Visualization() {
                     }}
                   >
                     <IconCar style={{ position: "inherit" }} className="me-2" />
-                    By car
+                    {t("monitoring.car")}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as="button"
@@ -413,44 +413,16 @@ function Visualization() {
                       style={{ position: "inherit" }}
                       className="me-2"
                     />
-                    By bike
+                    {t("monitoring.bike")}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {/* <ButtonGroup size="sm" aria-label="Basic example">
-                <Button
-                  variant="outline-primary"
-                  className="rounded-start-3"
-                  onClick={() => {
-                    getRoute(wp.lat, wp.lon, "foot");
-                  }}
-                >
-                  <IconWalk style={{ position: "inherit" }} />
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => {
-                    getRoute(wp.lat, wp.lon, "car");
-                  }}
-                >
-                  <IconCar style={{ position: "inherit" }} />
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  className="rounded-end-3"
-                  onClick={() => {
-                    getRoute(wp.lat, wp.lon, "bike");
-                  }}
-                >
-                  <IconBike style={{ position: "inherit" }} />
-                </Button>
-              </ButtonGroup> */}
             </div>
             <Form>
               <div className="mt-3 fs-6">
                 <Form.Check
                   reverse
-                  label="Start from a different location?"
+                  label={t("monitoring.diff-location")}
                   name="group1"
                   type="checkbox"
                   id={`reverse-checkbox-1`}
@@ -467,8 +439,6 @@ function Visualization() {
 
   const getRoute = (final_lat, final_lon, profile) => {
     if (isCheckboxChecked) {
-      // El checkbox está seleccionado
-      console.log("Checkbox is selected");
     } else {
       if ("geolocation" in navigator) {
         // El navegador admite geolocalización
@@ -492,9 +462,7 @@ function Visualization() {
               .catch((error) => {
                 if (error instanceof Error) {
                   setAlert(true);
-                  setAlertText(
-                    "We're unable to find a route between the starting point and the waterpoint."
-                  );
+                  setAlertText(t("monitoring.alert-route"));
                 } else {
                   console.log(error);
                 }
@@ -504,34 +472,26 @@ function Visualization() {
             switch (error.code) {
               case error.PERMISSION_DENIED:
                 setWarning(true);
-                setWarningText(
-                  "If you want to navigate to the waterpoint from your current location, please grant us access to your browser's location."
-                );
+                setWarningText(t("monitoring.warning-permission"));
                 break;
               case error.POSITION_UNAVAILABLE:
                 setWarning(true);
-                setWarningText(
-                  "We're sorry, but it's imposible access to your location information at the moment"
-                );
+                setWarningText(t("monitoring.warning-position"));
                 break;
               case error.TIMEOUT:
                 setWarning(true);
-                setWarningText(
-                  "Sorry, we ran out of time trying to get your location."
-                );
+                setWarningText(t("monitoring.warning-timeout"));
                 break;
               default:
                 setWarning(true);
-                setWarningText("Oops! An unknown error occurred.");
+                setWarningText(t("monitoring.warning-default"));
                 break;
             }
           }
         );
       } else {
         setWarning(true);
-        setWarningText(
-          "Geolocation is not available in this browser. Please consider selecting your initial position from a different location."
-        );
+        setWarningText(t("monitoring.warning-browser"));
       }
     }
   };
@@ -559,9 +519,7 @@ function Visualization() {
       .catch((error) => {
         if (error instanceof Error) {
           setAlert(true);
-          setAlertText(
-            "We're unable to find a route between the starting point and the waterpoint."
-          );
+          setAlertText(t("monitoring.alert-route"));
         } else {
           console.log(error);
         }
@@ -597,7 +555,7 @@ function Visualization() {
         centered
       >
         <Modal.Body className="d-flex flex-column">
-          <p>Where do you want start?</p>
+          <p>{t("monitoring.modal-search")}</p>
           <SearchBar
             waterpoints={waterpoints}
             type="places"

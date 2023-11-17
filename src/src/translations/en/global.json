@@ -18,8 +18,8 @@
     "feature1-description": "Explore our interactive map and view the location of each waterpoint in Ethiopia. Get detailed data on existing infrastructure.",
     "feature2": "Waterpoint profile",
     "feature2-description": "Explore key characteristics of this waterpoint's surroundings and community.",
-    "feature3": "Dashboard waterpoint",
-    "feature3-description": "Access comprehensive water point data, drill down into historical temperature and precipitation records, and take advantage of seasonal and sub-seasonal forecasts to make informed decisions.",
+    "feature3": "Waterpoint dashboard",
+    "feature3-description": "Access comprehensive waterpoint data, drill down into historical temperature and precipitation records, and take advantage of seasonal and sub-seasonal forecasts to make informed decisions.",
     "feature4": "Routes",
     "feature4-description": "Find your path to the water! With our routing module, getting to the waterpoint has never been easier"
   },

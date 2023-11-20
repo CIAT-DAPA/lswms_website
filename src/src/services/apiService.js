@@ -82,7 +82,7 @@ class Services {
   get_route(inicio_lat, inicio_lon, final_lat, final_lon, profile) {
     const url = `${Configuration.get_url_graphhopper()}/route?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&point=${inicio_lat},${inicio_lon}&point=${final_lat},${final_lon}&points_encoded=false&profile=${profile}`;
+    }&point=${inicio_lat},${inicio_lon}&point=${final_lat},${final_lon}&points_encoded=false&profile=${profile}&instructions=false`;
     return axios
       .get(url)
       .then((response) => {

@@ -62,7 +62,7 @@
     "warning-timeout": "Sorry, we ran out of time trying to get your location.",
     "warning-default": "Oops! An unknown error occurred.",
     "warning-browser": "Geolocation is not available in this browser. Please consider selecting your initial position from a different location.",
-    "modal-search": "Where do you want start?"
+    "modal-search": "Ready for an adventure? Enter your starting point and let's plan your route together."
   },
   "profile": {
     "area": "Area",

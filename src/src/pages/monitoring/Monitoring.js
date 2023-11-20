@@ -28,7 +28,6 @@ import { useTranslation } from "react-i18next";
 import SearchBar from "../../components/searchBar/SearchBar";
 import {
   IconAlertCircleFilled,
-  IconAlertTriangleFilled,
   IconBike,
   IconCar,
   IconRoad,
@@ -60,15 +59,11 @@ function Visualization() {
   });
   const mapRef = useRef(null);
   const [waterpoints, setWaterpoints] = useState([]);
-  const [profilesEn, setProfilesEn] = useState();
-  const [profilesAm, setProfilesAm] = useState();
-  const [profilesOr, setProfilesOr] = useState();
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [warning, setWarning] = useState(false);
+
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
-  const [warningText, setWarningText] = useState("");
   const [showSearchPlace, setShowSearchPlace] = useState("");
   const [path, setPath] = useState();
   const [filter, setFilter] = useState({
@@ -79,7 +74,6 @@ function Visualization() {
     gray: true,
   });
   const [showWarning, setShowWarning] = useState(false);
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [profile, setProfile] = useState();
   const [waterpointRoute, setWaterpointRoute] = useState();
 
@@ -102,35 +96,12 @@ function Visualization() {
       const idsWp = waterpoints.map((item) => item.id);
 
       const idString = idsWp.join(",");
-      Services.get_waterpoints_profile(idString, "en")
-        .then((response) => {
-          setProfilesEn(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      Services.get_waterpoints_profile(idString, "am")
-        .then((response) => {
-          setProfilesAm(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      Services.get_waterpoints_profile(idString, "or")
-        .then((response) => {
-          setProfilesOr(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
       const requests = idsWp.map((id) => Services.get_last_data(id));
 
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => {
+            console.log(response.data[0]);
             return response.data[0];
           });
           setMonitored(monitoredData);
@@ -146,7 +117,6 @@ function Visualization() {
   const popupData = (wp) => {
     // Find the corresponding monitored data for the current waterpoint
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-
     // Get the value of depth if the monitored data is found
     const depthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "depth")
@@ -154,27 +124,10 @@ function Visualization() {
     const scaledDepthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;
-    // If there is wp content or not
-    const currentLanguage = i18n.language;
-    const currentProfile =
-      (currentLanguage === "en" &&
-        profilesEn.find((profile) => profile.id === wp.id)) ||
-      (currentLanguage === "am" &&
-        profilesAm.find((profile) => profile.id === wp.id)) ||
-      (currentLanguage === "or" &&
-        profilesOr.find((profile) => profile.id === wp.id));
 
-    const defaultProfile =
-      profilesEn.find((profile) => profile.id === wp.id) ||
-      profilesAm.find((profile) => profile.id === wp.id) ||
-      profilesOr.find((profile) => profile.id === wp.id);
+    const hasContentsWp =
+      monitoredData.am || monitoredData.or || monitoredData.en;
 
-    const profileWp =
-      currentProfile && currentProfile.contents_wp.length > 0
-        ? currentProfile
-        : defaultProfile;
-
-    const hasContentsWp = profileWp.contents_wp.length > 0;
     return !filter.green &&
       scaledDepthValue.value > 100 ? null : !filter.yellow &&
       scaledDepthValue.value <= 100 &&
@@ -196,9 +149,9 @@ function Visualization() {
               {t("monitoring.modal-body") ||
                 "The waterpoint profile is not available in the language selected, only in"}{" "}
               <strong>
-                {profileWp.contents_wp[0].language == "en"
+                {monitoredData["en"]
                   ? "English"
-                  : profileWp.contents_wp[0].language == "am"
+                  : monitoredData["am"]
                   ? "Amharic"
                   : "Afaan Oromo"}
               </strong>
@@ -212,7 +165,9 @@ function Visualization() {
                 className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
                   hasContentsWp ? "" : "disabled "
                 }`}
-                to={`/profile/${wp.id}/${profileWp.contents_wp[0].language}`}
+                to={`/profile/${wp.id}/${Object.keys(monitoredData).find(
+                  (key) => monitoredData[key] === true
+                )}`}
               >
                 {t("monitoring.modal-continue") ||
                   "Continue to waterpoint profile"}
@@ -326,8 +281,7 @@ function Visualization() {
                 : t("monitoring.seasonally-m")}
             </p>
             <div className="d-flex justify-content-between mt-3">
-              {hasContentsWp &&
-              profileWp.contents_wp[0].language !== currentLanguage ? (
+              {hasContentsWp && !monitoredData[i18n.language] ? (
                 <Button
                   className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
                     hasContentsWp ? "" : "disabled "
@@ -367,13 +321,9 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      if (!isCheckboxChecked) {
-                        getRoute(wp.lat, wp.lon, "foot");
-                      } else {
-                        setShowSearchPlace(true);
-                        setProfile("foot");
-                        setWaterpointRoute(wp);
-                      }
+                      setShowSearchPlace(true);
+                      setProfile("foot");
+                      setWaterpointRoute(wp);
                     }}
                   >
                     <IconWalk
@@ -385,13 +335,9 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      if (!isCheckboxChecked) {
-                        getRoute(wp.lat, wp.lon, "car");
-                      } else {
-                        setShowSearchPlace(true);
-                        setProfile("car");
-                        setWaterpointRoute(wp);
-                      }
+                      setShowSearchPlace(true);
+                      setProfile("car");
+                      setWaterpointRoute(wp);
                     }}
                   >
                     <IconCar style={{ position: "inherit" }} className="me-2" />
@@ -400,13 +346,9 @@ function Visualization() {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      if (!isCheckboxChecked) {
-                        getRoute(wp.lat, wp.lon, "bike");
-                      } else {
-                        setShowSearchPlace(true);
-                        setProfile("bike");
-                        setWaterpointRoute(wp);
-                      }
+                      setShowSearchPlace(true);
+                      setProfile("bike");
+                      setWaterpointRoute(wp);
                     }}
                   >
                     <IconBike
@@ -418,82 +360,10 @@ function Visualization() {
                 </Dropdown.Menu>
               </Dropdown>
             </div>
-            <Form>
-              <div className="mt-3 fs-6">
-                <Form.Check
-                  reverse
-                  label={t("monitoring.diff-location")}
-                  name="group1"
-                  type="checkbox"
-                  id={`reverse-checkbox-1`}
-                  checked={isCheckboxChecked}
-                  onChange={() => setIsCheckboxChecked(!isCheckboxChecked)}
-                />
-              </div>
-            </Form>
           </Popup>
         </Marker>
       </>
     );
-  };
-
-  const getRoute = (final_lat, final_lon, profile) => {
-    if (isCheckboxChecked) {
-    } else {
-      if ("geolocation" in navigator) {
-        // El navegador admite geolocalización
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const inicio_lat = position.coords.latitude;
-            const inicio_lon = position.coords.longitude;
-            Services.get_route(
-              inicio_lat,
-              inicio_lon,
-              final_lat,
-              final_lon,
-              profile
-            )
-              .then((response) => {
-                const pathInvertidas = response.paths[0].points.coordinates.map(
-                  (coordinates) => [coordinates[1], coordinates[0]]
-                );
-                setPath(pathInvertidas);
-              })
-              .catch((error) => {
-                if (error instanceof Error) {
-                  setAlert(true);
-                  setAlertText(t("monitoring.alert-route"));
-                } else {
-                  console.log(error);
-                }
-              });
-          },
-          function (error) {
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                setWarning(true);
-                setWarningText(t("monitoring.warning-permission"));
-                break;
-              case error.POSITION_UNAVAILABLE:
-                setWarning(true);
-                setWarningText(t("monitoring.warning-position"));
-                break;
-              case error.TIMEOUT:
-                setWarning(true);
-                setWarningText(t("monitoring.warning-timeout"));
-                break;
-              default:
-                setWarning(true);
-                setWarningText(t("monitoring.warning-default"));
-                break;
-            }
-          }
-        );
-      } else {
-        setWarning(true);
-        setWarningText(t("monitoring.warning-browser"));
-      }
-    }
   };
 
   const handleWpClick = (wp) => {
@@ -528,16 +398,6 @@ function Visualization() {
 
   return (
     <>
-      {/* Modal de warning de obtener ubicacion */}
-      <Modal show={warning} onHide={() => setWarning(false)} centered>
-        <Modal.Body className="d-flex align-items-center ">
-          <IconAlertTriangleFilled
-            className="me-2 text-warning "
-            size={50}
-          ></IconAlertTriangleFilled>
-          {warningText}
-        </Modal.Body>
-      </Modal>
       {/* Modal de alert de obtener ubicacion */}
       <Modal show={alert} onHide={() => setAlert(false)} centered>
         <Modal.Body className="d-flex align-items-center ">
@@ -548,7 +408,7 @@ function Visualization() {
           {alertText}
         </Modal.Body>
       </Modal>
-      {/* Modal de alert de obtener ubicacion */}
+      {/* Modal de buscar punto de inicio */}
       <Modal
         show={showSearchPlace}
         onHide={() => setShowSearchPlace(false)}
@@ -593,12 +453,9 @@ function Visualization() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {path && <Polyline color="lime" positions={path} weight={5} />}
-        {profilesEn !== undefined &&
-          profilesAm !== undefined &&
-          profilesOr !== undefined &&
-          waterpoints.map((wp, i) => (
-            <div key={i}>{loading ? <></> : popupData(wp)}</div>
-          ))}
+        {waterpoints.map((wp, i) => (
+          <div key={i}>{loading ? <></> : popupData(wp)}</div>
+        ))}
       </MapContainer>
       <SearchBar
         waterpoints={waterpoints}

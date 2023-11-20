@@ -64,6 +64,11 @@
     "warning-browser": "Geolocation browser kana keessatti hin argamu. Maaloo bakka jalqabaa bakka adda ta’e irraa filachuu yaadaa.",
     "modal-search": "Eessaa jalqabuu barbaadda?"
   },
+  "route": {
+    "title": "Odeeffannoo daandii",
+    "time": "Yeroo",
+    "distance": "Fageenya"
+  },
   "profile": {
     "area": "Bal'ina",
     "population": "Baay'ina uummataa",

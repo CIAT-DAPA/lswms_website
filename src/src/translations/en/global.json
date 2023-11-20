@@ -64,6 +64,11 @@
     "warning-browser": "Geolocation is not available in this browser. Please consider selecting your initial position from a different location.",
     "modal-search": "Ready for an adventure? Enter your starting point and let's plan your route together."
   },
+  "route": {
+    "title": "Route information",
+    "time": "Time",
+    "distance": "Distance"
+  },
   "profile": {
     "area": "Area",
     "population": "Population",

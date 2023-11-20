@@ -33,6 +33,7 @@ import {
   IconRoad,
   IconWalk,
 } from "@tabler/icons-react";
+import RouteInfo from "../../components/routeInfo/RouteInfo";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -65,7 +66,7 @@ function Visualization() {
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [showSearchPlace, setShowSearchPlace] = useState("");
-  const [path, setPath] = useState();
+  const [route, setRoute] = useState();
   const [filter, setFilter] = useState({
     green: true,
     yellow: true,
@@ -94,14 +95,11 @@ function Visualization() {
     if (waterpoints.length > 0) {
       //Call to API to get each monitored data for each wp
       const idsWp = waterpoints.map((item) => item.id);
-
-      const idString = idsWp.join(",");
       const requests = idsWp.map((id) => Services.get_last_data(id));
 
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => {
-            console.log(response.data[0]);
             return response.data[0];
           });
           setMonitored(monitoredData);
@@ -380,10 +378,12 @@ function Visualization() {
       profile
     )
       .then((response) => {
-        const pathInvertidas = response.paths[0].points.coordinates.map(
-          (coordinates) => [coordinates[1], coordinates[0]]
-        );
-        setPath(pathInvertidas);
+        response.paths[0].points.coordinates =
+          response.paths[0].points.coordinates.map((coordinates) => [
+            coordinates[1],
+            coordinates[0],
+          ]);
+        setRoute(response.paths[0]);
         setShowSearchPlace(false);
       })
       .catch((error) => {
@@ -452,7 +452,13 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {path && <Polyline color="#0016ff" positions={path} weight={5} />}
+        {route && (
+          <Polyline
+            color="#0016ff"
+            positions={route.points.coordinates}
+            weight={5}
+          />
+        )}
         {waterpoints.map((wp, i) => (
           <div key={i}>{loading ? <></> : popupData(wp)}</div>
         ))}
@@ -463,6 +469,7 @@ function Visualization() {
         type="waterpoints"
       />
       <Legend setFilter={setFilter} filter={filter} />
+      {route && <RouteInfo route={route} />}
     </>
   );
 }

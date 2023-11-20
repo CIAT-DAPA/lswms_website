@@ -118,7 +118,7 @@ function SearchBar({ waterpoints, onWpClick, type }) {
         >
           <input
             type="search"
-            className="form-control form-control-sm border-0 text-input w-100"
+            className="form-control form-control-sm border-0 text-input w-100 text-capitalize "
             style={{ width: "350px" }}
             aria-label="Search waterpoint"
             placeholder={t("monitoring.placeholder-search")}
@@ -160,7 +160,13 @@ function SearchBar({ waterpoints, onWpClick, type }) {
                   key={i}
                   onClick={() => {
                     if (type === "waterpoints") handleWpClick(wp);
-                    if (type === "places") onWpClick(wp.lat, wp.lon);
+                    if (type === "places") {
+                      setSelectedValue(
+                        `${wp.name.toLowerCase()}, ${wp.adm3.toLowerCase()}, ${wp.adm2.toLowerCase()}, ${wp.adm1.toLowerCase()}`
+                      );
+                      setLatCurrent(wp.lat);
+                      setLonCurrent(wp.lon);
+                    }
                   }}
                 >
                   <IconDropletFilled
@@ -178,8 +184,11 @@ function SearchBar({ waterpoints, onWpClick, type }) {
                     className="py-1 small hint-div text-capitalize "
                     key={i}
                     onClick={() => {
-                      if (type === "places")
-                        onWpClick(e.point.lat, e.point.lng);
+                      if (type === "places") {
+                        setSelectedValue(`${e.name}, ${e.country}`);
+                        setLatCurrent(e.point.lat);
+                        setLonCurrent(e.point.lng);
+                      }
                     }}
                   >
                     <IconMapPin color="#4d4d4d" className="me-3" />

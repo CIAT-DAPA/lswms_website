@@ -109,6 +109,20 @@ class Services {
         console.log(error);
       });
   }
+
+  get_reverse_geocoding(lat, lon) {
+    const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
+      process.env.REACT_APP_KEY_GRAPHHOPER
+    }&reverse=true&point=${lat},${lon}&limit=1`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }
 
 export default new Services();

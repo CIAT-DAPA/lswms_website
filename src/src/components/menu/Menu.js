@@ -69,6 +69,9 @@ function Menu() {
             {/* <Link className="nav-link text-black" to="/userprofile">
               User Profile
             </Link> */}
+            <Button variant="outline-primary" className="me-2">
+              Log in
+            </Button>
             <Dropdown as={ButtonGroup} className="d-block">
               <Button
                 variant="outline-secondary"

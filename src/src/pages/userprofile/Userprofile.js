@@ -1,35 +1,35 @@
 import React from "react";
 import "./Userprofile.css";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import userImg from "../../assets/img/userTest.png";
 import editIcon from "../../assets/svg/edit.svg";
 import smsIcon from "../../assets/svg/sms.svg";
 import emailIcon from "../../assets/svg/emailChannel.svg";
 import unsubscribeIcon from "../../assets/svg/unsubscribe.svg";
 import noSubscriptionImg from "../../assets/img/noSubscription.png";
 import { Link } from "react-router-dom";
+import { IconEdit } from "@tabler/icons-react";
 
 function Userprofile() {
-  const subscriptions = false;
+  const subscriptions = true;
   return (
     <>
       <div className="user-bg">
         <Container className="container-user">
           <Row className="text-white align-items-center ">
             <Col className="col-3 col-md-2 text-center">
-              <img
-                src={userImg}
-                alt="user profile"
-                className="img-fluid border border-5 border-white rounded-circle position-relative"
-                style={{ bottom: "15px" }}
-              />
+              <div
+                className="bg-black border border-5 py-5 rounded-circle d-flex flex-column justify-content-center align-items-center"
+                style={{ height: "150px", width: "150px" }}
+              >
+                <span className="fw-bold fs-1">MT</span>
+              </div>
             </Col>
             <Col className="pb-5">
               <h3 className="fw-normal my-4">Mekonnen Tolcha</h3>
             </Col>
             <Col className="col-1 pb-5 text-end">
               <Button className="rounded-4">
-                <img src={editIcon} alt="" className="" />
+                <IconEdit size={24} />
               </Button>
             </Col>
           </Row>
@@ -91,7 +91,11 @@ function Userprofile() {
                   <Link to="/visualization">waterpoint display</Link> and
                   subscribing to a waterpoint
                 </p>
-                <img src={noSubscriptionImg} alt="no subscriptions" className="img-fluid"/>
+                <img
+                  src={noSubscriptionImg}
+                  alt="no subscriptions"
+                  className="img-fluid"
+                />
               </>
             )}
           </Col>
@@ -99,10 +103,6 @@ function Userprofile() {
             <h5 className="text-capitalize ">Contact information</h5>
             <table className="fs-6 w-100">
               <tbody>
-                <tr className="tr-table">
-                  <td className="text-capitalize ">{`Cellphone:`}</td>
-                  <td className="text-end text-capitalize">{`+251 91 405 5461`}</td>
-                </tr>
                 <tr className="tr-table">
                   <td className="text-capitalize ">{`Email:`}</td>
                   <td className="text-end text-capitalize">{`example@test.com`}</td>

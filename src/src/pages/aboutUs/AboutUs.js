@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 function AboutUs() {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   return (
     <div className="container">
       <h1 className="pt-5">{t("aboutUs.title")}</h1>

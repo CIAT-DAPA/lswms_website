@@ -3,7 +3,7 @@ import img404 from "../../assets/img/404.png";
 import { useTranslation } from "react-i18next";
 
 function NotFound() {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   return (
     <div
       style={{ height: "100vh" }}

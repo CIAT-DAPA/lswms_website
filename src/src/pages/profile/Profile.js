@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
-import downloadImg from "../../assets/svg/download.svg";
-import dataIcon from "../../assets/svg/data.svg";
-import emailImg from "../../assets/svg/email.svg";
 import {
   Button,
   Carousel,
@@ -34,6 +31,7 @@ import ItemTable from "../../components/itemTable/ItemTable";
 import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
+import { IconDownload, IconChartLine, IconMail } from "@tabler/icons-react";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -210,7 +208,7 @@ function Waterprofile() {
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}
                         >
-                          <img src={downloadImg} alt="" className="" />
+                          <IconDownload />
                         </Button>
                       </div>
                     </Carousel.Caption>
@@ -234,7 +232,7 @@ function Waterprofile() {
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}
                         >
-                          <img src={downloadImg} alt="" className="" />
+                          <IconDownload />
                         </Button>
                       </div>
                     </Carousel.Caption>
@@ -434,12 +432,15 @@ function Waterprofile() {
               </Container>
             </div>
             <Container className="mb-5 mt-2">
-              <Button className="me-5 rounded-4 mb-2 mb-sm-0" onClick={downloadProfileAsPdf}>
-                <img src={downloadImg} alt="" className="me-3" />
+              <Button
+                className="me-5 rounded-4 mb-2 mb-sm-0"
+                onClick={downloadProfileAsPdf}
+              >
+                <IconDownload className="me-3" />
                 {t("profile.download")}
               </Button>
               {/* <Button disabled={true}>
-          <img src={emailImg} className="me-3" />
+              <IconMail className="me-3" />
           Send profile
         </Button> */}
               <Link
@@ -447,7 +448,7 @@ function Waterprofile() {
                 className="btn btn-primary me-5 rounded-4"
                 to={`/dashboard/${wp.id}`}
               >
-                <img src={dataIcon} alt="" className="me-3" />
+                <IconChartLine className="me-3" />
                 {t("monitoring.data")}
               </Link>
             </Container>

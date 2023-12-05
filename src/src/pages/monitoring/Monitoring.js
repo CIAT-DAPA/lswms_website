@@ -8,8 +8,6 @@ import {
   ZoomControl,
 } from "react-leaflet";
 import L from "leaflet";
-import profileIcon from "../../assets/svg/profile.svg";
-import dataIcon from "../../assets/svg/data.svg";
 import { Link } from "react-router-dom";
 import "./Monitoring.css";
 import Services from "../../services/apiService";
@@ -21,7 +19,6 @@ import {
   Badge,
   Button,
   Dropdown,
-  Form,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
@@ -32,6 +29,8 @@ import {
   IconCar,
   IconRoad,
   IconWalk,
+  IconChartLine,
+  IconId,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 
@@ -286,7 +285,7 @@ function Visualization() {
                   }`}
                   onClick={() => setShowWarning(true)}
                 >
-                  <img src={profileIcon} alt="" className="me-3" />
+                  <IconId style={{ position: "inherit" }} className="me-3" />
                   {t("monitoring.profile")}
                 </Button>
               ) : (
@@ -297,7 +296,7 @@ function Visualization() {
                   }`}
                   to={`/profile/${wp.id}`}
                 >
-                  <img src={profileIcon} alt="" className="me-3" />
+                  <IconId style={{ position: "inherit" }} className="me-3" />
                   {t("monitoring.profile")}
                 </Link>
               )}
@@ -307,7 +306,10 @@ function Visualization() {
                 className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
                 to={`/dashboard/${wp.id}`}
               >
-                <img src={dataIcon} alt="" className="me-3" />
+                <IconChartLine
+                  style={{ position: "inherit" }}
+                  className="me-3"
+                />
                 {t("monitoring.data")}
               </Link>
               <Dropdown variant="sm">

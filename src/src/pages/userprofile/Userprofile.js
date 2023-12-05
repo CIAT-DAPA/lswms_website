@@ -86,11 +86,6 @@ function Userprofile() {
                   alt="no subscriptions"
                   className="img-fluid"
                 />
-                <img
-                  src={noSubscriptionImg}
-                  alt="no subscriptions"
-                  className="img-fluid"
-                />
               </>
             )}
           </Col>

@@ -2,15 +2,17 @@ import React from "react";
 import "./Userprofile.css";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import userImg from "../../assets/img/userTest.png";
-import editIcon from "../../assets/svg/edit.svg";
-import smsIcon from "../../assets/svg/sms.svg";
-import emailIcon from "../../assets/svg/emailChannel.svg";
-import unsubscribeIcon from "../../assets/svg/unsubscribe.svg";
 import noSubscriptionImg from "../../assets/img/noSubscription.png";
 import { Link } from "react-router-dom";
+import {
+  IconEdit,
+  IconMessageDots,
+  IconMail,
+  IconMailOff,
+} from "@tabler/icons-react";
 
 function Userprofile() {
-  const subscriptions = false;
+  const subscriptions = true;
   return (
     <>
       <div className="user-bg">
@@ -29,7 +31,7 @@ function Userprofile() {
             </Col>
             <Col className="col-1 pb-5 text-end">
               <Button className="rounded-4">
-                <img src={editIcon} alt="" className="" />
+                <IconEdit />
               </Button>
             </Col>
           </Row>
@@ -49,12 +51,8 @@ function Userprofile() {
                       >
                         Burra
                       </div>
-                      <img src={emailIcon} alt="email" className="me-2" />
-                      <img
-                        src={smsIcon}
-                        alt="sms"
-                        style={{ minWidth: "16px" }}
-                      />
+                      <IconMail className="me-2" />
+                      <IconMessageDots />
                     </div>
                     <div>Borena, Yabelo, Tsadim</div>
                   </Col>
@@ -63,19 +61,11 @@ function Userprofile() {
                   </Col>
                   <Col className="d-flex col-auto">
                     <Button className="me-4 rounded-4 btn-warning text-black">
-                      <img
-                        src={editIcon}
-                        alt="edit"
-                        className="me-2 editIconBlack"
-                      />
+                      <IconEdit />
                       Edit Subscribe
                     </Button>
                     <Button className=" rounded-4 btn-danger ">
-                      <img
-                        src={unsubscribeIcon}
-                        alt="Unsubscribe"
-                        className="me-2"
-                      />
+                      <IconMailOff className="me-2" />
                       Unsubscribe
                     </Button>
                   </Col>
@@ -91,7 +81,11 @@ function Userprofile() {
                   <Link to="/visualization">waterpoint display</Link> and
                   subscribing to a waterpoint
                 </p>
-                <img src={noSubscriptionImg} alt="no subscriptions" className="img-fluid"/>
+                <img
+                  src={noSubscriptionImg}
+                  alt="no subscriptions"
+                  className="img-fluid"
+                />
               </>
             )}
           </Col>

@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Modal } from "react-bootstrap";
 
 function SearchBar({ waterpoints, onWpClick, type }) {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   const [filterText, setFilterText] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [hits, setHits] = useState("");

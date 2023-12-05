@@ -9,7 +9,7 @@ import "./Footer.css";
 import { useTranslation } from "react-i18next";
 
 function Footer() {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   return (
     <footer>
       <Container>

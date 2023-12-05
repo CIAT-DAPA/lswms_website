@@ -4,7 +4,7 @@ import { IconClockHour3, IconRuler2 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
 function RouteInfo({ route }) {
-    const [t, i18n] = useTranslation("global");
+    const [t] = useTranslation("global");
   const distanceInKm = (route.distance / 1000).toFixed(2);
   const timeInHours = Math.floor(route.time / 3600000);
   const timeInMinutes = Math.floor((route.time % 3600000) / 60000);

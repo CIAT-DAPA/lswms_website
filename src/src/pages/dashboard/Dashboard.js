@@ -59,7 +59,7 @@ function HistoricalData() {
     setEvap(filterData(wpData, "evp", selectedYear));
     setYear(selectedYear);
     const result = typeNames.map((type) => {
-      return climatology.climatology.flatMap((monthData) => {
+      return climatology?.climatology?.flatMap((monthData) => {
         return monthData.map((dayData) => {
           const month = dayData.month.toString().padStart(2, "0");
           const day = dayData.day.toString().padStart(2, "0");
@@ -74,10 +74,10 @@ function HistoricalData() {
       });
     });
 
-    setClimaDepthData(result[0].sort((a, b) => a.x - b.x));
-    setClimaScaledDepthData(result[1].sort((a, b) => a.x - b.x));
-    setClimaRain(result[2].sort((a, b) => a.x - b.x));
-    setClimaEvap(result[3].sort((a, b) => a.x - b.x));
+    setClimaDepthData(result[0]?.sort((a, b) => a.x - b.x));
+    setClimaScaledDepthData(result[1]?.sort((a, b) => a.x - b.x));
+    setClimaRain(result[2]?.sort((a, b) => a.x - b.x));
+    setClimaEvap(result[3]?.sort((a, b) => a.x - b.x));
   };
 
   useEffect(() => {

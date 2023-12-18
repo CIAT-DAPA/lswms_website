@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Userprofile.css";
-import { Button, Col, Container, Row } from "react-bootstrap";
-import userImg from "../../assets/img/userTest.png";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import noSubscriptionImg from "../../assets/img/noSubscription.png";
 import { Link } from "react-router-dom";
 import {
@@ -12,9 +20,64 @@ import {
 } from "@tabler/icons-react";
 
 function Userprofile() {
-  const subscriptions = true;
+  const [waterpointsTest, setwaterpointsTest] = useState([
+    {
+      id: 1,
+      name: "Burra",
+      region: "Borena",
+      woreda: "Yabelo",
+      kebele: "Tsadim",
+      depth: "3.50%",
+      email: true,
+      sms: false,
+    },
+    {
+      id: 2,
+      name: "Kolobsisa",
+      region: "Borena",
+      woreda: "Yabelo",
+      kebele: "Tsadim",
+      depth: "3.50%",
+      email: false,
+      sms: true,
+    },
+  ]);
+  const [showToastUnsubscribe, setShowToastUnsubscribe] = useState(false);
+  const [modalVisibility, setModalVisibility] = useState(
+    Array(waterpointsTest.length).fill(false)
+  );
+
+  const unsubscribeWp = (id) => {
+    setwaterpointsTest(waterpointsTest.filter((wp) => wp.id !== id));
+    setShowToastUnsubscribe(true);
+  };
+
+  const editWp = (id) => {
+    setModalVisibility((prevVisibility) =>
+      prevVisibility.map((value, index) => (index === id - 1 ? true : value))
+    );
+  };
+
   return (
     <>
+      <ToastContainer
+        className="p-3"
+        position="bottom-end"
+        style={{ zIndex: 1 }}
+      >
+        <Toast
+          onClose={() => setShowToastUnsubscribe(false)}
+          show={showToastUnsubscribe}
+          delay={3000}
+          className="bg-danger-subtle "
+          autohide
+        >
+          <Toast.Body>
+            Woohoo, you've unsubscribe from this waterpoint!
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <div className="user-bg">
         <Container className="container-user">
           <Row className="text-white align-items-center ">
@@ -26,13 +89,8 @@ function Userprofile() {
                 <span className="fw-bold fs-1">MT</span>
               </div>
             </Col>
-            <Col className="pb-5">
+            <Col className="pb-5 ms-5 ms-lg-0">
               <h3 className="fw-normal my-4">Mekonnen Tolcha</h3>
-            </Col>
-            <Col className="col-1 pb-5 text-end">
-              <Button className="rounded-4">
-                <IconEdit />
-              </Button>
             </Col>
           </Row>
         </Container>
@@ -40,36 +98,108 @@ function Userprofile() {
       <Container className="mt-5">
         <Row className="">
           <Col className="col-12 col-md-8 mt-4">
-            {subscriptions ? (
+            {waterpointsTest?.length > 0 ? (
               <>
                 <h5 className="fw-medium">Subscribed waterpoints</h5>
-                <Row className="justify-content-between align-items-baseline mb-3">
-                  <Col className="col-auto">
-                    <div className="d-flex align-items-stretch ">
-                      <div
-                        className={`td-name text-center fw-medium px-4 me-2 td-brown`}
+                {waterpointsTest.map((waterpoint, index) => {
+                  return (
+                    <>
+                      <Modal
+                        show={modalVisibility[index]}
+                        onHide={() =>
+                          setModalVisibility((prevState) =>
+                            prevState.map((value, i) =>
+                              i === index ? false : value
+                            )
+                          )
+                        }
+                        centered
+                        size="sm"
+                        key={index + 100}
                       >
-                        Burra
-                      </div>
-                      <IconMail className="me-2" />
-                      <IconMessageDots />
-                    </div>
-                    <div>Borena, Yabelo, Tsadim</div>
-                  </Col>
-                  <Col className="col-auto">
-                    <p>Depth: 3.50%</p>
-                  </Col>
-                  <Col className="d-flex col-auto">
-                    <Button className="me-4 rounded-4 btn-warning text-black">
-                      <IconEdit />
-                      Edit Subscribe
-                    </Button>
-                    <Button className=" rounded-4 btn-danger ">
-                      <IconMailOff className="me-2" />
-                      Unsubscribe
-                    </Button>
-                  </Col>
-                </Row>
+                        <Modal.Header closeButton>
+                          <Modal.Title className="h5">
+                            Edit your subscriptions
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <Form>
+                            <Form.Check
+                              type={"checkbox"}
+                              id={`default-checkbox`}
+                              label={`Email`}
+                              checked={waterpoint.email}
+                              onChange={(e) => {
+                                const newWaterpoints = [...waterpointsTest];
+                                const index = newWaterpoints.findIndex(
+                                  (wp) => wp.id === waterpoint.id
+                                );
+                                newWaterpoints[index] = {
+                                  ...newWaterpoints[index],
+                                  email: e.target.checked,
+                                };
+                                setwaterpointsTest(newWaterpoints);
+                              }}
+                            />
+                            <Form.Check
+                              type={"checkbox"}
+                              id={`default-checkbox`}
+                              label={`SMS`}
+                              checked={waterpoint.sms}
+                              onChange={(e) => {
+                                const newWaterpoints = [...waterpointsTest];
+                                const index = newWaterpoints.findIndex(
+                                  (wp) => wp.id === waterpoint.id
+                                );
+                                newWaterpoints[index] = {
+                                  ...newWaterpoints[index],
+                                  sms: e.target.checked,
+                                };
+                                setwaterpointsTest(newWaterpoints);
+                              }}
+                            />
+                          </Form>
+                        </Modal.Body>
+                      </Modal>
+                      <Row
+                        className="justify-content-between align-items-baseline mb-3"
+                        key={index}
+                      >
+                        <Col className="col-auto">
+                          <div className="d-flex align-items-stretch ">
+                            <div
+                              className={`td-name text-center fw-medium px-4 me-2 td-brown`}
+                            >
+                              {waterpoint.name}
+                            </div>
+                            {waterpoint.email && <IconMail className="me-2" />}
+                            {waterpoint.sms && <IconMessageDots />}
+                          </div>
+                          <div>{`${waterpoint.region}, ${waterpoint.woreda}, ${waterpoint.kebele}`}</div>
+                        </Col>
+                        <Col className="col-auto">
+                          <p>Depth: {waterpoint.depth}</p>
+                        </Col>
+                        <Col className="d-flex col-auto">
+                          <Button
+                            className="me-4 rounded-4 btn-warning text-black"
+                            onClick={() => editWp(waterpoint.id)}
+                          >
+                            <IconEdit />
+                            Edit Subscribe
+                          </Button>
+                          <Button
+                            className=" rounded-4 btn-danger "
+                            onClick={() => unsubscribeWp(waterpoint.id)}
+                          >
+                            <IconMailOff className="me-2" />
+                            Unsubscribe
+                          </Button>
+                        </Col>
+                      </Row>
+                    </>
+                  );
+                })}
               </>
             ) : (
               <>

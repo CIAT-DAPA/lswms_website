@@ -60,27 +60,24 @@ function AddWMSLayer() {
 
     // Create a time dimension
     const timeDimension = new L.TimeDimension({
-      time: "2022-01", // Start the timeline at this date
-      timeInterval: "2022-01/2023-09", // Change this to match your data
-      period: "P1M", // Change this to match your data
+      timeInterval: "2022-01/2023-09",
+      period: "P1M",
     });
     map.timeDimension = timeDimension;
 
     // Create and add a TimeDimension Layer to the map
-    var tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
-      updateTimeDimension: true,
-      updateTimeDimensionMode: "replace",
-      timeDimensionName: "time", // Change this to the name of the time dimension in the WMS server
-      requestTimeFromCapabilities: true, // Add this line
+    const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+      timeDimensionName: "time",
     });
     tdWmsLayer.addTo(map);
 
     // Create and add a TimeDimension Control to the map
     if (!timeDimensionControlRef.current) {
-      var timeDimensionControl = new L.Control.TimeDimension({
+      const timeDimensionControl = new L.Control.TimeDimension({
         timeDimension: timeDimension,
         position: "bottomleft",
         autoPlay: false,
+        speedSlider: false,
         playerOptions: {
           buffer: 1,
           minBufferReady: -1,

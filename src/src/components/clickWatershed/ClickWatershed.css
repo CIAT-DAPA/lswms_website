@@ -1,0 +1,7 @@
+.forage-popup{
+    width: auto;
+}
+
+.forage-popup > .leaflet-popup-content-wrapper > .leaflet-popup-content{
+    min-width: auto;
+}

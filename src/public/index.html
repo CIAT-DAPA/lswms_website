@@ -13,19 +13,10 @@
       name="keywords"
       content="water, water management, water management system, monitoring, waterpoints, water management system for agriculture, water management system for irrigation, water management system for farmers, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in ethiopia"
     />
-    <meta property="og:image" content="%PUBLIC_URL%/logo192.png">
+    <meta property="og:image" content="%PUBLIC_URL%/logo192.png" />
 
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--Leaflet-->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
-    />
     <!--Google fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,15 +24,46 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
       rel="stylesheet"
     />
+    <!-- Leaflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+    />
+
+    <!-- Leaflet Timeline -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.min.css"
+    />
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SBLCV9SVE9"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-SBLCV9SVE9"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      
-      gtag('config', 'G-SBLCV9SVE9');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-SBLCV9SVE9");
     </script>
+    <!-- Leaflet Scripts -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"
+    ></script>
+
+    <!-- Leaflet TimeDimension Scripts -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"
+    ></script>
     <title>ET - Monitoring</title>
   </head>
   <body>

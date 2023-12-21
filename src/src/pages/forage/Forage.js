@@ -10,6 +10,7 @@ import {
 import Configuration from "../../conf/Configuration";
 import TimelineController from "../../components/timelineController/TimelineController";
 import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
+import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
 
 function Forage() {
   return (
@@ -45,6 +46,7 @@ function Forage() {
           layer="waterpoints_et:biomass"
         />
         <ClickWatershed />
+        <BiomassLegend layer="waterpoints_et:biomass" />
       </MapContainer>
     </>
   );

@@ -17,6 +17,7 @@
     "i18next": "^23.4.5",
     "jspdf": "^2.5.1",
     "leaflet": "^1.9.4",
+    "leaflet-timedimension": "^1.1.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import "./Forage.css";
 import {
   LayersControl,
@@ -6,11 +6,10 @@ import {
   TileLayer,
   WMSTileLayer,
   ZoomControl,
-  useMap,
 } from "react-leaflet";
-import L from "leaflet";
-import "leaflet-timedimension";
 import Configuration from "../../conf/Configuration";
+import TimelineController from "../../components/timelineController/TimelineController";
+import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
 
 function Forage() {
   return (
@@ -41,54 +40,13 @@ function Forage() {
           </LayersControl.Overlay>
         </LayersControl>
         <ZoomControl position="topright" />
-        <AddWMSLayer />
+        <TimelineController
+          dimensionName="time"
+          layer="waterpoints_et:biomass"
+        />
+        <ClickWatershed />
       </MapContainer>
     </>
   );
 }
-
-function AddWMSLayer() {
-  const map = useMap();
-  const timeDimensionControlRef = useRef(null);
-
-  useEffect(() => {
-    const wmsLayer = L.tileLayer.wms(Configuration.get_url_geoserver(), {
-      layers: "waterpoints_et:biomass",
-      format: "image/png",
-      transparent: true,
-    });
-
-    // Create a time dimension
-    const timeDimension = new L.TimeDimension({
-      timeInterval: "2022-01/2023-09",
-      period: "P1M",
-    });
-    map.timeDimension = timeDimension;
-
-    // Create and add a TimeDimension Layer to the map
-    const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
-      timeDimensionName: "time",
-    });
-    tdWmsLayer.addTo(map);
-
-    // Create and add a TimeDimension Control to the map
-    if (!timeDimensionControlRef.current) {
-      const timeDimensionControl = new L.Control.TimeDimension({
-        timeDimension: timeDimension,
-        position: "bottomleft",
-        autoPlay: false,
-        speedSlider: false,
-        playerOptions: {
-          buffer: 1,
-          minBufferReady: -1,
-        },
-      });
-      map.addControl(timeDimensionControl);
-      timeDimensionControlRef.current = timeDimensionControl;
-    }
-  }, [map]);
-
-  return null;
-}
-
 export default Forage;

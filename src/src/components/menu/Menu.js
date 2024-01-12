@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
+import { Button, ButtonGroup, Dropdown, SplitButton } from "react-bootstrap";
 import "./Menu.css";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
@@ -72,19 +72,21 @@ function Menu() {
             {/* <Link className="nav-link text-black" to="/userprofile">
               User Profile
             </Link> */}
-            <Button variant="outline-primary" className="me-2">
-              Log in
-            </Button>
-            <Dropdown as={ButtonGroup} className="d-block">
+            <Dropdown
+              as={ButtonGroup}
+              className="d-block mb-2 ms-0 me-5 mt-1 mb-lg-0 ms-lg-2"
+            >
               <Button
-                variant="outline-secondary"
-                className="text-uppercase disabled"
+                variant="outline-secondary "
+                size="sm"
+                className="text-uppercase disabled "
               >
                 {window.localStorage.getItem("language") || "es"}
               </Button>
               <Dropdown.Toggle
                 variant="outline-secondary"
                 split
+                size="sm"
                 id="dropdown-split-basic"
               />
               <Dropdown.Menu>
@@ -99,6 +101,13 @@ function Menu() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            <Button
+              href="https://users.waterpointsmonitoring.net/"
+              target="_blank"
+              variant="outline-primary"
+            >
+              Log in
+            </Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

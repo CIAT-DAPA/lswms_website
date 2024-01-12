@@ -31,7 +31,13 @@ import ItemTable from "../../components/itemTable/ItemTable";
 import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
-import { IconDownload, IconChartLine, IconMail } from "@tabler/icons-react";
+import {
+  IconDownload,
+  IconChartLine,
+  IconMail,
+  IconMailPlus,
+} from "@tabler/icons-react";
+import { IconMailOff } from "@tabler/icons-react";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -41,6 +47,7 @@ function Waterprofile() {
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
   const [show, setShow] = useState(false);
+  const [subscriptionTemp, setSubscriptionTemp] = useState(false);
 
   useEffect(() => {
     fetchWaterProfile();
@@ -60,6 +67,10 @@ function Waterprofile() {
       setWsTable({ adm1, adm2, adm3, watershed_name });
     }
   }, [wp]);
+
+  const handleSubscription = () => {
+    setSubscriptionTemp(!subscriptionTemp);
+  };
 
   // Función para obtener los datos del perfil del agua
   const fetchWaterProfile = () => {
@@ -205,6 +216,21 @@ function Waterprofile() {
                       </p>
                       <div className="d-flex justify-content-end ">
                         <Button
+                          size="sm"
+                          className="rounded-4 me-2"
+                          onClick={() => handleSubscription()}
+                        >
+                          {!subscriptionTemp ? (
+                            <>
+                              <IconMailPlus size={20} /> Subscribe
+                            </>
+                          ) : (
+                            <>
+                              <IconMailOff size={20} /> Unsubscribe
+                            </>
+                          )}
+                        </Button>
+                        <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}
                         >
@@ -228,6 +254,21 @@ function Waterprofile() {
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
+                        <Button
+                          size="sm"
+                          className="rounded-4 me-2"
+                          onClick={() => handleSubscription()}
+                        >
+                          {!subscriptionTemp ? (
+                            <>
+                              <IconMailPlus size={20} /> Subscribe
+                            </>
+                          ) : (
+                            <>
+                              <IconMailOff size={20} /> Unsubscribe
+                            </>
+                          )}
+                        </Button>
                         <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}

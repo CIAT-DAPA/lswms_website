@@ -31,6 +31,9 @@ import {
   IconWalk,
   IconChartLine,
   IconId,
+  IconMailPlus,
+  IconMailOff,
+  IconMailCheck,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 
@@ -76,6 +79,8 @@ function Visualization() {
   const [showWarning, setShowWarning] = useState(false);
   const [profile, setProfile] = useState();
   const [waterpointRoute, setWaterpointRoute] = useState();
+  const [subscriptionTemp, setSubscriptionTemp] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClose = () => setShowWarning(false);
 
@@ -110,6 +115,10 @@ function Visualization() {
         });
     }
   }, [waterpoints]);
+
+  const handleSubscription = () => {
+    setSubscriptionTemp(!subscriptionTemp);
+  };
 
   const popupData = (wp) => {
     // Find the corresponding monitored data for the current waterpoint
@@ -188,12 +197,36 @@ function Visualization() {
           }
           key={wp.id}
         >
-          <Popup>
+          <Popup closeButton={false}>
             <div>
-              <h6 className="fw-medium mb-0">
-                {t("monitoring.waterpoint")} {wp.name}{" "}
-                {t("monitoring.overview")}
-              </h6>
+              <div className="d-flex align-items-center justify-content-between ">
+                <h6 className="fw-medium mb-0">
+                  {t("monitoring.waterpoint")} {wp.name}{" "}
+                  {t("monitoring.overview")}
+                </h6>
+                <Button
+                  size="sm"
+                  className={`rounded-4 ${
+                    subscriptionTemp && !isHovered
+                      ? "btn-success"
+                      : subscriptionTemp && isHovered
+                      ? "btn-danger"
+                      : ""
+                  }`}
+                  onClick={() => handleSubscription()}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {!subscriptionTemp ? (
+                    <IconMailPlus size={20} />
+                  ) : isHovered ? (
+                    <IconMailOff size={20} />
+                  ) : (
+                    <IconMailCheck size={20} />
+                  )}
+                </Button>
+              </div>
+
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
               </p>

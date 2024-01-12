@@ -489,6 +489,7 @@ function Waterprofile() {
               <OverlayTrigger
                 trigger="click"
                 placement="right"
+                rootClose={true}
                 overlay={popoverShare}
               >
                 <Button className="rounded-4 mb-2 mb-sm-0">

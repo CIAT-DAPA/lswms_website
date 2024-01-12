@@ -18,7 +18,25 @@
   top: 40vh;
 }
 
-.img-carousel{
+.img-carousel {
   height: 55vh;
   object-fit: cover;
+}
+
+.btn-facebook {
+  border-color: #21479b !important;
+  background-color: #21479b !important;
+}
+
+.btn-facebook:hover {
+  background-color: #17367a !important;
+}
+
+.btn-x {
+  border-color: #161616 !important;
+  background-color: #161616 !important;
+}
+
+.btn-x:hover {
+  background-color: #000000 !important;
 }

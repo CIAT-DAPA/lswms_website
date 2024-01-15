@@ -11,6 +11,7 @@ import "./SearchBar.css";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "react-bootstrap";
+import { useDebouncedCallback } from "use-debounce";
 
 function SearchBar({ waterpoints, onWpClick, type }) {
   const [t] = useTranslation("global");
@@ -23,8 +24,15 @@ function SearchBar({ waterpoints, onWpClick, type }) {
   const [lonCurrent, setLonCurrent] = useState();
 
   const handleFilterChange = (e) => {
+    setFilterText(e.target.value);
+    setSelectedValue("");
+
+    debouncedGetGeocoding(e.target.value);
+  };
+
+  const debouncedGetGeocoding = useDebouncedCallback((value) => {
     if (type === "places") {
-      Services.get_geocoding(e.target.value)
+      Services.get_geocoding(value)
         .then((response) => {
           setHits(response.hits);
         })
@@ -32,9 +40,7 @@ function SearchBar({ waterpoints, onWpClick, type }) {
           console.log(error);
         });
     }
-    setFilterText(e.target.value);
-    setSelectedValue("");
-  };
+  }, 300);
 
   const filteredWaterpoints = waterpoints.filter((wp) =>
     [wp.name, wp.adm1, wp.adm2, wp.adm3].some((prop) =>

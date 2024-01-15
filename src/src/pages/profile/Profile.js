@@ -8,6 +8,8 @@ import {
   Col,
   Container,
   Modal,
+  OverlayTrigger,
+  Popover,
   Row,
   Spinner,
   Toast,
@@ -35,9 +37,12 @@ import {
   IconDownload,
   IconChartLine,
   IconMail,
+  IconShare,
+  IconBrandFacebook,
+  IconBrandX,
+  IconMail,
   IconMailPlus,
 } from "@tabler/icons-react";
-import { IconMailOff } from "@tabler/icons-react";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -148,6 +153,36 @@ function Waterprofile() {
       return <></>;
     }
   };
+
+  const popoverShare = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">Share</Popover.Header>
+      <Popover.Body>
+        <Button
+          className="me-2 btn-facebook"
+          onClick={() => {
+            const url = window.location.href;
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
+              url
+            )}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandFacebook />
+        </Button>
+        <Button
+          className="btn-x"
+          onClick={() => {
+            const url = window.location.href;
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(url)}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandX />
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
 
   return (
     <>
@@ -474,24 +509,31 @@ function Waterprofile() {
             </div>
             <Container className="mb-5 mt-2">
               <Button
-                className="me-5 rounded-4 mb-2 mb-sm-0"
+                className="me-3 rounded-4 mb-2 mb-sm-0"
                 onClick={downloadProfileAsPdf}
               >
                 <IconDownload className="me-3" />
                 {t("profile.download")}
               </Button>
-              {/* <Button disabled={true}>
-              <IconMail className="me-3" />
-          Send profile
-        </Button> */}
               <Link
                 type="button"
-                className="btn btn-primary me-5 rounded-4"
+                className="btn btn-primary me-3 rounded-4"
                 to={`/dashboard/${wp.id}`}
               >
                 <IconChartLine className="me-3" />
                 {t("monitoring.data")}
               </Link>
+              <OverlayTrigger
+                trigger="click"
+                placement="right"
+                rootClose={true}
+                overlay={popoverShare}
+              >
+                <Button className="rounded-4 mb-2 mb-sm-0">
+                  <IconShare className="me-3" />
+                  Share profile
+                </Button>
+              </OverlayTrigger>
             </Container>
           </>
         )

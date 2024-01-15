@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Userprofile.css";
 import {
   Button,
@@ -18,37 +18,28 @@ import {
   IconMail,
   IconMailOff,
 } from "@tabler/icons-react";
+import Services from "../../services/apiService";
 
 function Userprofile() {
-  const [waterpointsTest, setwaterpointsTest] = useState([
-    {
-      id: 1,
-      name: "Burra",
-      region: "Borena",
-      woreda: "Yabelo",
-      kebele: "Tsadim",
-      depth: "3.50%",
-      email: true,
-      sms: false,
-    },
-    {
-      id: 2,
-      name: "Kolobsisa",
-      region: "Borena",
-      woreda: "Yabelo",
-      kebele: "Tsadim",
-      depth: "3.50%",
-      email: false,
-      sms: true,
-    },
-  ]);
+  const [notification, setNotifications] = useState([]);
+
+  useEffect(() => {
+    Services.get_all_subscription_by_user("test")
+      .then((response) => {
+        setNotifications(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const [showToastUnsubscribe, setShowToastUnsubscribe] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(
-    Array(waterpointsTest.length).fill(false)
+    Array(notification.length).fill(false)
   );
 
   const unsubscribeWp = (id) => {
-    setwaterpointsTest(waterpointsTest.filter((wp) => wp.id !== id));
+    setwaterpointsTest(notification.filter((wp) => wp.id !== id));
     setShowToastUnsubscribe(true);
   };
 
@@ -98,10 +89,10 @@ function Userprofile() {
       <Container className="mt-5">
         <Row className="">
           <Col className="col-12 col-md-8 mt-4">
-            {waterpointsTest?.length > 0 ? (
+            {notification?.length > 0 ? (
               <>
                 <h5 className="fw-medium">Subscribed waterpoints</h5>
-                {waterpointsTest.map((waterpoint, index) => {
+                {notification.map((waterpoint, index) => {
                   return (
                     <>
                       <Modal
@@ -208,7 +199,7 @@ function Userprofile() {
                 </h3>
                 <p className="text-center">
                   try going to the{" "}
-                  <Link to="/visualization">waterpoint display</Link> and
+                  <Link to="/monitoring">waterpoint display</Link> and
                   subscribing to a waterpoint
                 </p>
                 <img

@@ -36,11 +36,11 @@ import Configuration from "../../conf/Configuration";
 import {
   IconDownload,
   IconChartLine,
-  IconMail,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
   IconMail,
+  IconMailOff,
   IconMailPlus,
 } from "@tabler/icons-react";
 
@@ -52,10 +52,11 @@ function Waterprofile() {
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
   const [show, setShow] = useState(false);
-  const [subscriptionTemp, setSubscriptionTemp] = useState(false);
+  const [subscription, setSubscription] = useState();
 
   useEffect(() => {
     fetchWaterProfile();
+    fetchSubscription();
   }, []);
 
   useEffect(() => {
@@ -74,7 +75,33 @@ function Waterprofile() {
   }, [wp]);
 
   const handleSubscription = () => {
-    setSubscriptionTemp(!subscriptionTemp);
+    Services.post_subscription("test", idWater, "weekly")
+      .then((response) => {
+        setSubscription(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleUnsubscribe = () => {
+    Services.patch_unsubscribe(idWater, subscription[0].id)
+      .then((response) => {
+        setSubscription();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const fetchSubscription = () => {
+    Services.get_one_subscription_by_user("test", idWater)
+      .then((response) => {
+        if (response.length > 0) setSubscription(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // Función para obtener los datos del perfil del agua
@@ -250,21 +277,23 @@ function Waterprofile() {
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
-                        <Button
-                          size="sm"
-                          className="rounded-4 me-2"
-                          onClick={() => handleSubscription()}
-                        >
-                          {!subscriptionTemp ? (
-                            <>
-                              <IconMailPlus size={20} /> Subscribe
-                            </>
-                          ) : (
-                            <>
-                              <IconMailOff size={20} /> Unsubscribe
-                            </>
-                          )}
-                        </Button>
+                        {!subscription ? (
+                          <Button
+                            size="sm"
+                            className="rounded-4 me-2 btn-success"
+                            onClick={() => handleSubscription()}
+                          >
+                            <IconMailPlus size={20} /> Subscribe
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            className="rounded-4 me-2 btn-danger"
+                            onClick={() => handleUnsubscribe()}
+                          >
+                            <IconMailOff size={20} /> Unsubscribe
+                          </Button>
+                        )}
                         <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}
@@ -289,21 +318,23 @@ function Waterprofile() {
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
-                        <Button
-                          size="sm"
-                          className="rounded-4 me-2"
-                          onClick={() => handleSubscription()}
-                        >
-                          {!subscriptionTemp ? (
-                            <>
-                              <IconMailPlus size={20} /> Subscribe
-                            </>
-                          ) : (
-                            <>
-                              <IconMailOff size={20} /> Unsubscribe
-                            </>
-                          )}
-                        </Button>
+                        {!subscription ? (
+                          <Button
+                            size="sm"
+                            className="rounded-4 me-2 btn-success"
+                            onClick={() => handleSubscription()}
+                          >
+                            <IconMailPlus size={20} /> Subscribe
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            className="rounded-4 me-2 btn-danger"
+                            onClick={() => handleUnsubscribe()}
+                          >
+                            <IconMailOff size={20} /> Unsubscribe
+                          </Button>
+                        )}
                         <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}

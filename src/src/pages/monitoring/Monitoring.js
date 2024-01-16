@@ -19,6 +19,8 @@ import {
   Badge,
   Button,
   Dropdown,
+  ToastContainer,
+  Toast,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
@@ -31,11 +33,9 @@ import {
   IconWalk,
   IconChartLine,
   IconId,
-  IconMailPlus,
-  IconMailOff,
-  IconMailCheck,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -79,8 +79,8 @@ function Visualization() {
   const [showWarning, setShowWarning] = useState(false);
   const [profile, setProfile] = useState();
   const [waterpointRoute, setWaterpointRoute] = useState();
-  const [subscriptionTemp, setSubscriptionTemp] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
 
   const handleClose = () => setShowWarning(false);
 
@@ -115,10 +115,6 @@ function Visualization() {
         });
     }
   }, [waterpoints]);
-
-  const handleSubscription = () => {
-    setSubscriptionTemp(!subscriptionTemp);
-  };
 
   const popupData = (wp) => {
     // Find the corresponding monitored data for the current waterpoint
@@ -204,29 +200,14 @@ function Visualization() {
                   {t("monitoring.waterpoint")} {wp.name}{" "}
                   {t("monitoring.overview")}
                 </h6>
-                <Button
+                <SubscriptionButton
+                  idWater={wp.id}
+                  idUser={"test"}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
                   size="sm"
-                  className={`rounded-4 ${
-                    subscriptionTemp && !isHovered
-                      ? "btn-success"
-                      : subscriptionTemp && isHovered
-                      ? "btn-danger"
-                      : ""
-                  }`}
-                  onClick={() => handleSubscription()}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  {!subscriptionTemp ? (
-                    <IconMailPlus size={20} />
-                  ) : isHovered ? (
-                    <IconMailOff size={20} />
-                  ) : (
-                    <IconMailCheck size={20} />
-                  )}
-                </Button>
+                />
               </div>
-
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
               </p>
@@ -433,6 +414,25 @@ function Visualization() {
 
   return (
     <>
+      <ToastContainer
+        className="p-3 position-fixed"
+        position="bottom-end"
+        style={{ zIndex: 2000 }}
+      >
+        <Toast
+          onClose={() => setShowToastSubscribe(false)}
+          show={showToastSubscribe}
+          delay={2000}
+          className={!toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`}
+          autohide
+        >
+          <Toast.Body>
+            {!toastSuccess
+              ? `Woohoo, you've unsubscribe from the waterpoint!`
+              : `Success! You're now subscribed to the waterpoint.`}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
       {/* Modal de alert de obtener ubicacion */}
       <Modal show={alert} onHide={() => setAlert(false)} centered>
         <Modal.Body className="d-flex align-items-center ">

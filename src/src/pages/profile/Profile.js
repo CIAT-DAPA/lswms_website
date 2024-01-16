@@ -39,10 +39,8 @@ import {
   IconShare,
   IconBrandFacebook,
   IconBrandX,
-  IconMail,
-  IconMailOff,
-  IconMailPlus,
 } from "@tabler/icons-react";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -52,11 +50,11 @@ function Waterprofile() {
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
   const [show, setShow] = useState(false);
-  const [subscription, setSubscription] = useState();
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
 
   useEffect(() => {
     fetchWaterProfile();
-    fetchSubscription();
   }, []);
 
   useEffect(() => {
@@ -73,36 +71,6 @@ function Waterprofile() {
       setWsTable({ adm1, adm2, adm3, watershed_name });
     }
   }, [wp]);
-
-  const handleSubscription = () => {
-    Services.post_subscription("test", idWater, "weekly")
-      .then((response) => {
-        setSubscription(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const handleUnsubscribe = () => {
-    Services.patch_unsubscribe(idWater, subscription[0].id)
-      .then((response) => {
-        setSubscription();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const fetchSubscription = () => {
-    Services.get_one_subscription_by_user("test", idWater)
-      .then((response) => {
-        if (response.length > 0) setSubscription(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   // Función para obtener los datos del perfil del agua
   const fetchWaterProfile = () => {
@@ -257,6 +225,28 @@ function Waterprofile() {
               </Toast>
             </ToastContainer>
 
+            <ToastContainer
+              className="p-3 position-fixed"
+              position="bottom-end"
+              style={{ zIndex: 2000 }}
+            >
+              <Toast
+                onClose={() => setShowToastSubscribe(false)}
+                show={showToastSubscribe}
+                delay={2000}
+                className={
+                  !toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`
+                }
+                autohide
+              >
+                <Toast.Body>
+                  {!toastSuccess
+                    ? `Woohoo, you've unsubscribe from the waterpoint!`
+                    : `Success! You're now subscribed to the waterpoint.`}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
             <div id="profile">
               <div className="profile-bg">
                 <Carousel
@@ -277,23 +267,13 @@ function Waterprofile() {
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
-                        {!subscription ? (
-                          <Button
-                            size="sm"
-                            className="rounded-4 me-2 btn-success"
-                            onClick={() => handleSubscription()}
-                          >
-                            <IconMailPlus size={20} /> Subscribe
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            className="rounded-4 me-2 btn-danger"
-                            onClick={() => handleUnsubscribe()}
-                          >
-                            <IconMailOff size={20} /> Unsubscribe
-                          </Button>
-                        )}
+                        <SubscriptionButton
+                          idWater={idWater}
+                          idUser={"test"}
+                          setShowToastSubscribe={setShowToastSubscribe}
+                          setToastSuccess={setToastSuccess}
+                          label
+                        />
                         <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}
@@ -318,23 +298,13 @@ function Waterprofile() {
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
                       <div className="d-flex justify-content-end ">
-                        {!subscription ? (
-                          <Button
-                            size="sm"
-                            className="rounded-4 me-2 btn-success"
-                            onClick={() => handleSubscription()}
-                          >
-                            <IconMailPlus size={20} /> Subscribe
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            className="rounded-4 me-2 btn-danger"
-                            onClick={() => handleUnsubscribe()}
-                          >
-                            <IconMailOff size={20} /> Unsubscribe
-                          </Button>
-                        )}
+                        <SubscriptionButton
+                          idWater={idWater}
+                          idUser={"test"}
+                          setShowToastSubscribe={setShowToastSubscribe}
+                          setToastSuccess={setToastSuccess}
+                          label
+                        />
                         <Button
                           className="rounded-4"
                           onClick={downloadProfileAsPdf}

@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Userprofile.css";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Modal,
-  Row,
-  Toast,
-  ToastContainer,
-} from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import noSubscriptionImg from "../../assets/img/noSubscription.png";
 import { Link } from "react-router-dom";
 import {
@@ -21,12 +12,30 @@ import {
 import Services from "../../services/apiService";
 
 function Userprofile() {
-  const [notification, setNotifications] = useState([]);
+  const [subscription, setSubscription] = useState([]);
 
   useEffect(() => {
     Services.get_all_subscription_by_user("test")
       .then((response) => {
-        setNotifications(response);
+        // Crear un nuevo array para almacenar los waterpoints modificados
+        let waterpoints = [];
+
+        // Iterar sobre cada objeto en el array
+        response.forEach((item) => {
+          // Iterar sobre cada waterpoint en el array waterpoints del objeto actual
+          item.waterpoints.forEach((waterpoint) => {
+            // Crear una copia del waterpoint para no modificar el original
+            let waterpointCopy = { ...waterpoint };
+
+            // Agregar la propiedad subscriptionType al waterpoint
+            waterpointCopy.subscriptionType = item.boletin;
+
+            // Agregar el waterpoint modificado al array waterpoints
+            waterpoints.push(waterpointCopy);
+          });
+        });
+        setSubscription(waterpoints);
+        console.log(waterpoints);
       })
       .catch((error) => {
         console.log(error);
@@ -35,11 +44,11 @@ function Userprofile() {
 
   const [showToastUnsubscribe, setShowToastUnsubscribe] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(
-    Array(notification.length).fill(false)
+    Array(subscription?.length).fill(false)
   );
 
   const unsubscribeWp = (id) => {
-    setwaterpointsTest(notification.filter((wp) => wp.id !== id));
+    setwaterpointsTest(subscription.filter((wp) => wp.id !== id));
     setShowToastUnsubscribe(true);
   };
 
@@ -51,24 +60,6 @@ function Userprofile() {
 
   return (
     <>
-      <ToastContainer
-        className="p-3"
-        position="bottom-end"
-        style={{ zIndex: 1 }}
-      >
-        <Toast
-          onClose={() => setShowToastUnsubscribe(false)}
-          show={showToastUnsubscribe}
-          delay={3000}
-          className="bg-danger-subtle "
-          autohide
-        >
-          <Toast.Body>
-            Woohoo, you've unsubscribe from this waterpoint!
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
-
       <div className="user-bg">
         <Container className="container-user">
           <Row className="text-white align-items-center ">
@@ -89,10 +80,10 @@ function Userprofile() {
       <Container className="mt-5">
         <Row className="">
           <Col className="col-12 col-md-8 mt-4">
-            {notification?.length > 0 ? (
+            {subscription?.length > 0 ? (
               <>
                 <h5 className="fw-medium">Subscribed waterpoints</h5>
-                {notification.map((waterpoint, index) => {
+                {subscription.map((waterpoint, index) => {
                   return (
                     <>
                       <Modal
@@ -159,17 +150,30 @@ function Userprofile() {
                         <Col className="col-auto">
                           <div className="d-flex align-items-stretch ">
                             <div
-                              className={`td-name text-center fw-medium px-4 me-2 td-brown`}
+                              className={`td-name text-center fw-medium px-4 me-2 ${
+                                waterpoint.last_monitored_deph > 100
+                                  ? "td-green"
+                                  : waterpoint.last_monitored_deph <= 100 &&
+                                    waterpoint.last_monitored_deph >= 50
+                                  ? "td-yellow"
+                                  : waterpoint.last_monitored_deph < 50 &&
+                                    waterpoint.last_monitored_deph >= 3
+                                  ? "td-brown"
+                                  : waterpoint.last_monitored_deph < 3 &&
+                                    waterpoint.last_monitored_deph > 0
+                                  ? "td-red"
+                                  : "td-gray"
+                              }`}
                             >
-                              {waterpoint.name}
+                              {waterpoint.watershed_name}
                             </div>
                             {waterpoint.email && <IconMail className="me-2" />}
                             {waterpoint.sms && <IconMessageDots />}
                           </div>
-                          <div>{`${waterpoint.region}, ${waterpoint.woreda}, ${waterpoint.kebele}`}</div>
+                          <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
                         </Col>
                         <Col className="col-auto">
-                          <p>Depth: {waterpoint.depth}</p>
+                          <p>Depth: {waterpoint.last_monitored_deph}</p>
                         </Col>
                         <Col className="d-flex col-auto">
                           <Button

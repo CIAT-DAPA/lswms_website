@@ -125,7 +125,7 @@ class Services {
   }
 
   post_subscription(userId, wpId, boletin) {
-    const url = `${Configuration.get_url_api_base()}/suscribe`;
+    const url = `${Configuration.get_url_api_base()}/subscribe`;
     return axios
       .post(url, {
         userId: userId,
@@ -141,7 +141,7 @@ class Services {
   }
 
   get_all_subscription_by_user(userId) {
-    const url = `${Configuration.get_url_api_base()}/suscribe/get_suscription_by_user/${userId}`;
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_susbcription_by_user/${userId}`;
     return axios
       .get(url)
       .then((response) => {
@@ -153,7 +153,7 @@ class Services {
   }
 
   get_one_subscription_by_user(userId, wpId) {
-    const url = `${Configuration.get_url_api_base()}/suscribe/get_suscription_by_waterpoint/${wpId}/${userId}`;
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_waterpoint/${wpId}/${userId}`;
     return axios
       .get(url)
       .then((response) => {
@@ -165,7 +165,7 @@ class Services {
   }
 
   patch_unsubscribe(wpId, subscriptionId) {
-    const url = `${Configuration.get_url_api_base()}/suscribe/unsubscribe/${wpId}/${subscriptionId}`;
+    const url = `${Configuration.get_url_api_base()}/subscribe/unsubscribe/${wpId}/${subscriptionId}`;
     return axios
       .patch(url)
       .then((response) => {

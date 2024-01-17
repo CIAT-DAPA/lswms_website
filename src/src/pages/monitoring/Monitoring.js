@@ -36,6 +36,7 @@ import {
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { useAuth } from "../../hooks/useAuth";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -81,6 +82,7 @@ function Visualization() {
   const [waterpointRoute, setWaterpointRoute] = useState();
   const [toastSuccess, setToastSuccess] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const { userInfo } = useAuth();
 
   const handleClose = () => setShowWarning(false);
 
@@ -202,7 +204,7 @@ function Visualization() {
                 </h6>
                 <SubscriptionButton
                   idWater={wp.id}
-                  idUser={"test"}
+                  idUser={userInfo?.sub}
                   setShowToastSubscribe={setShowToastSubscribe}
                   setToastSuccess={setToastSuccess}
                   size="sm"

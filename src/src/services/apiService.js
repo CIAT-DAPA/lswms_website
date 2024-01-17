@@ -141,7 +141,7 @@ class Services {
   }
 
   get_all_subscription_by_user(userId) {
-    const url = `${Configuration.get_url_api_base()}/subscribe/get_susbcription_by_user/${userId}`;
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_user/${userId}`;
     return axios
       .get(url)
       .then((response) => {

@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IconMailOff, IconMailPlus } from "@tabler/icons-react";
-import {
-  Button,
-  Dropdown,
-  Form,
-  Modal,
-} from "react-bootstrap";
+import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import Services from "../../services/apiService";
+import { useAuth } from "../../hooks/useAuth";
 
 function SubscriptionButton({
   idWater,
@@ -18,6 +14,7 @@ function SubscriptionButton({
 }) {
   const [modalSubscription, setModalSubscription] = useState(false);
   const [subscription, setSubscription] = useState();
+  const { login } = useAuth();
 
   useEffect(() => {
     fetchSubscription();
@@ -34,6 +31,12 @@ function SubscriptionButton({
   };
 
   const handleSubscription = (bolletin) => {
+    if (!idUser) {
+      console.log("no user");
+      login();
+      return;
+    }
+
     Services.post_subscription(idUser, idWater, bolletin)
       .then((response) => {
         fetchSubscription();

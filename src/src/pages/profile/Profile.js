@@ -41,6 +41,7 @@ import {
   IconBrandX,
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -52,6 +53,7 @@ function Waterprofile() {
   const [show, setShow] = useState(false);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const [toastSuccess, setToastSuccess] = useState();
+  const { userInfo } = useAuth();
 
   useEffect(() => {
     fetchWaterProfile();
@@ -249,6 +251,21 @@ function Waterprofile() {
 
             <div id="profile">
               <div className="profile-bg">
+                <div
+                  className="position-absolute z-3 d-flex "
+                  style={{ top: "365px", right: "3vw" }}
+                >
+                  <SubscriptionButton
+                    idWater={idWater}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                    label
+                  />
+                  <Button className="rounded-4" onClick={downloadProfileAsPdf}>
+                    <IconDownload />
+                  </Button>
+                </div>
                 <Carousel
                   fade
                   controls={false}
@@ -258,7 +275,7 @@ function Waterprofile() {
                 >
                   <Carousel.Item>
                     <img src={bgImg} className="w-100 img-carousel" />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -266,21 +283,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <SubscriptionButton
-                          idWater={idWater}
-                          idUser={"test"}
-                          setShowToastSubscribe={setShowToastSubscribe}
-                          setToastSuccess={setToastSuccess}
-                          label
-                        />
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <IconDownload />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
@@ -289,7 +291,7 @@ function Waterprofile() {
                       style={{ filter: "grayscale(1)" }}
                       className="w-100 img-carousel"
                     />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -297,21 +299,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <SubscriptionButton
-                          idWater={idWater}
-                          idUser={"test"}
-                          setShowToastSubscribe={setShowToastSubscribe}
-                          setToastSuccess={setToastSuccess}
-                          label
-                        />
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <IconDownload />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                 </Carousel>

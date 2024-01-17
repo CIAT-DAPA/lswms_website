@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./Userprofile.css";
 import {
   Button,
-  Card,
   Col,
   Container,
   Form,

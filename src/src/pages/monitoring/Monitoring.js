@@ -140,7 +140,7 @@ function Visualization() {
       scaledDepthValue.value >= 3 ? null : !filter.red &&
       scaledDepthValue.value < 3 &&
       scaledDepthValue.value > 0 ? null : !filter.gray &&
-      scaledDepthValue.value == 0 ? null : (
+      scaledDepthValue.value === 0 ? null : (
       <>
         {hasContentsWp && (
           <Modal show={showWarning} onHide={handleClose} centered>

@@ -7,7 +7,6 @@ import Profile from "./pages/profile/Profile";
 import Footer from "./components/footer/Footer";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/notFound/NotFound";
-import Userprofile from "./pages/userprofile/Userprofile";
 import AboutUs from "./pages/aboutUs/AboutUs";
 import Forage from "./pages/forage/Forage";
 
@@ -21,7 +20,6 @@ function App() {
         <Route path="/forage" element={<Forage />} />
         <Route path="/profile/:idWater/:language?" element={<Profile />} />
         <Route path="/dashboard/:idWp" element={<Dashboard />} />
-        {/* <Route path="/userprofile" element={<Userprofile />} /> */}
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

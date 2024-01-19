@@ -42,24 +42,7 @@ function Userprofile() {
     setLoading(true);
     Services.get_all_subscription_by_user(userInfo.sub)
       .then((response) => {
-        let waterpoints = {};
-
-        response.forEach((item) => {
-          item.waterpoints.forEach((waterpoint) => {
-            if (!waterpoints[waterpoint.id]) {
-              waterpoints[waterpoint.id] = waterpoint;
-            }
-
-            if (item.boletin === "weekly") {
-              waterpoints[waterpoint.id].weekly = true;
-              waterpoints[waterpoint.id].subscriptionIdWeekly = item.id;
-            } else if (item.boletin === "alert") {
-              waterpoints[waterpoint.id].alert = true;
-              waterpoints[waterpoint.id].subscriptionIdAlert = item.id;
-            }
-          });
-        });
-        setSubscription(Object.values(waterpoints));
+        setSubscription(response);
         setLoading(false);
       })
       .catch((error) => {
@@ -68,25 +51,15 @@ function Userprofile() {
       });
   };
 
-  const unsubscribeWp = (waterpoint) => {
+  const unsubscribeWp = (waterpoint, boletin) => {
     let promises = [];
 
-    if (waterpoint.alert) {
-      promises.push(
-        Services.patch_unsubscribe(
-          waterpoint.id,
-          waterpoint.subscriptionIdAlert
-        )
-      );
+    if (boletin.boletin === "alert") {
+      promises.push(Services.patch_unsubscribe(waterpoint.id, boletin.id));
     }
 
-    if (waterpoint.weekly) {
-      promises.push(
-        Services.patch_unsubscribe(
-          waterpoint.id,
-          waterpoint.subscriptionIdWeekly
-        )
-      );
+    if (boletin.boletin === "weekly") {
+      promises.push(Services.patch_unsubscribe(waterpoint.id, boletin.id));
     }
 
     Promise.all(promises)
@@ -150,6 +123,19 @@ function Userprofile() {
   };
 
   const modalEdit = (waterpoint) => {
+    subscription.forEach((item) => {
+      item.waterpoints.forEach((wp) => {
+        if (wp.id === waterpoint.id) {
+          if (item.boletin === "alert") {
+            waterpoint.alert = true;
+            waterpoint.subscriptionIdAlert = item.id;
+          } else if (item.boletin === "weekly") {
+            waterpoint.weekly = true;
+            waterpoint.subscriptionIdWeekly = item.id;
+          }
+        }
+      });
+    });
     setEditingWaterpoint(waterpoint);
     setModalVisibility(true);
   };
@@ -283,68 +269,82 @@ function Userprofile() {
               {subscription?.length > 0 ? (
                 <>
                   <h5 className="fw-medium">Subscribed waterpoints</h5>
-                  {subscription.map((waterpoint, index) => {
-                    return (
-                      <>
-                        <Row
-                          className="justify-content-between align-items-baseline mb-4 mb-md-3 flex-wrap "
-                          key={index}
-                        >
-                          <Col className="col-10 col-md-5">
-                            <div className="d-flex align-items-stretch ">
-                              <div
-                                className={`td-name text-center fw-medium px-4 me-2 ${
-                                  waterpoint.last_monitored_scaled_depth > 100
-                                    ? "td-green"
-                                    : waterpoint.last_monitored_scaled_depth <=
-                                        100 &&
-                                      waterpoint.last_monitored_scaled_depth >=
-                                        50
-                                    ? "td-yellow"
-                                    : waterpoint.last_monitored_scaled_depth <
-                                        50 &&
-                                      waterpoint.last_monitored_scaled_depth >=
-                                        3
-                                    ? "td-brown"
-                                    : waterpoint.last_monitored_scaled_depth <
-                                        3 &&
-                                      waterpoint.last_monitored_scaled_depth > 0
-                                    ? "td-red"
-                                    : "td-gray"
-                                }`}
-                              >
-                                {waterpoint.waterpoint_name}
+                  {subscription.map((boletin, index) => (
+                    <div key={index}>
+                      <div className="d-flex">
+                        {boletin.boletin === "weekly" ? (
+                          <IconCalendarWeek className="me-2" />
+                        ) : boletin.boletin === "alert" ? (
+                          <IconBell className="me-2" />
+                        ) : (
+                          <></>
+                        )}
+                        <h5 className="fw-medium text-capitalize ">
+                          {boletin.boletin}
+                        </h5>
+                      </div>
+
+                      {boletin.waterpoints.map((waterpoint, index) => (
+                        <>
+                          <Row
+                            className="justify-content-between align-items-baseline mb-4 mb-md-3 flex-wrap "
+                            key={index}
+                          >
+                            <Col className="col-10 col-md-5">
+                              <div className="d-flex align-items-stretch ">
+                                <div
+                                  className={`td-name text-center fw-medium px-4 me-2 ${
+                                    waterpoint.last_monitored_scaled_depth > 100
+                                      ? "td-green"
+                                      : waterpoint.last_monitored_scaled_depth <=
+                                          100 &&
+                                        waterpoint.last_monitored_scaled_depth >=
+                                          50
+                                      ? "td-yellow"
+                                      : waterpoint.last_monitored_scaled_depth <
+                                          50 &&
+                                        waterpoint.last_monitored_scaled_depth >=
+                                          3
+                                      ? "td-brown"
+                                      : waterpoint.last_monitored_scaled_depth <
+                                          3 &&
+                                        waterpoint.last_monitored_scaled_depth >
+                                          0
+                                      ? "td-red"
+                                      : "td-gray"
+                                  }`}
+                                >
+                                  {waterpoint.waterpoint_name}
+                                </div>
                               </div>
-                              {waterpoint.alert && (
-                                <IconBell className="me-2" />
-                              )}
-                              {waterpoint.weekly && <IconCalendarWeek />}
-                            </div>
-                            <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
-                          </Col>
-                          <Col className="col-2">
-                            Depth: {waterpoint.last_monitored_deph.toFixed(3)}
-                          </Col>
-                          <Col className="d-flex col-12 col-md-5">
-                            <Button
-                              className="me-4 rounded-4 btn-warning text-black"
-                              onClick={() => modalEdit(waterpoint)}
-                            >
-                              <IconEdit />
-                              Edit Subscribe
-                            </Button>
-                            <Button
-                              className=" rounded-4 btn-danger "
-                              onClick={() => unsubscribeWp(waterpoint)}
-                            >
-                              <IconMailOff className="me-2" />
-                              Unsubscribe
-                            </Button>
-                          </Col>
-                        </Row>
-                      </>
-                    );
-                  })}
+                              <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
+                            </Col>
+                            <Col className="col-2">
+                              Depth: {waterpoint.last_monitored_deph.toFixed(3)}
+                            </Col>
+                            <Col className="d-flex col-12 col-md-5">
+                              <Button
+                                className="me-4 rounded-4 btn-warning text-black"
+                                onClick={() => modalEdit(waterpoint)}
+                              >
+                                <IconEdit />
+                                Edit Subscribe
+                              </Button>
+                              <Button
+                                className=" rounded-4 btn-danger "
+                                onClick={() =>
+                                  unsubscribeWp(waterpoint, boletin)
+                                }
+                              >
+                                <IconMailOff className="me-2" />
+                                Unsubscribe
+                              </Button>
+                            </Col>
+                          </Row>
+                        </>
+                      ))}
+                    </div>
+                  ))}
                 </>
               ) : (
                 <>

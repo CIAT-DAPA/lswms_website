@@ -17,7 +17,7 @@ function Privacy() {
         emails when certain events occur at the water points to which they
         subscribe.
       </p>
-      <p>
+      <p className="mt-5">
         You, as a local resident, have been selected to participate in this
         interview for the following purposes:
       </p>
@@ -25,7 +25,7 @@ function Privacy() {
         <li>To collect your demographic information</li>
         <li>To collect your personal information</li>
       </ul>
-      <p>
+      <p className="mt-5">
         This is for the purpose of storing it in a database so that we can send
         constant updates when necessary. It is important to clarify here that:
       </p>
@@ -41,7 +41,7 @@ function Privacy() {
           reflection of your participation in the Livesock Surface monitoring
           system, you will not be exposed to any risk.
         </li>
-        <li>
+        <li className="mt-3">
           This study will maintain the absolute confidentiality of your identity
           and will use the data obtained only for professional purposes,
           encrypting the information, and keeping it in secure files. Only
@@ -50,24 +50,24 @@ function Privacy() {
           handling of your information regarding this study, you may (also)
           contact Sintayehu Alemayehu (s.alemayehu@cgiar.org).
         </li>
-        <li>
+        <li className="mt-3">
           The information you provide will be used exclusively for research
           purposes.
         </li>
-        <li>
+        <li className="mt-3">
           You may withdraw or abstain from the interview at any time. We respect
           your right not to respond to them.
         </li>
-        <li>
+        <li className="mt-3">
           If direct quotations are to be used in reports of results and/or
           publications, they will be used with the prior consent of the
           interviewee.
         </li>
-        <li>
+        <li className="mt-3">
           During the interview, your name, phone number, email and location will
           be collected due to the remote nature of the interview.
         </li>
-        <li>
+        <li className="mt-3">
           By signing/accepting this agreement, you acknowledge that you have
           been informed of the purpose of this study and agree to the above and
           give your consent to participate in this study.

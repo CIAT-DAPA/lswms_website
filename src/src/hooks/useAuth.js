@@ -27,8 +27,6 @@ export const AuthProvider = ({ children }) => {
         if (authenticated) {
           keycloak.current.loadUserInfo().then((userInfo) => {
             setUserInfo(userInfo);
-            // console.log(userInfo);
-            // console.log("Usuario autenticado:", userInfo);
           });
         }
       })
@@ -42,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    keycloak.current.logout();
+    keycloak.current.logout({ redirectUri: 'http://localhost:3000' });
     setUserInfo(null);
   };
 

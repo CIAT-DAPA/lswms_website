@@ -7,6 +7,7 @@ import partner4 from "../../assets/img/partner4.png";
 import partner5 from "../../assets/img/partner5.png";
 import "./Footer.css";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 function Footer() {
   const [t] = useTranslation("global");
@@ -16,12 +17,24 @@ function Footer() {
         <Row className="justify-content-between align-items-center py-3">
           <Col className="col-lg-4">
             <p className="">{t("footer.rights")}</p>
+            {t("footer.email")}:
+            <br />
             <a
               href="mailto: S.alemayehu@cgiar.org"
               className="text-decoration-none text-white"
             >
-              {t("footer.email")}: S.alemayehu@cgiar.org{" "}
+              S.alemayehu@cgiar.org{" "}
             </a>
+            <br />
+            <a
+              href="mailto: liyenew@gmail.com"
+              className="text-decoration-none text-white"
+            >
+              Liyenew@gmail.com{" "}
+            </a>
+            <Link className="nav-link mt-2" to="/privacy">
+              Privacy Information
+            </Link>
           </Col>
 
           <Col className="d-flex flex-column flex-md-row align-items-center justify-content-between mt-3 d-lg-block col-lg-auto mt-lg-0">

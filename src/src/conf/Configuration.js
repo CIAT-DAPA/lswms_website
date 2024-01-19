@@ -7,7 +7,7 @@ const GEOSERVER_PRODUCTION_URL =
   "https://geo.aclimate.org/geoserver/waterpoints_et/wms";
 const KEYCLOAK_URL = "http://localhost:5004";
 const KEYCLOAK_URL_PRODUCTION = process.env.REACT_APP_KEYCLOAK_URL_PRODUCTION;
-const KEYCLOAK_REALM = "auth-react";
+const KEYCLOAK_REALM = "waterpoints-monitoring";
 const KEYCLOAK_CLIENT = "myclient";
 
 class Configuration {

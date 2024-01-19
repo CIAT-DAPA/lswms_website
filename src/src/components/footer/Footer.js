@@ -19,20 +19,25 @@ function Footer() {
             <p className="">{t("footer.rights")}</p>
             {t("footer.email")}:
             <br />
-            <a
-              href="mailto: S.alemayehu@cgiar.org"
-              className="text-decoration-none text-white"
-            >
-              S.alemayehu@cgiar.org{" "}
-            </a>
-            <br />
-            <a
-              href="mailto: liyenew@gmail.com"
-              className="text-decoration-none text-white"
-            >
-              Liyenew@gmail.com{" "}
-            </a>
-            <Link className="nav-link mt-2" to="/privacy">
+            <ul>
+              <li>
+                <a
+                  href="mailto: S.alemayehu@cgiar.org"
+                  className="text-decoration-none text-white"
+                >
+                  S.alemayehu@cgiar.org{" "}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto: liyenew@gmail.com"
+                  className="text-decoration-none text-white"
+                >
+                  Liyenew@gmail.com{" "}
+                </a>
+              </li>
+            </ul>
+            <Link className="nav-link" to="/privacy">
               Privacy Information
             </Link>
           </Col>

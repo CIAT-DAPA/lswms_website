@@ -90,14 +90,14 @@
     "monitored-d": "Explore a variety of charts covering depth of field, depth scale, precipitation and evapotranspiration. Customise your experience by filtering these graphs according to your preferred year.",
     "year": "Year",
     "depth": "Depth",
-    "depth-description": "These graphs show the depth and climatology for the depth of waterpoint",
+    "depth-description": "These graphs show the depth and daily historical average for the depth of waterpoint",
     "depth-year": "in the year",
     "scaled": "Scaled Depth",
-    "scaled-description": "These graphs show the scaled depth and climatology for the scaled depth of waterpoint",
+    "scaled-description": "These graphs show the scaled depth and daily historical average for the scaled depth of waterpoint",
     "rain": "Precipitation",
-    "rain-description": "These graphs show the precipitation and climatology for the precipitation of waterpoint",
+    "rain-description": "These graphs show the precipitation and daily historical average for the precipitation of waterpoint",
     "evap": "Evaporation",
-    "evap-description": "These graphs show the evaporation and climatology for the evaporation of waterpoint",
+    "evap-description": "These graphs show the evaporation and daily historical average for the evaporation of waterpoint",
     "subseasonal": "Sub-seasonal forecast",
     "subseasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific month. Below, you can find the most probable category for the selected waterpoint and the forecast month.",
     "precipitation": "Precipitation probabilities",
@@ -117,7 +117,7 @@
     "notFound-title": "No aclimate ID was provided.",
     "notFound-d": "Try to get the data from the waterpoints display.",
     "climate": "Climate Forecast",
-    "climatology": "Climatology"
+    "climatology": "Daily historical average"
   },
   "notFound": {
     "title": "Oops! Looks like you've ventured into uncharted territory.",

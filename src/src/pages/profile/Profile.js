@@ -182,9 +182,6 @@ function Waterprofile() {
 
   return (
     <>
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content="Título de tu página" />
-      <meta property="og:description" content="Descripción de tu página" />
       {idWater ? (
         loading ? (
           <Modal

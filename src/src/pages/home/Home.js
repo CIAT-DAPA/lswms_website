@@ -5,6 +5,7 @@ import feature1 from "../../assets/img/feature1.png";
 import feature2 from "../../assets/img/feature2.png";
 import feature3 from "../../assets/img/feature3.png";
 import feature4 from "../../assets/img/feature4.png";
+import feature5 from "../../assets/img/feature5.png";
 import Feature from "../../components/feature/Feature";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -69,6 +70,12 @@ function Home() {
           description={t("home.feature4-description")}
           image={feature4}
           color="white"
+        ></Feature>
+        <Feature
+          title="Forage Module"
+          description="The forage module is a tool that allows users to monitor forage production and see how it changes over time."
+          image={feature5}
+          color="blue"
         ></Feature>
       </Row>
     </div>

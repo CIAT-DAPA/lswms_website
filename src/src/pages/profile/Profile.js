@@ -167,7 +167,10 @@ function Waterprofile() {
           className="btn-x"
           onClick={() => {
             const url = window.location.href;
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(url)}`;
+            const text = "Check this waterpoint profile!";
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(
+              url
+            )}&text=${encodeURI(text)}`;
             window.open(shareUrl, "_blank");
           }}
         >
@@ -179,6 +182,9 @@ function Waterprofile() {
 
   return (
     <>
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Título de tu página" />
+      <meta property="og:description" content="Descripción de tu página" />
       {idWater ? (
         loading ? (
           <Modal

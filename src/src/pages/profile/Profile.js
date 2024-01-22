@@ -228,6 +228,34 @@ function Waterprofile() {
 
             <div id="profile">
               <div className="profile-bg">
+                <div
+                  className="position-absolute z-3 d-flex "
+                  style={{ top: "450px", right: "3vw" }}
+                >
+                  <Button
+                    className="rounded-4 me-2"
+                    onClick={downloadProfileAsPdf}
+                  >
+                    <IconDownload />
+                  </Button>
+                  <Link
+                    type="button"
+                    className="btn btn-primary me-2 rounded-4"
+                    to={`/dashboard/${wp.id}`}
+                  >
+                    <IconChartLine />
+                  </Link>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    rootClose={true}
+                    overlay={popoverShare}
+                  >
+                    <Button className="rounded-4">
+                      <IconShare />
+                    </Button>
+                  </OverlayTrigger>
+                </div>
                 <Carousel
                   fade
                   controls={false}
@@ -245,14 +273,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <IconDownload />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
@@ -269,14 +289,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <IconDownload />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                 </Carousel>
@@ -497,7 +509,7 @@ function Waterprofile() {
               >
                 <Button className="rounded-4 mb-2 mb-sm-0">
                   <IconShare className="me-3" />
-                  Share profile
+                  Share
                 </Button>
               </OverlayTrigger>
             </Container>

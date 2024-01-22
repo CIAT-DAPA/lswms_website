@@ -1,5 +1,6 @@
 .invisible-icon {
   background-color: transparent;
+  pointer-events: none !important;
 }
 
 .leaflet-tooltip {

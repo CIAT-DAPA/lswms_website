@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
+  Button,
   Col,
   Container,
   Modal,
@@ -15,6 +16,8 @@ import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
 import "./Dashboard.css";
 import { useTranslation } from "react-i18next";
+import { IconDownload } from "@tabler/icons-react";
+import Papa from "papaparse";
 
 function HistoricalData() {
   const [t, i18n] = useTranslation("global");
@@ -58,7 +61,6 @@ function HistoricalData() {
   const handleFilterYear = (event) => {
     const selectedYear = event?.target?.value || event;
     setDepthData(filterData(wpData, "depth", selectedYear));
-    console.log(filterData(wpData, "depth", selectedYear));
     setScaledDepthData(filterData(wpData, "scaled_depth", selectedYear));
     setRain(filterData(wpData, "rain", selectedYear));
     setEvap(filterData(wpData, "evp", selectedYear));
@@ -154,6 +156,67 @@ function HistoricalData() {
     ];
     uniqueYears.sort((a, b) => b - a);
   }
+
+  const downloadAllData = () => {
+    const dataToDownload = wpData.map((item) => {
+      const date = new Date(item.date);
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      const climatologyItem = climatology.climatology.find(
+        (c) => c[0].month === month && c[0].day === day
+      );
+
+      const climatologyDepth = climatologyItem
+        ? climatologyItem[0].values.find((value) => value.type === "depth")
+            .value
+        : null;
+      const climatologyScaledDepth = climatologyItem
+        ? climatologyItem[0].values.find(
+            (value) => value.type === "scaled_depth"
+          ).value
+        : null;
+      const climatologyRain = climatologyItem
+        ? climatologyItem[0].values.find((value) => value.type === "rain").value
+        : null;
+      const climatologyEvp = climatologyItem
+        ? climatologyItem[0].values.find((value) => value.type === "evp").value
+        : null;
+
+      return {
+        date,
+        depth: item.values
+          .find((value) => value.type === "depth")
+          ?.value.toFixed(2),
+        trend_value_depth: climatologyDepth,
+        scaled_depth: item.values
+          .find((value) => value.type === "scaled_depth")
+          ?.value.toFixed(2),
+        trend_value_scaled_depth: climatologyScaledDepth,
+        rain: item.values
+          .find((value) => value.type === "rain")
+          ?.value.toFixed(2),
+        trend_value_rain: climatologyRain,
+        evaporation: item.values
+          .find((value) => value.type === "evp")
+          ?.value.toFixed(2),
+        trend_value_evaporation: climatologyEvp,
+      };
+    });
+    const dataToDownloadFormatted = dataToDownload.map((item) => ({
+      ...item,
+      date: item.date.toLocaleDateString("en-CA"),
+    }));
+    dataToDownloadFormatted.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const csv = Papa.unparse(dataToDownloadFormatted);
+    const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const csvURL = window.URL.createObjectURL(csvData);
+    let tempLink = document.createElement("a");
+    tempLink.href = csvURL;
+    tempLink.setAttribute("download", `${wp.name}.csv`);
+    tempLink.click();
+  };
 
   return (
     <div>
@@ -264,7 +327,6 @@ function HistoricalData() {
                                 chart: {
                                   id: "scaled",
                                   group: "historical",
-                                  
                                 },
                                 xaxis: {
                                   type: "datetime",
@@ -347,6 +409,12 @@ function HistoricalData() {
                           <p className="label-y">mm</p>
                         </>
                       )}
+                    </Col>
+                    <Col className="mb-4">
+                      <Button onClick={() => downloadAllData()}>
+                        <IconDownload className="me-2" />
+                        Download all data
+                      </Button>
                     </Col>
                   </Row>
                 </Tab>

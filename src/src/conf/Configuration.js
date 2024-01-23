@@ -8,7 +8,7 @@ const GEOSERVER_PRODUCTION_URL =
 const KEYCLOAK_URL = "http://localhost:5004";
 const KEYCLOAK_URL_PRODUCTION = process.env.REACT_APP_KEYCLOAK_URL_PRODUCTION;
 const KEYCLOAK_REALM = "waterpoints-monitoring";
-const KEYCLOAK_CLIENT = "myclient";
+const KEYCLOAK_CLIENT = "frontWp";
 
 class Configuration {
   get_url_geoserver() {

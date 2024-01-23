@@ -47,13 +47,18 @@ function HistoricalData() {
           item.values.find((value) => value.type === type)?.value.toFixed(2) ||
           0,
       }));
-    filteredData.sort((a, b) => a.x - b.x);
-    return filteredData;
+    const formattedData = filteredData.map((item) => ({
+      ...item,
+      x: item.x.toLocaleDateString("en-CA"),
+    }));
+    formattedData.sort((a, b) => new Date(a.x) - new Date(b.x));
+    return formattedData;
   };
 
   const handleFilterYear = (event) => {
     const selectedYear = event?.target?.value || event;
     setDepthData(filterData(wpData, "depth", selectedYear));
+    console.log(filterData(wpData, "depth", selectedYear));
     setScaledDepthData(filterData(wpData, "scaled_depth", selectedYear));
     setRain(filterData(wpData, "rain", selectedYear));
     setEvap(filterData(wpData, "evp", selectedYear));
@@ -66,18 +71,21 @@ function HistoricalData() {
           const date = new Date(
             `${selectedYear}-${month}-${day}T05:00:00.000Z`
           );
+          const formatteDate = date.toLocaleDateString("en-CA");
           const value = dayData.values
             .find((entry) => entry.type === type)
             .value.toFixed(2);
-          return { x: date, y: value };
+          return { x: formatteDate, y: value };
         });
       });
     });
 
-    setClimaDepthData(result[0]?.sort((a, b) => a.x - b.x));
-    setClimaScaledDepthData(result[1]?.sort((a, b) => a.x - b.x));
-    setClimaRain(result[2]?.sort((a, b) => a.x - b.x));
-    setClimaEvap(result[3]?.sort((a, b) => a.x - b.x));
+    setClimaDepthData(result[0]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
+    setClimaScaledDepthData(
+      result[1]?.sort((a, b) => new Date(a.x) - new Date(b.x))
+    );
+    setClimaRain(result[2]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
+    setClimaEvap(result[3]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
   };
 
   useEffect(() => {
@@ -209,6 +217,20 @@ function HistoricalData() {
                               chart: {
                                 id: "depth",
                                 group: "historical",
+                                toolbar: {
+                                  export: {
+                                    csv: {
+                                      filename: `${wp.name}-${year}`,
+                                      dateFormatter(timestamp) {
+                                        const newDate = new Date(timestamp);
+                                        const formattedDate = newDate
+                                          .toISOString()
+                                          .split("T")[0];
+                                        return formattedDate;
+                                      },
+                                    },
+                                  },
+                                },
                               },
                               xaxis: {
                                 type: "datetime",
@@ -242,6 +264,7 @@ function HistoricalData() {
                                 chart: {
                                   id: "scaled",
                                   group: "historical",
+                                  
                                 },
                                 xaxis: {
                                   type: "datetime",

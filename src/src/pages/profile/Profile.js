@@ -14,6 +14,7 @@ import {
   Spinner,
   Toast,
   ToastContainer,
+  Tooltip,
 } from "react-bootstrap";
 import "./Profile.css";
 import {
@@ -39,6 +40,8 @@ import {
   IconShare,
   IconBrandFacebook,
   IconBrandX,
+  IconInfoCircleFilled,
+  IconInfoCircle,
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
@@ -263,7 +266,6 @@ function Waterprofile() {
                     idUser={userInfo?.sub}
                     setShowToastSubscribe={setShowToastSubscribe}
                     setToastSuccess={setToastSuccess}
-                    label
                   />
                   <Button
                     className="rounded-4 me-2"
@@ -518,33 +520,57 @@ function Waterprofile() {
                 </Row>
               </Container>
             </div>
-            <Container className="mb-5 mt-2">
-              <Button
-                className="me-3 rounded-4 mb-2 mb-sm-0"
-                onClick={downloadProfileAsPdf}
-              >
-                <IconDownload className="me-3" />
-                {t("profile.download")}
-              </Button>
-              <Link
-                type="button"
-                className="btn btn-primary me-3 rounded-4"
-                to={`/dashboard/${wp.id}`}
-              >
-                <IconChartLine className="me-3" />
-                {t("monitoring.data")}
-              </Link>
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                rootClose={true}
-                overlay={popoverShare}
-              >
-                <Button className="rounded-4 mb-2 mb-sm-0">
-                  <IconShare className="me-3" />
-                  Share
+            <Container className="mb-2 mt-2 d-flex justify-content-between ">
+              <div className="d-flex align-items-center ">
+                <Button
+                  className="me-3 rounded-4 mb-2 mb-sm-0"
+                  onClick={downloadProfileAsPdf}
+                >
+                  <IconDownload className="me-3" />
+                  {t("profile.download")}
                 </Button>
-              </OverlayTrigger>
+                <Link
+                  type="button"
+                  className="btn btn-primary me-3 rounded-4"
+                  to={`/dashboard/${wp.id}`}
+                >
+                  <IconChartLine className="me-3" />
+                  {t("monitoring.data")}
+                </Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  rootClose={true}
+                  overlay={popoverShare}
+                >
+                  <Button className="rounded-4 mb-2 mb-sm-0">
+                    <IconShare className="me-3" />
+                    Share
+                  </Button>
+                </OverlayTrigger>
+              </div>
+              <div className="d-flex align-items-center">
+                <OverlayTrigger
+                  placement="top"
+                  overlay={
+                    <Tooltip id={`tooltip-top`}>
+                      Subscribe now to the waterpoint and tailor your
+                      notifications. Choose between receiving immediate alert
+                      emails for status changes or opt for a weekly update in
+                      your inbox.
+                    </Tooltip>
+                  }
+                >
+                  <IconInfoCircleFilled />
+                </OverlayTrigger>
+                <SubscriptionButton
+                  idWater={idWater}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
+              </div>
             </Container>
           </>
         )

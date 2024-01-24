@@ -33,11 +33,13 @@ import {
   IconWalk,
   IconChartLine,
   IconId,
+  IconInfoCircleFilled,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import WpLabel from "../../components/wpLabel/WpLabel";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -203,13 +205,28 @@ function Visualization() {
                   {t("monitoring.waterpoint")} {wp.name}{" "}
                   {t("monitoring.overview")}
                 </h6>
-                <SubscriptionButton
-                  idWater={wp.id}
-                  idUser={userInfo?.sub}
-                  setShowToastSubscribe={setShowToastSubscribe}
-                  setToastSuccess={setToastSuccess}
-                  size="sm"
-                />
+                <div className="d-flex align-items-center ">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-top`}>
+                        Subscribe now to the waterpoint and tailor your
+                        notifications. Choose between receiving immediate alert
+                        emails for status changes or opt for a weekly update in
+                        your inbox.
+                      </Tooltip>
+                    }
+                  >
+                    <IconInfoCircleFilled />
+                  </OverlayTrigger>
+                  <SubscriptionButton
+                    idWater={wp.id}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                    size="sm"
+                  />
+                </div>
               </div>
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
@@ -241,7 +258,7 @@ function Visualization() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="d-flex align-items-center ">
                     {" "}
                     <OverlayTrigger
                       placement="left"
@@ -251,16 +268,14 @@ function Visualization() {
                         </Tooltip>
                       }
                     >
-                      <Badge pill className="fw-semibold me-1">
-                        i
-                      </Badge>
+                      <IconInfoCircleFilled />
                     </OverlayTrigger>
                     {t("monitoring.depth")} (%) :
                   </td>
                   <td>{depthValue.value}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="d-flex align-items-center ">
                     <OverlayTrigger
                       placement="left"
                       overlay={
@@ -269,9 +284,7 @@ function Visualization() {
                         </Tooltip>
                       }
                     >
-                      <Badge pill className="fw-semibold me-1">
-                        i
-                      </Badge>
+                      <IconInfoCircleFilled />
                     </OverlayTrigger>
                     {t("monitoring.median-depth")} (%):
                   </td>

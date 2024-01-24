@@ -171,7 +171,10 @@ function Waterprofile() {
           className="btn-x"
           onClick={() => {
             const url = window.location.href;
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(url)}`;
+            const text = "Check this waterpoint profile!";
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(
+              url
+            )}&text=${encodeURI(text)}`;
             window.open(shareUrl, "_blank");
           }}
         >
@@ -253,7 +256,7 @@ function Waterprofile() {
               <div className="profile-bg">
                 <div
                   className="position-absolute z-3 d-flex "
-                  style={{ top: "365px", right: "3vw" }}
+                  style={{ top: "450px", right: "3vw" }}
                 >
                   <SubscriptionButton
                     idWater={idWater}
@@ -262,9 +265,29 @@ function Waterprofile() {
                     setToastSuccess={setToastSuccess}
                     label
                   />
-                  <Button className="rounded-4" onClick={downloadProfileAsPdf}>
+                  <Button
+                    className="rounded-4 me-2"
+                    onClick={downloadProfileAsPdf}
+                  >
                     <IconDownload />
                   </Button>
+                  <Link
+                    type="button"
+                    className="btn btn-primary me-2 rounded-4"
+                    to={`/dashboard/${wp.id}`}
+                  >
+                    <IconChartLine />
+                  </Link>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    rootClose={true}
+                    overlay={popoverShare}
+                  >
+                    <Button className="rounded-4">
+                      <IconShare />
+                    </Button>
+                  </OverlayTrigger>
                 </div>
                 <Carousel
                   fade
@@ -519,7 +542,7 @@ function Waterprofile() {
               >
                 <Button className="rounded-4 mb-2 mb-sm-0">
                   <IconShare className="me-3" />
-                  Share profile
+                  Share
                 </Button>
               </OverlayTrigger>
             </Container>

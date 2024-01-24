@@ -7,7 +7,6 @@ import Profile from "./pages/profile/Profile";
 import Footer from "./components/footer/Footer";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/notFound/NotFound";
-import Userprofile from "./pages/userprofile/Userprofile";
 import AboutUs from "./pages/aboutUs/AboutUs";
 import Forage from "./pages/forage/Forage";
 import { AuthProvider } from "./hooks/useAuth";

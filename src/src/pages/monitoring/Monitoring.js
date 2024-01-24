@@ -35,6 +35,7 @@ import {
   IconId,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
+import WpLabel from "../../components/wpLabel/WpLabel";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -489,6 +490,8 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {waterpoints && <WpLabel waterpoints={waterpoints} />}
+
         {route && (
           <Polyline
             color="#0016ff"

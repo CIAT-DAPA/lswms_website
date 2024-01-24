@@ -18,6 +18,7 @@ import "./Dashboard.css";
 import { useTranslation } from "react-i18next";
 import { IconDownload } from "@tabler/icons-react";
 import Papa from "papaparse";
+import SliderYear from "../../components/sliderYear/SliderYear";
 
 function HistoricalData() {
   const [t, i18n] = useTranslation("global");
@@ -25,7 +26,6 @@ function HistoricalData() {
   const [wpData, setWpData] = useState();
   const [climatology, setClimatology] = useState();
   const [loading, setLoading] = useState(true);
-  const [year, setYear] = useState();
   const [depthData, setDepthData] = useState([]);
   const [climaDepthData, setClimaDepthData] = useState([]);
   const [scaledDepthData, setScaledDepthData] = useState([]);
@@ -37,58 +37,9 @@ function HistoricalData() {
   const [aclimateId, setAclimateId] = useState(null);
   const [subseasonal, setSubseasonal] = useState([]);
   const [seasonal, setSeasonal] = useState([]);
+  const [value, setValue] = useState(null);
   const { idWp } = useParams();
-  let uniqueYears;
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
-
-  const filterData = (data, type, year) => {
-    const filteredData = data
-      .filter((item) => new Date(item.date).getFullYear() === Number(year))
-      .map((item) => ({
-        x: new Date(item.date),
-        y:
-          item.values.find((value) => value.type === type)?.value.toFixed(2) ||
-          0,
-      }));
-    const formattedData = filteredData.map((item) => ({
-      ...item,
-      x: item.x.toLocaleDateString("en-CA"),
-    }));
-    formattedData.sort((a, b) => new Date(a.x) - new Date(b.x));
-    return formattedData;
-  };
-
-  const handleFilterYear = (event) => {
-    const selectedYear = event?.target?.value || event;
-    setDepthData(filterData(wpData, "depth", selectedYear));
-    setScaledDepthData(filterData(wpData, "scaled_depth", selectedYear));
-    setRain(filterData(wpData, "rain", selectedYear));
-    setEvap(filterData(wpData, "evp", selectedYear));
-    setYear(selectedYear);
-    const result = typeNames.map((type) => {
-      return climatology?.climatology?.flatMap((monthData) => {
-        return monthData.map((dayData) => {
-          const month = dayData.month.toString().padStart(2, "0");
-          const day = dayData.day.toString().padStart(2, "0");
-          const date = new Date(
-            `${selectedYear}-${month}-${day}T05:00:00.000Z`
-          );
-          const formatteDate = date.toLocaleDateString("en-CA");
-          const value = dayData.values
-            .find((entry) => entry.type === type)
-            .value.toFixed(2);
-          return { x: formatteDate, y: value };
-        });
-      });
-    });
-
-    setClimaDepthData(result[0]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
-    setClimaScaledDepthData(
-      result[1]?.sort((a, b) => new Date(a.x) - new Date(b.x))
-    );
-    setClimaRain(result[2]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
-    setClimaEvap(result[3]?.sort((a, b) => new Date(a.x) - new Date(b.x)));
-  };
 
   useEffect(() => {
     //Call to API to get waterpoint
@@ -124,10 +75,52 @@ function HistoricalData() {
   }, [wp]);
 
   useEffect(() => {
-    if (uniqueYears) {
-      handleFilterYear(uniqueYears[0]);
+    if (wpData) {
+      const years = [
+        ...new Set(wpData.map((item) => new Date(item.date).getFullYear())),
+      ];
+      years.sort((a, b) => b - a);
     }
   }, [wpData]);
+
+  useEffect(() => {
+    if (value) {
+      setDepthData(filterData(wpData, "depth"));
+      setScaledDepthData(filterData(wpData, "scaled_depth"));
+      setRain(filterData(wpData, "rain"));
+      setEvap(filterData(wpData, "evp"));
+
+      const result = typeNames.map((type) => {
+        return climatology?.climatology
+          ?.flatMap((monthData) => {
+            return monthData.flatMap((dayData) => {
+              const month = dayData.month.toString().padStart(2, "0");
+              const day = dayData.day.toString().padStart(2, "0");
+              // Generate an array of years from value.min to value.max
+              const years = Array.from(
+                { length: value.max - value.min + 1 },
+                (_, i) => value.min + i
+              );
+              // Map over each year in the range
+              return years.map((year) => {
+                const date = new Date(`${year}-${month}-${day}T05:00:00.000Z`);
+                const formattedDate = date.toLocaleDateString("en-CA");
+                const value =
+                  dayData.values
+                    .find((entry) => entry.type === type)
+                    ?.value.toFixed(2) || 0;
+                return { x: formattedDate, y: value };
+              });
+            });
+          })
+          .sort((a, b) => new Date(a.x) - new Date(b.x));
+      });
+      setClimaDepthData(result[0]);
+      setClimaScaledDepthData(result[1]);
+      setClimaRain(result[2]);
+      setClimaEvap(result[3]);
+    }
+  }, [value]);
 
   useEffect(() => {
     if (aclimateId) {
@@ -150,12 +143,25 @@ function HistoricalData() {
     }
   }, [aclimateId]);
 
-  if (wpData && wpData.length > 0) {
-    uniqueYears = [
-      ...new Set(wpData.map((item) => new Date(item.date).getFullYear())),
-    ];
-    uniqueYears.sort((a, b) => b - a);
-  }
+  const filterData = (data, type) => {
+    const filteredData = data
+      .filter((item) => {
+        const itemYear = new Date(item.date).getFullYear();
+        return itemYear >= Number(value.min) && itemYear <= Number(value.max);
+      })
+      .map((item) => ({
+        x: new Date(item.date),
+        y:
+          item.values.find((value) => value.type === type)?.value.toFixed(2) ||
+          0,
+      }));
+    const formattedData = filteredData.map((item) => ({
+      ...item,
+      x: item.x.toLocaleDateString("en-CA"),
+    }));
+    formattedData.sort((a, b) => new Date(a.x) - new Date(b.x));
+    return formattedData;
+  };
 
   const downloadAllData = () => {
     const dataToDownload = wpData.map((item) => {
@@ -253,17 +259,36 @@ function HistoricalData() {
                       <h5>{t("data.monitored")}</h5>
                       <p>{t("data.monitored-d")}</p>
                       <p className="mb-0">{t("data.year")}</p>
-                      <select
-                        className="form-select w-50"
-                        aria-label="Default select example"
-                        onChange={handleFilterYear}
-                      >
-                        {uniqueYears.map((year) => (
-                          <option value={year} key={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
+                      {(() => {
+                        const years = [
+                          ...new Set(
+                            wpData.map((item) =>
+                              new Date(item.date).getFullYear()
+                            )
+                          ),
+                        ];
+
+                        return (
+                          <>
+                            <Row className="justify-content-around ">
+                              <Col className="col-auto">
+                                <p>Min year</p>
+                                <h4>{value && value.min}</h4>
+                              </Col>
+                              <Col className="col-auto">
+                                <p>Max year</p>
+                                <h4>{value && value.max}</h4>
+                              </Col>
+                            </Row>
+                            <SliderYear
+                              step={1}
+                              min={Math.min(...years)}
+                              max={Math.max(...years)}
+                              onChange={setValue}
+                            />
+                          </>
+                        );
+                      })()}
                     </Col>
                   </Row>
                   <Row>
@@ -272,8 +297,11 @@ function HistoricalData() {
                       {depthData?.length > 0 && (
                         <>
                           <p>
-                            {t("data.depth-description")} {wp.name},{" "}
-                            {t("data.depth-year")} {year}.
+                            {t("data.depth-description")}{" "}
+                            <span className="fw-bold ">{wp.name}</span>,{" "}
+                            {t("data.depth-year")} between{" "}
+                            <span className="fw-bold ">{value.min}</span> and{" "}
+                            <span className="fw-bold ">{value.max}</span>.
                           </p>
                           <ReactApexChart
                             options={{
@@ -283,7 +311,7 @@ function HistoricalData() {
                                 toolbar: {
                                   export: {
                                     csv: {
-                                      filename: `${wp.name}-${year}`,
+                                      filename: `${wp.name}-${value.min}-${value.max}`,
                                       dateFormatter(timestamp) {
                                         const newDate = new Date(timestamp);
                                         const formattedDate = newDate
@@ -319,8 +347,11 @@ function HistoricalData() {
                         {scaledDepthData?.length > 0 && (
                           <>
                             <p>
-                              {t("data.scaled-description")} {wp.name},{" "}
-                              {t("data.depth-year")} {year}.
+                              {t("data.scaled-description")}{" "}
+                              <span className="fw-bold ">{wp.name}</span>,{" "}
+                              {t("data.depth-year")} between{" "}
+                              <span className="fw-bold ">{value.min}</span> and{" "}
+                              <span className="fw-bold ">{value.max}</span>.
                             </p>
                             <ReactApexChart
                               options={{
@@ -357,8 +388,11 @@ function HistoricalData() {
                       {rain?.length > 0 && (
                         <>
                           <p>
-                            {t("data.rain-description")} {wp.name},{" "}
-                            {t("data.depth-year")} {year}.
+                            {t("data.rain-description")}{" "}
+                            <span className="fw-bold ">{wp.name}</span>,{" "}
+                            {t("data.depth-year")} between{" "}
+                            <span className="fw-bold ">{value.min}</span> and{" "}
+                            <span className="fw-bold ">{value.max}</span>.
                           </p>
                           <ReactApexChart
                             options={{
@@ -386,8 +420,11 @@ function HistoricalData() {
                       {evap?.length > 0 && (
                         <>
                           <p>
-                            {t("data.evap-description")} {wp.name},{" "}
-                            {t("data.depth-year")} {year}.
+                            {t("data.evap-description")}{" "}
+                            <span className="fw-bold ">{wp.name}</span>,{" "}
+                            {t("data.depth-year")} between{" "}
+                            <span className="fw-bold ">{value.min}</span> and{" "}
+                            <span className="fw-bold ">{value.max}</span>.
                           </p>
                           <ReactApexChart
                             options={{

@@ -11,6 +11,7 @@ import AboutUs from "./pages/aboutUs/AboutUs";
 import Forage from "./pages/forage/Forage";
 import { AuthProvider } from "./hooks/useAuth";
 import Privacy from "./pages/privacy/Privacy";
+import Userprofile from "./pages/userprofile/Userprofile";
 
 function App() {
   return (

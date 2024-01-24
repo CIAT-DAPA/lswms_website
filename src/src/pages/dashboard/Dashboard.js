@@ -384,7 +384,8 @@ function HistoricalData() {
                   </Row>
                   <Row>
                     <Col className="col-12 col-lg-6">
-                      <h6>{t("data.rain")}</h6>
+                      <h6 className="mb-0">{t("data.rain")}</h6>
+                      <p className="fw-light ">Source: RFE</p>
                       {rain?.length > 0 && (
                         <>
                           <p>
@@ -416,7 +417,8 @@ function HistoricalData() {
                       )}
                     </Col>
                     <Col className="col-12 col-lg-6">
-                      <h6>{t("data.evap")}</h6>
+                      <h6 className="mb-0">{t("data.evap")}</h6>
+                      <p className="fw-light ">Source: Global GDAS</p>
                       {evap?.length > 0 && (
                         <>
                           <p>
@@ -457,7 +459,8 @@ function HistoricalData() {
                 </Tab>
                 <Tab eventKey="Climate Forecast" title={t("data.climate")}>
                   <Row className="mt-3">
-                    <h5>{t("data.subseasonal")}</h5>
+                    <h5 className="mb-0">{t("data.subseasonal")}</h5>
+                    <p className="fw-light ">Source: AClimate Ethiopia</p>
                     <p>{t("data.subseasonal-d")}</p>
                     {subseasonal &&
                       subseasonal.map((week, i) => {
@@ -476,7 +479,8 @@ function HistoricalData() {
                       })}
                   </Row>
                   <Row className="mt-3 justify-content-around ">
-                    <h5>{t("data.seasonal")}</h5>
+                    <h5 className="mb-0">{t("data.seasonal")}</h5>
+                    <p className="fw-light ">Source: AClimate Ethiopia</p>
                     <p>{t("data.seasonal-d")}</p>
                     {seasonal &&
                       seasonal.map((month, i) => {

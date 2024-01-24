@@ -269,6 +269,20 @@ function Userprofile() {
               {subscription?.length > 0 ? (
                 <>
                   <h5 className="fw-medium">Subscribed waterpoints</h5>
+                  <p className="text-wrap-pretty">
+                    Welcome to the subscription management section of
+                    Waterpoints.
+                  </p>
+                  <p className="text-wrap-pretty">
+                    We take care of keeping you up to date and making sure you
+                    are informed of any relevant updates. You have the
+                    flexibility to choose between two types of subscriptions:
+                    <span className="fw-bold"> Weekly</span>, where you will
+                    receive notifications on a regular weekly basis, or{" "}
+                    <span className="fw-bold">Alert</span>, to notify you
+                    immediately of any significant changes in the status of
+                    Waterpoint.
+                  </p>
                   {subscription.map((boletin, index) => (
                     <div key={index}>
                       <div className="d-flex">

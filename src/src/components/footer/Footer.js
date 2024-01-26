@@ -14,63 +14,95 @@ function Footer() {
   return (
     <footer>
       <Container>
-        <Row className="justify-content-between align-items-center py-3">
-          <Col className="col-lg-4">
-            <p className="">{t("footer.rights")}</p>
-            {t("footer.email")}:
-            <br />
-            <ul>
-              <li>
-                <a
-                  href="mailto: S.alemayehu@cgiar.org"
-                  className="text-decoration-none text-white"
-                >
-                  S.alemayehu@cgiar.org{" "}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="mailto: liyenew@gmail.com"
-                  className="text-decoration-none text-white"
-                >
-                  Liyenew@gmail.com{" "}
-                </a>
-              </li>
-            </ul>
-            <Link className="nav-link" to="/privacy">
-              Privacy Information
-            </Link>
-          </Col>
+        <footer class="py-5">
+          <div class="row">
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Sections</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2 item-footer">
+                  <Link className="nav-link text-white" to="/">
+                    Home
+                  </Link>
+                </li>
+                <li class="nav-item mb-2 item-footer">
+                  <Link className="nav-link text-white" to="/monitoring">
+                    {t("menu.monitoring")}
+                  </Link>
+                </li>
+                <li class="nav-item mb-2 item-footer">
+                  <Link className="nav-link text-white" to="/forage">
+                    {t("menu.forage")}
+                  </Link>
+                </li>
+                <li class="nav-item mb-2 item-footer">
+                  <Link className="nav-link text-white" to="/aboutus">
+                    {t("menu.about-us")}
+                  </Link>
+                </li>
+                {/* <li class="nav-item mb-2  item-footer">
+                  <Link className="nav-link text-white" to="/privacy">
+                    Privacy
+                  </Link>
+                </li> */}
+              </ul>
+            </div>
 
-          <Col className="d-flex flex-column flex-md-row align-items-center justify-content-between mt-3 d-lg-block col-lg-auto mt-lg-0">
-            <p>{t("footer.partners")}:</p>
-            <img
-              src={partner1}
-              alt="partner EIAR"
-              className="me-3 mb-2 mb-md-0"
-            />
-            <img
-              src={partner5}
-              alt="partner CGIAR"
-              className="mx-3 my-2 my-md-0"
-            />
-            <img
-              src={partner2}
-              alt="partner Alliance"
-              className="mx-3 my-2 my-md-0"
-            />
-            <img
-              src={partner4}
-              alt="partner Minister"
-              className="mx-3 my-2 my-md-0"
-            />
-            <img
-              src={partner3}
-              alt="partner Bill & Melinda Gates"
-              className="mx-3 my-2 my-md-0"
-            />
-          </Col>
-        </Row>
+            <div class="col-6 col-md-2 mb-3">
+              <h5>{t("footer.email")}</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2 item-footer">
+                  <a
+                    href="mailto: S.alemayehu@cgiar.org"
+                    className="nav-link text-white "
+                  >
+                    S.alemayehu@cgiar.org{" "}
+                  </a>
+                </li>
+                <li class="nav-item mb-2 item-footer">
+                  <a
+                    href="mailto: liyenew@gmail.com"
+                    className="nav-link text-white "
+                  >
+                    Liyenew@gmail.com{" "}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-md-5 offset-md-1 mb-3">
+              <p>{t("footer.partners")}:</p>
+              <img
+                src={partner1}
+                alt="partner EIAR"
+                className="me-3 mb-2 mb-md-0"
+              />
+              <img
+                src={partner5}
+                alt="partner CGIAR"
+                className="mx-3 my-2 my-md-0"
+              />
+              <img
+                src={partner2}
+                alt="partner Alliance"
+                className="mx-3 my-2 my-md-0"
+              />
+              <img
+                src={partner4}
+                alt="partner Minister"
+                className="mx-3 my-2 my-md-0"
+              />
+              <img
+                src={partner3}
+                alt="partner Bill & Melinda Gates"
+                className="mx-3 my-2 my-md-0"
+              />
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <p>{t("footer.rights")}.</p>
+          </div>
+        </footer>
       </Container>
     </footer>
   );

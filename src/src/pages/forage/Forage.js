@@ -36,7 +36,7 @@ function Forage() {
               layers={`waterpoints_et:Watershed_boundaries`}
               format="image/png"
               transparent={true}
-              zIndex={2000}
+              zIndex={3000}
             />
           </LayersControl.Overlay>
         </LayersControl>

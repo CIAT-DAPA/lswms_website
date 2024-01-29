@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-timedimension";
@@ -8,8 +8,6 @@ import axios from "axios";
 function TimelineController({ dimensionName, layer }) {
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
-
-  const [dates, setDates] = useState(null);
 
   // Define your custom control
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
@@ -31,7 +29,7 @@ function TimelineController({ dimensionName, layer }) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(response.data, "text/xml");
     const layers = xmlDoc.getElementsByTagName("Layer");
-    let firstDate, lastDate;
+    let dates;
 
     for (let i = 0; i < layers.length; i++) {
       const layerName = layers[i].getElementsByTagName("Name")[0].textContent;
@@ -39,19 +37,12 @@ function TimelineController({ dimensionName, layer }) {
         const dimension =
           layers[i].getElementsByTagName("Dimension")[0].textContent;
         const timeInterval = dimension.split(",");
-        firstDate = timeInterval[0];
-        lastDate = timeInterval[timeInterval.length - 1];
+        dates = timeInterval.map((date) => date.split("T")[0]);
         break;
       }
     }
-
-    if (firstDate && lastDate) {
-      firstDate = firstDate.split("T")[0];
-      lastDate = lastDate.split("T")[0];
-    }
-
-    setDates({ firstDate, lastDate });
-    return { firstDate, lastDate };
+    console.log(dates);
+    return dates;
   }
 
   useEffect(() => {
@@ -61,12 +52,10 @@ function TimelineController({ dimensionName, layer }) {
         format: "image/png",
         transparent: true,
         crs: L.CRS.EPSG4326,
-        zIndex: 1000,
       });
-      // Create a time dimension
+
       const timeDimension = new L.TimeDimension({
-        timeInterval: `${dates.firstDate}/${dates.lastDate}`,
-        period: "P1D",
+        times: dates,
       });
       map.timeDimension = timeDimension;
 
@@ -75,7 +64,6 @@ function TimelineController({ dimensionName, layer }) {
         timeDimensionName: dimensionName,
       });
       tdWmsLayer.addTo(map);
-
       // Create and add a TimeDimension Control to the map
       if (!timeDimensionControlRef.current) {
         const timeDimensionControl = new L.Control.TimeDimensionCustom({

@@ -100,7 +100,7 @@ function Footer() {
           </div>
 
           <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>{t("footer.rights")}.</p>
+            {/* <p>{t("footer.rights")}.</p> */}
           </div>
         </footer>
       </Container>

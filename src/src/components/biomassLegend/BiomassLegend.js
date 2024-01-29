@@ -15,7 +15,7 @@ function BiomassLegend({ layer }) {
       <div className="leaflet-control leaflet-bar">
         <div className="biomass-legend bg-white px-4 py-3 rounded-4 ">
           <h5 className="fw-medium">Biomass</h5>
-          <img src={legend}></img>
+          <img src={legend} alt="legend of biomass"></img>
         </div>
       </div>
     </div>

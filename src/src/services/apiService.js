@@ -123,6 +123,58 @@ class Services {
         console.log(error);
       });
   }
+
+  post_subscription(userId, wpId, boletin) {
+    const url = `${Configuration.get_url_api_base()}/subscribe`;
+    return axios
+      .post(url, {
+        userId: userId,
+        waterpoint: wpId,
+        boletin: boletin,
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  get_all_subscription_by_user(userId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_user/${userId}`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  get_one_subscription_by_user(userId, wpId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_waterpoint/${wpId}/${userId}`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  patch_unsubscribe(wpId, subscriptionId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/unsubscribe/${wpId}/${subscriptionId}`;
+    return axios
+      .patch(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }
 
 export default new Services();

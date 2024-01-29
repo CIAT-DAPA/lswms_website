@@ -44,8 +44,12 @@ function TimelineController({ dimensionName, layer }) {
         break;
       }
     }
-    firstDate = firstDate.split("T")[0];
-    lastDate = lastDate.split("T")[0];
+
+    if (firstDate && lastDate) {
+      firstDate = firstDate.split("T")[0];
+      lastDate = lastDate.split("T")[0];
+    }
+
     setDates({ firstDate, lastDate });
     return { firstDate, lastDate };
   }

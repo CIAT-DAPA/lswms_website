@@ -7,9 +7,9 @@ function AboutUs() {
     <div className="container">
       <h1 className="pt-5">{t("aboutUs.title")}</h1>
       <p>{t("aboutUs.description")}</p>
-      <h2>{t("aboutUs.about-project")}</h2>
+      <h2 className="mt-5">{t("aboutUs.about-project")}</h2>
       <p>{t("aboutUs.about-project-d")}</p>
-      <h2>{t("aboutUs.product")}</h2>
+      <h2 className="mt-5">{t("aboutUs.product")}</h2>
       <p>{t("aboutUs.product-d")}</p>
     </div>
   );

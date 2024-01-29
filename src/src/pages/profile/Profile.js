@@ -14,6 +14,7 @@ import {
   Spinner,
   Toast,
   ToastContainer,
+  Tooltip,
 } from "react-bootstrap";
 import "./Profile.css";
 import {
@@ -36,11 +37,14 @@ import Configuration from "../../conf/Configuration";
 import {
   IconDownload,
   IconChartLine,
-  IconMail,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
+  IconInfoCircleFilled,
+  IconInfoCircle,
 } from "@tabler/icons-react";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
@@ -50,6 +54,9 @@ function Waterprofile() {
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
   const [show, setShow] = useState(false);
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
+  const { userInfo } = useAuth();
 
   useEffect(() => {
     fetchWaterProfile();
@@ -226,12 +233,40 @@ function Waterprofile() {
               </Toast>
             </ToastContainer>
 
+            <ToastContainer
+              className="p-3 position-fixed"
+              position="bottom-end"
+              style={{ zIndex: 2000 }}
+            >
+              <Toast
+                onClose={() => setShowToastSubscribe(false)}
+                show={showToastSubscribe}
+                delay={2000}
+                className={
+                  !toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`
+                }
+                autohide
+              >
+                <Toast.Body>
+                  {!toastSuccess
+                    ? `Woohoo, you've unsubscribe from the waterpoint!`
+                    : `Success! You're now subscribed to the waterpoint.`}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
             <div id="profile">
               <div className="profile-bg">
                 <div
                   className="position-absolute z-3 d-flex "
                   style={{ top: "450px", right: "3vw" }}
                 >
+                  <SubscriptionButton
+                    idWater={idWater}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                  />
                   <Button
                     className="rounded-4 me-2"
                     onClick={downloadProfileAsPdf}
@@ -265,7 +300,7 @@ function Waterprofile() {
                 >
                   <Carousel.Item>
                     <img src={bgImg} className="w-100 img-carousel" />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -281,7 +316,7 @@ function Waterprofile() {
                       style={{ filter: "grayscale(1)" }}
                       className="w-100 img-carousel"
                     />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -485,33 +520,57 @@ function Waterprofile() {
                 </Row>
               </Container>
             </div>
-            <Container className="mb-5 mt-2">
-              <Button
-                className="me-3 rounded-4 mb-2 mb-sm-0"
-                onClick={downloadProfileAsPdf}
-              >
-                <IconDownload className="me-3" />
-                {t("profile.download")}
-              </Button>
-              <Link
-                type="button"
-                className="btn btn-primary me-3 rounded-4"
-                to={`/dashboard/${wp.id}`}
-              >
-                <IconChartLine className="me-3" />
-                {t("monitoring.data")}
-              </Link>
-              <OverlayTrigger
-                trigger="click"
-                placement="right"
-                rootClose={true}
-                overlay={popoverShare}
-              >
-                <Button className="rounded-4 mb-2 mb-sm-0">
-                  <IconShare className="me-3" />
-                  Share
+            <Container className="mb-2 mt-2 d-flex justify-content-between ">
+              <div className="d-flex align-items-center ">
+                <Button
+                  className="me-3 rounded-4 mb-2 mb-sm-0"
+                  onClick={downloadProfileAsPdf}
+                >
+                  <IconDownload className="me-3" />
+                  {t("profile.download")}
                 </Button>
-              </OverlayTrigger>
+                <Link
+                  type="button"
+                  className="btn btn-primary me-3 rounded-4"
+                  to={`/dashboard/${wp.id}`}
+                >
+                  <IconChartLine className="me-3" />
+                  {t("monitoring.data")}
+                </Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  rootClose={true}
+                  overlay={popoverShare}
+                >
+                  <Button className="rounded-4 mb-2 mb-sm-0">
+                    <IconShare className="me-3" />
+                    Share
+                  </Button>
+                </OverlayTrigger>
+              </div>
+              <div className="d-flex align-items-center">
+                <OverlayTrigger
+                  placement="top"
+                  overlay={
+                    <Tooltip id={`tooltip-top`}>
+                      Subscribe now to the waterpoint and tailor your
+                      notifications. Choose between receiving immediate alert
+                      emails for status changes or opt for a weekly update in
+                      your inbox.
+                    </Tooltip>
+                  }
+                >
+                  <IconInfoCircleFilled />
+                </OverlayTrigger>
+                <SubscriptionButton
+                  idWater={idWater}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
+              </div>
             </Container>
           </>
         )

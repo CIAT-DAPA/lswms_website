@@ -19,6 +19,8 @@ import {
   Badge,
   Button,
   Dropdown,
+  ToastContainer,
+  Toast,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
@@ -31,9 +33,13 @@ import {
   IconWalk,
   IconChartLine,
   IconId,
+  IconInfoCircleFilled,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import WpLabel from "../../components/wpLabel/WpLabel";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { useAuth } from "../../hooks/useAuth";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -77,6 +83,9 @@ function Visualization() {
   const [showWarning, setShowWarning] = useState(false);
   const [profile, setProfile] = useState();
   const [waterpointRoute, setWaterpointRoute] = useState();
+  const [toastSuccess, setToastSuccess] = useState();
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const { userInfo } = useAuth();
 
   const handleClose = () => setShowWarning(false);
 
@@ -134,7 +143,7 @@ function Visualization() {
       scaledDepthValue.value >= 3 ? null : !filter.red &&
       scaledDepthValue.value < 3 &&
       scaledDepthValue.value > 0 ? null : !filter.gray &&
-      scaledDepthValue.value == 0 ? null : (
+      scaledDepthValue.value === 0 ? null : (
       <>
         {hasContentsWp && (
           <Modal show={showWarning} onHide={handleClose} centered>
@@ -189,12 +198,36 @@ function Visualization() {
           }
           key={wp.id}
         >
-          <Popup>
+          <Popup closeButton={false}>
             <div>
-              <h6 className="fw-medium mb-0">
-                {t("monitoring.waterpoint")} {wp.name}{" "}
-                {t("monitoring.overview")}
-              </h6>
+              <div className="d-flex align-items-center justify-content-between ">
+                <h6 className="fw-medium mb-0">
+                  {t("monitoring.waterpoint")} {wp.name}{" "}
+                  {t("monitoring.overview")}
+                </h6>
+                <div className="d-flex align-items-center ">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-top`}>
+                        Subscribe now to the waterpoint and tailor your
+                        notifications. Choose between receiving immediate alert
+                        emails for status changes or opt for a weekly update in
+                        your inbox.
+                      </Tooltip>
+                    }
+                  >
+                    <IconInfoCircleFilled />
+                  </OverlayTrigger>
+                  <SubscriptionButton
+                    idWater={wp.id}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                    size="sm"
+                  />
+                </div>
+              </div>
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
               </p>
@@ -225,7 +258,7 @@ function Visualization() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="d-flex align-items-center ">
                     {" "}
                     <OverlayTrigger
                       placement="left"
@@ -235,16 +268,14 @@ function Visualization() {
                         </Tooltip>
                       }
                     >
-                      <Badge pill className="fw-semibold me-1">
-                        i
-                      </Badge>
+                      <IconInfoCircleFilled />
                     </OverlayTrigger>
                     {t("monitoring.depth")} (%) :
                   </td>
                   <td>{depthValue.value}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="d-flex align-items-center ">
                     <OverlayTrigger
                       placement="left"
                       overlay={
@@ -253,9 +284,7 @@ function Visualization() {
                         </Tooltip>
                       }
                     >
-                      <Badge pill className="fw-semibold me-1">
-                        i
-                      </Badge>
+                      <IconInfoCircleFilled />
                     </OverlayTrigger>
                     {t("monitoring.median-depth")} (%):
                   </td>
@@ -401,6 +430,25 @@ function Visualization() {
 
   return (
     <>
+      <ToastContainer
+        className="p-3 position-fixed"
+        position="bottom-end"
+        style={{ zIndex: 2000 }}
+      >
+        <Toast
+          onClose={() => setShowToastSubscribe(false)}
+          show={showToastSubscribe}
+          delay={2000}
+          className={!toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`}
+          autohide
+        >
+          <Toast.Body>
+            {!toastSuccess
+              ? `Woohoo, you've unsubscribe from the waterpoint!`
+              : `Success! You're now subscribed to the waterpoint.`}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
       {/* Modal de alert de obtener ubicacion */}
       <Modal show={alert} onHide={() => setAlert(false)} centered>
         <Modal.Body className="d-flex align-items-center ">

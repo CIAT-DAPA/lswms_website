@@ -14,6 +14,7 @@ env:
   REACT_APP_PRODUCTION_API_URL: ${{secrets.REACT_APP_PRODUCTION_API_URL}}
   REACT_APP_DEBUG: "false"
   REACT_APP_KEY_GRAPHHOPER: ${{secrets.REACT_APP_KEY_GRAPHHOPER}}
+  REACT_APP_KEYCLOAK_URL_PRODUCTION: ${{secrets.REACT_APP_KEYCLOAK_URL_PRODUCTION}}
  
 jobs:
  
@@ -34,6 +35,7 @@ jobs:
           echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
           echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
           echo "REACT_APP_KEY_GRAPHHOPER=${{env.REACT_APP_KEY_GRAPHHOPER}}" >> .env
+          echo "REACT_APP_KEYCLOAK_URL_PRODUCTION=${{env.REACT_APP_KEYCLOAK_URL_PRODUCTION}}" >> .env
           npm install
          
  
@@ -80,6 +82,7 @@ jobs:
           echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
           echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
           echo "REACT_APP_KEY_GRAPHHOPER=${{env.REACT_APP_KEY_GRAPHHOPER}}" >> .env
+          echo "REACT_APP_KEYCLOAK_URL_PRODUCTION=${{env.REACT_APP_KEYCLOAK_URL_PRODUCTION}}" >> .env
           npm install
           npm run build
  

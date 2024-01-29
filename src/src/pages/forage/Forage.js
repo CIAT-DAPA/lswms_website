@@ -11,7 +11,6 @@ import Configuration from "../../conf/Configuration";
 import TimelineController from "../../components/timelineController/TimelineController";
 import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
 import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
-import { CRS } from "leaflet";
 
 function Forage() {
   return (
@@ -42,14 +41,6 @@ function Forage() {
           </LayersControl.Overlay>
         </LayersControl>
         <ZoomControl position="topright" />
-        {/* <WMSTileLayer
-          url={Configuration.get_url_geoserver()}
-          layers={`waterpoints_et:biomass`}
-          format="image/png"
-          transparent={true}
-          zIndex={1000}
-          crs={CRS.EPSG4326}
-        /> */}
         <TimelineController
           dimensionName="time"
           layer="waterpoints_et:biomass"

@@ -61,6 +61,7 @@ function TimelineController({ dimensionName, layer }) {
         format: "image/png",
         transparent: true,
         crs: L.CRS.EPSG4326,
+        zIndex: 1000,
       });
       // Create a time dimension
       const timeDimension = new L.TimeDimension({

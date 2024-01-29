@@ -19,7 +19,7 @@ function WpLabel({ waterpoints }) {
 
   return (
     <>
-      {zoom >= 10 &&
+      {zoom >= 8 &&
         waterpoints.map((wp, i) => {
           return (
             <Marker key={i} position={[wp.lat, wp.lon]} icon={invisibleIcon}>

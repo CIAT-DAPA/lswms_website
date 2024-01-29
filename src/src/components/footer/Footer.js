@@ -14,43 +14,43 @@ function Footer() {
   return (
     <footer>
       <Container>
-        <footer class="py-5">
-          <div class="row">
-            <div class="col-6 col-md-2 mb-3">
+        <footer className="py-5">
+          <div className="row">
+            <div className="col-5 col-sm-6 col-md-2 mb-3">
               <h5>Sections</h5>
-              <ul class="nav flex-column">
-                <li class="nav-item mb-2 item-footer">
+              <ul className="nav flex-column">
+                <li className="nav-item mb-2 item-footer">
                   <Link className="nav-link text-white" to="/">
                     Home
                   </Link>
                 </li>
-                <li class="nav-item mb-2 item-footer">
+                <li className="nav-item mb-2 item-footer">
                   <Link className="nav-link text-white" to="/monitoring">
                     {t("menu.monitoring")}
                   </Link>
                 </li>
-                <li class="nav-item mb-2 item-footer">
+                <li className="nav-item mb-2 item-footer">
                   <Link className="nav-link text-white" to="/forage">
                     {t("menu.forage")}
                   </Link>
                 </li>
-                <li class="nav-item mb-2 item-footer">
+                <li className="nav-item mb-2 item-footer">
                   <Link className="nav-link text-white" to="/aboutus">
                     {t("menu.about-us")}
                   </Link>
                 </li>
-                {/* <li class="nav-item mb-2  item-footer">
+                <li className="nav-item mb-2  item-footer">
                   <Link className="nav-link text-white" to="/privacy">
                     Privacy
                   </Link>
-                </li> */}
+                </li>
               </ul>
             </div>
 
-            <div class="col-6 col-md-2 mb-3">
+            <div className="col-5 col-sm-6 col-md-2 mb-3">
               <h5>{t("footer.email")}</h5>
-              <ul class="nav flex-column">
-                <li class="nav-item mb-2 item-footer">
+              <ul className="nav flex-column">
+                <li className="nav-item mb-2 item-footer">
                   <a
                     href="mailto: S.alemayehu@cgiar.org"
                     className="nav-link text-white "
@@ -58,7 +58,7 @@ function Footer() {
                     S.alemayehu@cgiar.org{" "}
                   </a>
                 </li>
-                <li class="nav-item mb-2 item-footer">
+                <li className="nav-item mb-2 item-footer">
                   <a
                     href="mailto: liyenew@gmail.com"
                     className="nav-link text-white "
@@ -69,7 +69,7 @@ function Footer() {
               </ul>
             </div>
 
-            <div class="col-md-5 offset-md-1 mb-3">
+            <div className="col-md-5 offset-md-2 mb-3">
               <p>{t("footer.partners")}:</p>
               <img
                 src={partner1}
@@ -99,7 +99,7 @@ function Footer() {
             </div>
           </div>
 
-          <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+          <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
             {/* <p>{t("footer.rights")}.</p> */}
           </div>
         </footer>

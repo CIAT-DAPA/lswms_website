@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-pdf/renderer": "^3.1.12",
-    "@tabler/icons-react": "^2.35.0",
+    "@tabler/icons-react": "^2.46.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,6 +16,7 @@
     "html2canvas": "^1.4.1",
     "i18next": "^23.4.5",
     "jspdf": "^2.5.1",
+    "keycloak-js": "^23.0.4",
     "leaflet": "^1.9.4",
     "leaflet-timedimension": "^1.1.1",
     "moment": "^2.29.4",

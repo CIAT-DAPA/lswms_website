@@ -1,0 +1,8 @@
+.invisible-icon {
+  background-color: transparent;
+  pointer-events: none !important;
+}
+
+.leaflet-tooltip {
+  font-size: 16px;
+}

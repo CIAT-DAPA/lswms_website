@@ -91,11 +91,11 @@ function Footer() {
                 alt="partner Minister"
                 className="mx-3 my-2 my-md-0"
               />
-              <img
+              {/* <img
                 src={partner3}
                 alt="partner Bill & Melinda Gates"
                 className="mx-3 my-2 my-md-0"
-              />
+              /> */}
             </div>
           </div>
 

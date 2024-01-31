@@ -99,7 +99,7 @@
     "evap": "Evaporation",
     "evap-description": "These graphs show the evaporation and daily historical average for the evaporation of waterpoint",
     "subseasonal": "Sub-seasonal forecast",
-    "subseasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific month. Below, you can find the most probable category for the selected waterpoint and the forecast month.",
+    "subseasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific month. Below, you can find the most probable category for the selected municipality and the forecast month.",
     "precipitation": "Precipitation probabilities",
     "week": "Week",
     "forecast-sub-1a": "For the week",

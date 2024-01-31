@@ -41,7 +41,6 @@ function TimelineController({ dimensionName, layer }) {
         break;
       }
     }
-    console.log(dates);
     return dates;
   }
 

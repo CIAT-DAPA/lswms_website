@@ -78,6 +78,13 @@ function TimelineController({ dimensionName, layer }) {
         map.addControl(timeDimensionControl);
         timeDimensionControlRef.current = timeDimensionControl;
       }
+      let targetLayer;
+      map.eachLayer((layer) => {
+        if (layer.options.layers === 'waterpoints_et:Watershed_boundaries') {
+          targetLayer = layer;
+          targetLayer.setZIndex(1000);
+        }
+      });
     });
   }, [map]);
 

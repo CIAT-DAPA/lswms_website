@@ -1,12 +1,12 @@
 .header-bg {
   background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.795) 0%,
-      rgba(255, 255, 255, 0) 100%
+      rgb(255, 255, 255) 0%,
+      rgba(255, 255, 255, 0.199) 100%
     ),
-    url("../../assets/img/alt1.jpg");
+    url("../../assets/img/bg-home.jpg");
   background-size: cover;
-  background-position: top;
+  background-position: center;
   min-height: 100vh;
 }
 

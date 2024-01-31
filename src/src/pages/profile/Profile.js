@@ -259,7 +259,7 @@ function Waterprofile() {
               <div className="profile-bg">
                 <div
                   className="position-absolute z-3 d-flex "
-                  style={{ top: "450px", right: "3vw" }}
+                  style={{ top: "43%", right: "3vw" }}
                 >
                   <SubscriptionButton
                     idWater={idWater}

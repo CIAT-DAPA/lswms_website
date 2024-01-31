@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import "./Forage.css";
 import {
   LayersControl,
@@ -13,14 +13,6 @@ import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
 import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
 
 function Forage() {
-  const wmsLayerRef = useRef();
-
-  useEffect(() => {
-    if (wmsLayerRef.current) {
-      const leafletLayer = wmsLayerRef.current.leafletElement;
-      leafletLayer.bringToFront();
-    }
-  }, []);
   return (
     <>
       <MapContainer
@@ -40,12 +32,10 @@ function Forage() {
         <LayersControl position="topright">
           <LayersControl.Overlay name="Show watershred" checked>
             <WMSTileLayer
-              ref={wmsLayerRef}
               url={Configuration.get_url_geoserver()}
               layers={`waterpoints_et:Watershed_boundaries`}
               format="image/png"
               transparent={true}
-              zIndex={10}
             />
           </LayersControl.Overlay>
         </LayersControl>

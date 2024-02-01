@@ -237,7 +237,7 @@ function HistoricalData() {
           >
             <Modal.Body className="d-flex align-items-center ">
               <Spinner animation="border" role="status" className="me-2" />
-              Getting the waterpoint data...
+              {t("data.loading")}
             </Modal.Body>
           </Modal>
         ) : (
@@ -272,11 +272,11 @@ function HistoricalData() {
                           <>
                             <Row className="justify-content-around ">
                               <Col className="col-auto">
-                                <p>Min year</p>
+                                <p> {t("data.min-year")}</p>
                                 <h4>{value && value.min}</h4>
                               </Col>
                               <Col className="col-auto">
-                                <p>Max year</p>
+                                <p> {t("data.max-year")}</p>
                                 <h4>{value && value.max}</h4>
                               </Col>
                             </Row>
@@ -299,7 +299,7 @@ function HistoricalData() {
                           <p>
                             {t("data.depth-description")}{" "}
                             <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} between{" "}
+                            {t("data.depth-year")} {t("data.between")}{" "}
                             <span className="fw-bold ">{value.min}</span> and{" "}
                             <span className="fw-bold ">{value.max}</span>.
                           </p>
@@ -349,7 +349,7 @@ function HistoricalData() {
                             <p>
                               {t("data.scaled-description")}{" "}
                               <span className="fw-bold ">{wp.name}</span>,{" "}
-                              {t("data.depth-year")} between{" "}
+                              {t("data.depth-year")} {t("data.between")}{" "}
                               <span className="fw-bold ">{value.min}</span> and{" "}
                               <span className="fw-bold ">{value.max}</span>.
                             </p>
@@ -385,13 +385,13 @@ function HistoricalData() {
                   <Row>
                     <Col className="col-12 col-lg-6">
                       <h6 className="mb-0">{t("data.rain")}</h6>
-                      <p className="fw-light ">Source: RFE</p>
+                      <p className="fw-light ">{t("data.source")}: RFE</p>
                       {rain?.length > 0 && (
                         <>
                           <p>
                             {t("data.rain-description")}{" "}
                             <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} between{" "}
+                            {t("data.depth-year")} {t("data.between")}{" "}
                             <span className="fw-bold ">{value.min}</span> and{" "}
                             <span className="fw-bold ">{value.max}</span>.
                           </p>
@@ -418,13 +418,13 @@ function HistoricalData() {
                     </Col>
                     <Col className="col-12 col-lg-6">
                       <h6 className="mb-0">{t("data.evap")}</h6>
-                      <p className="fw-light ">Source: Global GDAS</p>
+                      <p className="fw-light ">{t("data.source")}: Global GDAS</p>
                       {evap?.length > 0 && (
                         <>
                           <p>
                             {t("data.evap-description")}{" "}
                             <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} between{" "}
+                            {t("data.depth-year")} {t("data.between")}{" "}
                             <span className="fw-bold ">{value.min}</span> and{" "}
                             <span className="fw-bold ">{value.max}</span>.
                           </p>
@@ -452,7 +452,7 @@ function HistoricalData() {
                     <Col className="mb-4">
                       <Button onClick={() => downloadAllData()}>
                         <IconDownload className="me-2" />
-                        Download all data
+                        {t("data.download")}
                       </Button>
                     </Col>
                   </Row>
@@ -460,7 +460,7 @@ function HistoricalData() {
                 <Tab eventKey="Climate Forecast" title={t("data.climate")}>
                   <Row className="mt-3">
                     <h5 className="mb-0">{t("data.subseasonal")}</h5>
-                    <p className="fw-light ">Source: AClimate Ethiopia</p>
+                    <p className="fw-light ">{t("data.source")}: AClimate Ethiopia</p>
                     <p>{t("data.subseasonal-d")}</p>
                     {subseasonal &&
                       subseasonal.map((week, i) => {
@@ -480,7 +480,7 @@ function HistoricalData() {
                   </Row>
                   <Row className="mt-3 justify-content-around ">
                     <h5 className="mb-0">{t("data.seasonal")}</h5>
-                    <p className="fw-light ">Source: AClimate Ethiopia</p>
+                    <p className="fw-light ">{t("data.source")}: AClimate Ethiopia</p>
                     <p>{t("data.seasonal-d")}</p>
                     {seasonal &&
                       seasonal.map((month, i) => {

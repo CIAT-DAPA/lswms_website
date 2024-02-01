@@ -2,12 +2,17 @@
   "menu": {
     "monitoring": "Monitoring",
     "forage": "Forage",
-    "about-us": "About Us"
+    "about-us": "About Us",
+    "log-in": "Log in",
+    "log-out": "Log out"
   },
   "footer": {
     "partners": "Partners",
     "rights": "Alliance of Bioversity International and CIAT rights reserved",
-    "email": "Email"
+    "email": "Email",
+    "sections": "Sections",
+    "home": "Home",
+    "privacy": "Privacy"
   },
   "home": {
     "title": "Making informed decisions",
@@ -63,7 +68,8 @@
     "warning-timeout": "Sorry, we ran out of time trying to get your location.",
     "warning-default": "Oops! An unknown error occurred.",
     "warning-browser": "Geolocation is not available in this browser. Please consider selecting your initial position from a different location.",
-    "modal-search": "Ready for an adventure? Enter your starting point and let's plan your route together."
+    "modal-search": "Ready for an adventure? Enter your starting point and let's plan your route together.",
+    "subscription-info": "Subscribe now to the waterpoint and tailor your notifications. Choose between receiving immediate alert emails for status changes or opt for a weekly update in your inbox."
   },
   "route": {
     "title": "Route information",
@@ -83,7 +89,8 @@
     "notFound-title": "No water ID was provided.",
     "notFound-d": "Try to get the profile from the waterpoints display.",
     "toast-title": "Warning",
-    "toast-body": "The waterpoint profile is not available in the language selected"
+    "toast-body": "The waterpoint profile is not available in the language selected",
+    "share": "Share"
   },
   "data": {
     "monitored": "Monitored data",
@@ -117,7 +124,13 @@
     "notFound-title": "No aclimate ID was provided.",
     "notFound-d": "Try to get the data from the waterpoints display.",
     "climate": "Climate Forecast",
-    "climatology": "Daily historical average"
+    "climatology": "Daily historical average",
+    "loading": "Getting the waterpoint data...",
+    "min-year": "Min-year",
+    "max-year": "Max-year",
+    "between": "Between",
+    "source": "Source",
+    "download": "Download all data"
   },
   "notFound": {
     "title": "Oops! Looks like you've ventured into uncharted territory.",
@@ -130,5 +143,41 @@
     "about-project-d": "ABC in collaboration with Ministry of Agriculture (MoA), Ethiopian Agricultural Research Institute (EIAR), Oromia Agricultural Research Institute (OARI), United States Geological Survey (USGS), along with other key national and local institutions has been implementing a Livestock Water Monitoring and Risk Management System (LWMRMS) Project through financial support from the Bill and Melinda Gates Foundation (BMGF). The project aims at providing a near real-time surface water information that are gender and socially inclusive in pastoral areas of Ethiopia. The project developed a digital LWMRMS platform to improve pastoralists’ drought management and build climate resilience of climate-induced risks, and thereby improve their livelihoods. The digital LWMRMS is an innovative web-platform for providing near real time water availability and level information. The platform can also be used to disseminate information to support livestock producers and/or organizations to make climate-resilient decisions. The platform will contribute to build climate resilient agriculture in Ethiopia by providing a near time water availability and level information for effective decision making and action.",
     "product": "Products and services",
     "product-d": "Digital LWMRMS provide surface water information for agricultural producers who lack access to the information in pastoral areas of Ethiopia. The platform provide a near real time information on 1) geographical location of water-points, including geospatial information and characteristics of water-points; 2) rainfall; 3) evaporation; 4) scaled water depth; and 5) condition of the water-points. This web-platform is also used to disseminate the information daily in near-real time base. Pastoral and agro-pastoral communities are highly vulnerable to climate variability and changes. Thus, this digital platform is a first in its kind and key decision support tools to manage climate risk and enhance pastoralists’ and agro-pastoralists’ adaptive capacity. The platform can also be used by governmental organizations, non-governmental organizations, and other stakeholders for early warning and decision making."
+  },
+  "subscriptionButton": {
+    "weekly": "Weekly",
+    "alert": "Alert",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe"
+  },
+  "forage": {
+    "show": "Show watershed"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "description-1": "We are representing the Alliance Bioversity International and CIAT and the Ethiopian Agricultural Research Institute in the Climate Action research program. We are developing a study of population living around water points in Ethiopia, the project aims to provide technology solutions to the people who may be affected by the different challenges at the water points. This study aims to collect data from these people in order to provide technological solutions such as text messages and emails when certain events occur at the water points to which they subscribe.",
+    "description-2": "You, as a local resident, have been selected to participate in this interview for the following purposes:",
+    "description-2-1": "To collect your demographic information",
+    "description-2-2": "To collect your personal information",
+    "description-3": "This is for the purpose of storing it in a database so that we can send constant updates when necessary. It is important to clarify here that:",
+    "description-3-1": "All information collected is confidential and will only be analyzed by researchers from the Alliance Bioversity International and CIAT and the Ethiopian Agricultural Research Institute. Because of its confidential nature, participating in this research anonymously will avoid any perceived risk of sharing your experiences and impressions of the program to be evaluated. Such confidentiality will also ensure that, except for the learning gained from your own and shared reflection of your participation in the Livesock Surface monitoring system, you will not be exposed to any risk.",
+    "description-3-2": "This study will maintain the absolute confidentiality of your identity and will use the data obtained only for professional purposes, encrypting the information, and keeping it in secure files. Only researchers will have access to this information. In no case will individual persons be identified. If you have questions about the handling of your information regarding this study, you may (also) contact Sintayehu Alemayehu (s.alemayehu@cgiar.org).",
+    "description-3-3": "The information you provide will be used exclusively for research purposes.",
+    "description-3-4": "You may withdraw or abstain from the interview at any time. We respect your right not to respond to them.",
+    "description-3-5": "If direct quotations are to be used in reports of results and/or publications, they will be used with the prior consent of the interviewee.",
+    "description-3-6": "During the interview, your name, phone number, email and location will be collected due to the remote nature of the interview.",
+    "description-3-7": "By signing/accepting this agreement, you acknowledge that you have been informed of the purpose of this study and agree to the above and give your consent to participate in this study."
+  },
+  "user-profile": {
+    "edit": "Edit your",
+    "subscription": "Subscription",
+    "save": "Save changes",
+    "loading": "Getting your profile...",
+    "title": "Subscribed waterpoints",
+    "description-1": "Welcome to the subscription management section of Waterpoints.",
+    "description-2-1": "We take care of keeping you up to date and making sure you are informed of any relevant updates. You have the flexibility to choose between two types of subscriptions:",
+    "description-2-2": "where you will receive notifications on a regular weekly basis, or",
+    "description-2-3": "to notify you immediately of any significant changes in the status of Waterpoint.",
+    "edit-2": "Edit Subscribe"
   }
 }

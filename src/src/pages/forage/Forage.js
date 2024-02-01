@@ -11,8 +11,10 @@ import Configuration from "../../conf/Configuration";
 import TimelineController from "../../components/timelineController/TimelineController";
 import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
 import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
+import { useTranslation } from "react-i18next";
 
 function Forage() {
+  const [t] = useTranslation("global");
   return (
     <>
       <MapContainer
@@ -30,7 +32,7 @@ function Forage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LayersControl position="topright">
-          <LayersControl.Overlay name="Show watershred" checked>
+          <LayersControl.Overlay name={t("forage.show")} checked>
             <WMSTileLayer
               url={Configuration.get_url_geoserver()}
               layers={`waterpoints_et:Watershed_boundaries`}

@@ -5,73 +5,22 @@ function Privacy() {
   const [t] = useTranslation("global");
   return (
     <div className="container">
-      <h1 className="pt-5">Privacy </h1>
-      <p>
-        We are representing the Alliance Bioversity International and CIAT and
-        the Ethiopian Agricultural Research Institute in the Climate Action
-        research program. We are developing a study of population living around
-        water points in Ethiopia, the project aims to provide technology
-        solutions to the people who may be affected by the different challenges
-        at the water points. This study aims to collect data from these people
-        in order to provide technological solutions such as text messages and
-        emails when certain events occur at the water points to which they
-        subscribe.
-      </p>
-      <p className="mt-5">
-        You, as a local resident, have been selected to participate in this
-        interview for the following purposes:
-      </p>
+      <h1 className="pt-5">{t("privacy.title")} </h1>
+      <p>{t("privacy.description-1")}</p>
+      <p className="mt-5">{t("privacy.description-2")}</p>
       <ul>
-        <li>To collect your demographic information</li>
-        <li>To collect your personal information</li>
+        <li>{t("privacy.description-2-1")}</li>
+        <li>{t("privacy.description-2-2")}</li>
       </ul>
-      <p className="mt-5">
-        This is for the purpose of storing it in a database so that we can send
-        constant updates when necessary. It is important to clarify here that:
-      </p>
+      <p className="mt-5">{t("privacy.description-3")}</p>
       <ol>
-        <li>
-          All information collected is confidential and will only be analyzed by
-          researchers from the Alliance Bioversity International and CIAT and
-          the Ethiopian Agricultural Research Institute. Because of its
-          confidential nature, participating in this research anonymously will
-          avoid any perceived risk of sharing your experiences and impressions
-          of the program to be evaluated. Such confidentiality will also ensure
-          that, except for the learning gained from your own and shared
-          reflection of your participation in the Livesock Surface monitoring
-          system, you will not be exposed to any risk.
-        </li>
-        <li className="mt-3">
-          This study will maintain the absolute confidentiality of your identity
-          and will use the data obtained only for professional purposes,
-          encrypting the information, and keeping it in secure files. Only
-          researchers will have access to this information. In no case will
-          individual persons be identified. If you have questions about the
-          handling of your information regarding this study, you may (also)
-          contact Sintayehu Alemayehu (s.alemayehu@cgiar.org).
-        </li>
-        <li className="mt-3">
-          The information you provide will be used exclusively for research
-          purposes.
-        </li>
-        <li className="mt-3">
-          You may withdraw or abstain from the interview at any time. We respect
-          your right not to respond to them.
-        </li>
-        <li className="mt-3">
-          If direct quotations are to be used in reports of results and/or
-          publications, they will be used with the prior consent of the
-          interviewee.
-        </li>
-        <li className="mt-3">
-          During the interview, your name, phone number, email and location will
-          be collected due to the remote nature of the interview.
-        </li>
-        <li className="mt-3">
-          By signing/accepting this agreement, you acknowledge that you have
-          been informed of the purpose of this study and agree to the above and
-          give your consent to participate in this study.
-        </li>
+        <li>{t("privacy.description-3-1")}</li>
+        <li className="mt-3">{t("privacy.description-3-2")}</li>
+        <li className="mt-3">{t("privacy.description-3-3")}</li>
+        <li className="mt-3">{t("privacy.description-3-4")}</li>
+        <li className="mt-3">{t("privacy.description-3-5")}</li>
+        <li className="mt-3">{t("privacy.description-3-6")}</li>
+        <li className="mt-3">{t("privacy.description-3-7")}</li>
       </ol>
     </div>
   );

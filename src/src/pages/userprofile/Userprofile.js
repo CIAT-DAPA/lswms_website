@@ -22,8 +22,10 @@ import {
 } from "@tabler/icons-react";
 import Services from "../../services/apiService";
 import { useAuth } from "../../hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 function Userprofile() {
+  const [t] = useTranslation("global");
   const [subscription, setSubscription] = useState([]);
   const [toastEdit, setToastEdit] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
@@ -177,7 +179,8 @@ function Userprofile() {
         >
           <Modal.Header closeButton>
             <Modal.Title className="h5">
-              Edit your {editingWaterpoint.waterpoint_name} subscription
+              {t("user-profile.edit")} {editingWaterpoint.waterpoint_name}{" "}
+              {t("user-profile.subscription")}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -185,7 +188,7 @@ function Userprofile() {
               <Form.Check
                 type={"checkbox"}
                 id={`checkbox-weekly`}
-                label={`Weekly`}
+                label={t("subscriptionButton.weekly")}
                 checked={editingWaterpoint.weekly}
                 name="weekly"
                 onChange={handleCheckboxChange}
@@ -193,7 +196,7 @@ function Userprofile() {
               <Form.Check
                 type={"checkbox"}
                 id={`checkbox-alert`}
-                label={`Alert`}
+                label={t("subscriptionButton.weekly")}
                 checked={editingWaterpoint.alert}
                 name="alert"
                 onChange={handleCheckboxChange}
@@ -205,14 +208,14 @@ function Userprofile() {
               variant="secondary"
               onClick={() => setModalVisibility(false)}
             >
-              Close
+              {t("monitoring.modal-close")}
             </Button>
             <Button
               variant="primary"
               onClick={() => editWp()}
               disabled={!editingWaterpoint.weekly && !editingWaterpoint.alert}
             >
-              Save changes
+              {t("user-profile.save")}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -261,27 +264,28 @@ function Userprofile() {
             >
               <Modal.Body className="d-flex align-items-center ">
                 <Spinner animation="border" role="status" className="me-2" />
-                cargando
+                {t("user-profile.loading")}
               </Modal.Body>
             </Modal>
           ) : (
             <Col className="col-12 mt-4">
               {subscription?.length > 0 ? (
                 <>
-                  <h5 className="fw-medium">Subscribed waterpoints</h5>
+                  <h5 className="fw-medium">{t("user-profile.title")}</h5>
                   <p className="text-wrap-pretty">
-                    Welcome to the subscription management section of
-                    Waterpoints.
+                    {t("user-profile.description-1")}
                   </p>
                   <p className="text-wrap-pretty">
-                    We take care of keeping you up to date and making sure you
-                    are informed of any relevant updates. You have the
-                    flexibility to choose between two types of subscriptions:
-                    <span className="fw-bold"> Weekly</span>, where you will
-                    receive notifications on a regular weekly basis, or{" "}
-                    <span className="fw-bold">Alert</span>, to notify you
-                    immediately of any significant changes in the status of
-                    Waterpoint.
+                    {t("user-profile.description-2-1")}
+                    <span className="fw-bold">
+                      {" "}
+                      {t("subscriptionButton.weekly")}
+                    </span>
+                    , {t("user-profile.description-2-2")}{" "}
+                    <span className="fw-bold">
+                      {t("subscriptionButton.alert")}
+                    </span>
+                    , {t("user-profile.description-2-3")}
                   </p>
                   {subscription.map((boletin, index) => (
                     <div key={index}>
@@ -334,7 +338,8 @@ function Userprofile() {
                               <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
                             </Col>
                             <Col className="col-2">
-                              Depth: {waterpoint.last_monitored_deph.toFixed(3)}
+                              {t("monitoring.depth")}:{" "}
+                              {waterpoint.last_monitored_deph.toFixed(3)}
                             </Col>
                             <Col className="d-flex col-12 col-md-5">
                               <Button
@@ -342,7 +347,7 @@ function Userprofile() {
                                 onClick={() => modalEdit(waterpoint)}
                               >
                                 <IconEdit />
-                                Edit Subscribe
+                                {t("user-profile.edit-2")}
                               </Button>
                               <Button
                                 className=" rounded-4 btn-danger "
@@ -351,7 +356,7 @@ function Userprofile() {
                                 }
                               >
                                 <IconMailOff className="me-2" />
-                                Unsubscribe
+                                {t("subscriptionButton.unsubscribe")}
                               </Button>
                             </Col>
                           </Row>

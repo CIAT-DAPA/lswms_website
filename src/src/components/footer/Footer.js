@@ -17,11 +17,11 @@ function Footer() {
         <footer className="py-5">
           <div className="row">
             <div className="col-5 col-sm-6 col-md-2 mb-3">
-              <h5>Sections</h5>
+              <h5>{t("footer.sections")}</h5>
               <ul className="nav flex-column">
                 <li className="nav-item mb-2 item-footer">
                   <Link className="nav-link text-white" to="/">
-                    Home
+                    {t("footer.home")}
                   </Link>
                 </li>
                 <li className="nav-item mb-2 item-footer">
@@ -41,7 +41,7 @@ function Footer() {
                 </li>
                 <li className="nav-item mb-2  item-footer">
                   <Link className="nav-link text-white" to="/privacy">
-                    Privacy
+                    {t("footer.privacy")}
                   </Link>
                 </li>
               </ul>

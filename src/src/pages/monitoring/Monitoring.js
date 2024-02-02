@@ -210,10 +210,7 @@ function Visualization() {
                     placement="top"
                     overlay={
                       <Tooltip id={`tooltip-top`}>
-                        Subscribe now to the waterpoint and tailor your
-                        notifications. Choose between receiving immediate alert
-                        emails for status changes or opt for a weekly update in
-                        your inbox.
+                        {t("monitoring.subscription-info")}
                       </Tooltip>
                     }
                   >

@@ -124,7 +124,7 @@ function Visualization() {
   const popupData = (wp) => {
     // Find the corresponding monitored data for the current waterpoint
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-    // Get the value of depth if the monitored data is found
+    // Get the value of depth if the monitored data is foun
     const depthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "depth")
       : null;

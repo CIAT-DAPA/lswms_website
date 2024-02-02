@@ -91,7 +91,7 @@ function HistoricalData() {
       setEvap(filterData(wpData, "evp"));
 
       const result = typeNames.map((type) => {
-        let data = climatology?.climatology
+        return climatology?.climatology
           ?.flatMap((monthData) => {
             return monthData.flatMap((dayData) => {
               const month = dayData.month.toString().padStart(2, "0");
@@ -114,37 +114,6 @@ function HistoricalData() {
             });
           })
           .sort((a, b) => new Date(a.x) - new Date(b.x));
-      
-        if (type === 'rain') {
-          const monthlyData = {};
-          data.forEach((item) => {
-            const month = new Date(item.x).getMonth();
-            const year = new Date(item.x).getFullYear();
-            const key = `${year}-${month}`;
-            if (!monthlyData[key]) {
-              monthlyData[key] = [];
-            }
-            monthlyData[key].push(Number(item.y));
-          });
-      
-          const monthlyAvg = {};
-          Object.entries(monthlyData).forEach(([key, values]) => {
-            const avg = values.reduce((a, b) => a + b, 0) / values.length;
-            monthlyAvg[key] = avg.toFixed(2);
-          });
-      
-          data = data.map((item) => {
-            const month = new Date(item.x).getMonth();
-            const year = new Date(item.x).getFullYear();
-            const key = `${year}-${month}`;
-            return {
-              ...item,
-              y: monthlyAvg[key],
-            };
-          });
-        }
-      
-        return data;
       });
       setClimaDepthData(result[0]);
       setClimaScaledDepthData(result[1]);
@@ -175,7 +144,7 @@ function HistoricalData() {
   }, [aclimateId]);
 
   const filterData = (data, type) => {
-    let filteredData = data
+    const filteredData = data
       .filter((item) => {
         const itemYear = new Date(item.date).getFullYear();
         return itemYear >= Number(value.min) && itemYear <= Number(value.max);
@@ -186,36 +155,6 @@ function HistoricalData() {
           item.values.find((value) => value.type === type)?.value.toFixed(2) ||
           0,
       }));
-
-    if (type === "rain") {
-      const monthlyData = {};
-      filteredData.forEach((item) => {
-        const month = item.x.getMonth();
-        const year = item.x.getFullYear();
-        const key = `${year}-${month}`;
-        if (!monthlyData[key]) {
-          monthlyData[key] = [];
-        }
-        monthlyData[key].push(Number(item.y));
-      });
-
-      const monthlyAvg = {};
-      Object.entries(monthlyData).forEach(([key, values]) => {
-        const avg = values.reduce((a, b) => a + b, 0) / values.length;
-        monthlyAvg[key] = avg.toFixed(2);
-      });
-
-      filteredData = filteredData.map((item) => {
-        const month = item.x.getMonth();
-        const year = item.x.getFullYear();
-        const key = `${year}-${month}`;
-        return {
-          ...item,
-          y: monthlyAvg[key],
-        };
-      });
-    }
-
     const formattedData = filteredData.map((item) => ({
       ...item,
       x: item.x.toLocaleDateString("en-CA"),

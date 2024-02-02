@@ -2,12 +2,17 @@
   "menu": {
     "monitoring": "Hordoffii",
     "forage": "Nyaata horii",
-    "about-us": "Waa'ee keenya"
+    "about-us": "Waa'ee keenya",
+    "log-in": "",
+    "log-out": ""
   },
   "footer": {
     "partners": "waahillan",
     "rights": "Alliance of Bioversity International and CIAT mirgi eegameera",
-    "email": "Imeelii"
+    "email": "Imeelii",
+    "sections": "",
+    "home": "",
+    "privacy": ""
   },
   "home": {
     "title": "Murtoo odeeffannoo irratti hundaa'e taasisuu",
@@ -47,7 +52,7 @@
     "seasonally-m": "Waqtii kana hin jiru",
     "profile": "Ibsa",
     "data": "Boordii odeeffannoo",
-    "loading": "Odeeffannoo waa'ee horoo argachuu",
+    "loading": "Madda bishaanii argachuu",
     "placeholder-search": "Qabxii bishaanii, aanaa, zoonii ykn naannootiin barbaadi",
     "modal-title": "Akeekkachiisa",
     "modal-body": "Profaayilli haroo afaan filatameen hin argamu, qofa keessatti argama",
@@ -63,7 +68,8 @@
     "warning-timeout": "Dhiifama, bakka jirtan argachuuf yaaluun yeroon nu jalaa dhume",
     "warning-default": "Oops! Dogoggorri hin beekamne uumame.",
     "warning-browser": "Geolocation browser kana keessatti hin argamu. Maaloo bakka jalqabaa bakka adda ta’e irraa filachuu yaadaa.",
-    "modal-search": "Eessaa jalqabuu barbaadda?"
+    "modal-search": "Eessaa jalqabuu barbaadda?",
+    "subscription-info": ""
   },
   "route": {
     "title": "Odeeffannoo daandii",
@@ -83,23 +89,24 @@
     "notFound-title": "Mallattoon bishaanii tokkollee hin kennamu",
     "notFound-d": "Agarsiisa qabxiiwwan bishaanii irraa piroofaayilii argachuuf yaali",
     "toast-title": "Akeekkachiisa",
-    "toast-body": "Profaayilli haroo afaan filatameen hin argamu"
+    "toast-body": "Profaayilli haroo afaan filatameen hin argamu",
+    "share": ""
   },
   "data": {
     "monitored": "Hordoffii daataa",
-    "monitored-d": "Chaartota gadi fageenya Ooyiruu, iskeelii gadi fageenyaa, roobaa fi hurka biqiltootaa fi lafa irraa ka'u abuuraa. Giraafota baroota filattanii  baasuudhaan muuxannoo keessanitt dabaladhaa. ",
+    "monitored-d": "Chaartiiwwan garaagaraa gadi fageenya madda bishaanii, iskeelii gadi fageenyaa, roobaa fi hurka biqiltootaa fi lafa irraa ka'u hubadhaa. Giraafota baroota filattanii  baasuudhaan muuxannoo keessan waliin fayyadamaa. ",
     "year": "Bara",
     "depth": "Gad-fageenya",
     "depth-description": "Giraafin kun gadi fageenya qabxii bishaanii fi haala qilleensaa agarsiisu",
     "depth-year": "",
-    "scaled": "Gadi fageenya madaalawaa",
+    "scaled": "Gad-fageenya safarame",
     "scaled-description": "Giraafin kun gadi fageenya qabxii bishaanii fi haala qilleensaa walgitu agarsiisu",
     "rain": "",
     "rain-description": "Giraafin kun qabxii bishaanii roobaafi haala qilleensaa agarsiisu",
     "evap": "Hurka",
     "evap-description": "Giraafin kun danfaa bishaanii fi haala qilleensaa agarsiisu",
     "subseasonal": "Raaga haala qilleensaa yeroo gabaabaa (waqtii gadii)",
-    "subseasonal-d": "Raagni haala qilleensaa dhibbeentaa carraa roobaa idilee iddoo tokkoo baatii adda ba'e tokkoon walbira qabuun kennama. Armaan gaditti carraa roobaa idilee, idilee-gad fi idilee-ol keessaa isa kamtu carraa guddaa akka qabu godina barbaaddan sanaaf argachuu dandeessu. ",
+    "subseasonal-d": "Raagni haala qilleensaa dhibbeentaa carraa roobaa idilee eddoo tokkoo baatii adda ba'e tokkoon walbira qabuun kennama. Armaan gaditti carraa roobaa idilee, idilee-gadii fi idilee-olii keessaa isa kamtu carraa guddaa akka qabu godina barbaaddan sanaaf argachuu dandeessu. ",
     "precipitation": "Carraa roobaa",
     "week": "Torbee",
     "forecast-sub-1a": "Torban tokkoof",
@@ -117,7 +124,13 @@
     "notFound-title": "",
     "notFound-d": "Odeeffannoo fuula agarsiisa qabxiiwwan bishaanii irraa argachuuf yaali.",
     "climate": "Raaga haala qilleensaa",
-    "climatology": "Qilleensa baramaa"
+    "climatology": "Qilleensa baramaa",
+    "loading": "",
+    "min-year": "",
+    "max-year": "",
+    "between": "",
+    "source": "",
+    "download": ""
   },
   "notFound": {
     "title": "Oops! Naannoo hin beekamne keessa waan deemte fakkaata.",
@@ -130,5 +143,41 @@
     "about-project-d": "Alliance of Bioversity International fi CIAT Ministeera Qonnaa (MoA), Inistiitiyuutii Qorannoo Qonnaa Itiyoophiyaa (EIAR), Institiutii Qorannoo Qonna Oromiyaa (IQQO), Qorannoo Ji’ooloojii Yunaayitid Isteetis (USGS) waliin ta’uun dhaabbilee ijoo biyyaalessaa fi biyya keessaa biroo waliin ta’uun... Pirojektii Sirna Hordoffii fi Bulchiinsa Balaa Bishaan Beeyladaa (LWMRMS) deeggarsa maallaqaa Faawundeeshinii Biil fi Meeliindaa Geetis (BMGF) irraa argameen hojiirra oolchaa tureera. Pirojektichi odeeffannoo bishaan gubbaa yeroo qabatamaatti dhihoo ta’ee fi koorniyaa fi hawaasummaan kan hammate naannoo tiksee Itoophiyaa keessatti dhiyeessuuf kan akeekedha. Pirojektichi bulchiinsa gogiinsa tiksitootaa fooyyessuu fi balaa haala qilleensaatiin dhufu dandamachuu danda’uu qilleensaa ijaaruuf, kanaanis jireenya isaanii fooyyessuuf waltajjii dijitaalaa LWMRMS qopheesse. LWMRMS dijitaalaa yeroo qabatamaatti dhihootti argama bishaanii fi odeeffannoo sadarkaa kennuudhaaf web-platform kalaqaa dha. Waltajjichi odeeffannoo tamsaasuun oomishtoonni beeyladaa fi/ykn dhaabbileen murtii haala qilleensaa dandamatu akka murteessan deeggaruufis ni danda’ama. Waltajjichi murtee fi tarkaanfii bu’a qabeessa ta’eef odeeffannoo yeroo dhiyootti argama bishaanii fi sadarkaa kennuudhaan qonna qilleensaa dandamatu Itiyoophiyaa keessatti ijaaruuf gumaacha ni taasisa.",
     "product": "",
     "product-d": "LWMRMS Dijiitaalaa oomishtoota qonnaa naannoo tiksee Itoophiyaa keessatti odeeffannoo kana argachuu hin dandeenyeef odeeffannoo bishaan gubbaa ni kenna. Waltajjichi odeeffannoo yeroo qabatamaatti dhihoo ta’e kan 1) teessuma lafaa qabxiiwwan bishaanii, odeeffannoo ji’oospaasii fi amala qabxiiwwan bishaanii dabalatee; 2) rooba; 3) danfisuu; 4) gadi fageenya bishaanii iskeelii; fi 5) haala bishaan-qabxii. Web-platform kun odeeffannoo guyyaa guyyaan yeroo dhugaatti dhihoo ta’een tamsaasuufis ni fayyadama. Hawaasni tiksee fi agro-pastoral jijjiirama qilleensaa fi jijjiirama qilleensaaf baay’ee saaxilamoo dha. Haala kanaan, waltajjiin dijitaalaa kun gosa isaatiin isa jalqabaa fi meeshaalee deeggarsa murtii ijoo balaa qilleensaa bulchuu fi dandeettii madaqsuu tiksitootaa fi tiksitoota qonnaa guddisuuf gargaara. Waltajjiin kun dhaabbilee mootummaa, dhaabbilee miti mootummaa, fi qooda fudhattoonni biroo akeekkachiisa dursaa fi murtee kennuufis itti fayyadamuu ni danda’u."
+  },
+  "subscriptionButton": {
+    "weekly": "",
+    "alert": "",
+    "subscribe": "",
+    "unsubscribe": ""
+  },
+  "forage": {
+    "show": ""
+  },
+  "privacy": {
+    "title": "",
+    "description-1": "",
+    "description-2": "",
+    "description-2-1": "",
+    "description-2-2": "",
+    "description-3": "",
+    "description-3-1": "",
+    "description-3-2": "",
+    "description-3-3": "",
+    "description-3-4": "",
+    "description-3-5": "",
+    "description-3-6": "",
+    "description-3-7": ""
+  },
+  "user-profile": {
+    "edit": "",
+    "subscription": "",
+    "save": "",
+    "loading": "",
+    "title": "",
+    "description-1": "",
+    "description-2-1": "",
+    "description-2-2": "",
+    "description-2-3": "",
+    "edit-2": ""
   }
 }

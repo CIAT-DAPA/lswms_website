@@ -3,6 +3,7 @@ import { IconMailOff, IconMailPlus } from "@tabler/icons-react";
 import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import Services from "../../services/apiService";
 import { useAuth } from "../../hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 function SubscriptionButton({
   idWater,
@@ -12,6 +13,7 @@ function SubscriptionButton({
   setToastSuccess,
   size,
 }) {
+  const [t] = useTranslation("global");
   const [modalSubscription, setModalSubscription] = useState(false);
   const [subscription, setSubscription] = useState();
   const { login } = useAuth();
@@ -95,7 +97,7 @@ function SubscriptionButton({
           onClick={() => handleUnsubscribe()}
         >
           <IconMailOff size={20} className={label ? "me-2" : ""} />
-          {label ? "Unsubscribe" : ""}
+          {label ? t("subscriptionButton.unsubscribe") : ""}
         </Button>
       ) : (
         <Dropdown>
@@ -105,15 +107,15 @@ function SubscriptionButton({
             id="dropdown-basic"
           >
             <IconMailPlus size={20} className={label ? "me-2" : ""} />{" "}
-            {label ? "Subscribe" : ""}
+            {label ? t("subscriptionButton.subscribe") : ""}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => handleSubscription("weekly")}>
-              Weekly
+              {t("subscriptionButton.weekly")}
             </Dropdown.Item>
             <Dropdown.Item onClick={() => handleSubscription("alert")}>
-              Alert
+              {t("subscriptionButton.alert")}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

@@ -126,13 +126,13 @@ function Menu() {
                   className=""
                 >
                   <IconLogout className="me-2" />
-                  Log out
+                  {t("menu.log-out")}
                 </Button>
               </>
             ) : (
               <Button onClick={login} target="_blank" variant="outline-primary">
                 <IconLogin className="me-2" />
-                Log in
+                {t("menu.log-in")}
               </Button>
             )}
           </Nav>

@@ -156,7 +156,7 @@ function Waterprofile() {
 
   const popoverShare = (
     <Popover id="popover-basic">
-      <Popover.Header as="h3">Share</Popover.Header>
+      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
       <Popover.Body>
         <Button
           className="me-2 btn-facebook"
@@ -545,7 +545,7 @@ function Waterprofile() {
                 >
                   <Button className="rounded-4 mb-2 mb-sm-0">
                     <IconShare className="me-3" />
-                    Share
+                    {t("profile.share")}
                   </Button>
                 </OverlayTrigger>
               </div>
@@ -554,10 +554,7 @@ function Waterprofile() {
                   placement="top"
                   overlay={
                     <Tooltip id={`tooltip-top`}>
-                      Subscribe now to the waterpoint and tailor your
-                      notifications. Choose between receiving immediate alert
-                      emails for status changes or opt for a weekly update in
-                      your inbox.
+                      {t("monitoring.subscription-info")}
                     </Tooltip>
                   }
                 >

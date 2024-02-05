@@ -196,7 +196,7 @@ function Userprofile() {
               <Form.Check
                 type={"checkbox"}
                 id={`checkbox-alert`}
-                label={t("subscriptionButton.weekly")}
+                label={t("subscriptionButton.alert")}
                 checked={editingWaterpoint.alert}
                 name="alert"
                 onChange={handleCheckboxChange}

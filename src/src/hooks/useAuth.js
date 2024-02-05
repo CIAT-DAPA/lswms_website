@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    keycloak.current.logout({ redirectUri: 'http://localhost:3000' });
+    keycloak.current.logout({ redirectUri: window.location.origin });
     setUserInfo(null);
   };
 

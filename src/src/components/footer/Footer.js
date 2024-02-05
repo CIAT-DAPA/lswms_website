@@ -60,10 +60,10 @@ function Footer() {
                 </li>
                 <li className="nav-item mb-2 item-footer">
                   <a
-                    href="mailto: liyenew@gmail.com"
+                    href="mailto: liyunehgebre@outlook.com"
                     className="nav-link text-white "
                   >
-                    Liyenew@gmail.com{" "}
+                    Liyunehgebre@outlook.com{" "}
                   </a>
                 </li>
               </ul>

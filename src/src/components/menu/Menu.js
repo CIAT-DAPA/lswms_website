@@ -121,7 +121,6 @@ function Menu() {
                 </Link>
                 <Button
                   onClick={logout}
-                  target="_blank"
                   variant="outline-danger"
                   className=""
                 >
@@ -130,7 +129,7 @@ function Menu() {
                 </Button>
               </>
             ) : (
-              <Button onClick={login} target="_blank" variant="outline-primary">
+              <Button onClick={login} variant="outline-primary">
                 <IconLogin className="me-2" />
                 {t("menu.log-in")}
               </Button>

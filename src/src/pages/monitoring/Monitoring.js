@@ -102,24 +102,22 @@ function Visualization() {
 
   useEffect(() => {
     if (waterpoints.length > 0) {
-      //Call to API to get each monitored data for each wp
       const idsWp = waterpoints.map((item) => item.id);
       const requests = idsWp.map((id) => Services.get_last_data(id));
 
       Promise.all(requests)
         .then((responses) => {
-          const monitoredData = responses.map((response) => {
-            return response.data[0];
-          });
+          const monitoredData = responses.map((response) => response.data[0]);
           setMonitored(monitoredData);
-          setLoading(false);
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
+        })
+        .finally(() => {
           setLoading(false);
         });
     }
-  }, [waterpoints]);
+  }, [waterpoints.length]);
 
   const popupData = (wp) => {
     // Find the corresponding monitored data for the current waterpoint

@@ -14,7 +14,6 @@ function SubscriptionButton({
   size,
 }) {
   const [t] = useTranslation("global");
-  const [modalSubscription, setModalSubscription] = useState(false);
   const [subscription, setSubscription] = useState();
   const { login } = useAuth();
 
@@ -34,7 +33,6 @@ function SubscriptionButton({
 
   const handleSubscription = (bolletin) => {
     if (!idUser) {
-      console.log("no user");
       login();
       return;
     }
@@ -64,32 +62,6 @@ function SubscriptionButton({
 
   return (
     <>
-      <Modal
-        show={modalSubscription}
-        onHide={() => setModalSubscription(false)}
-        centered
-        size="sm"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title className="h5">
-            What type of subscription do you want?
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Check
-              type={"checkbox"}
-              id={`default-checkbox`}
-              label={`Weekly`}
-            />
-            <Form.Check
-              type={"checkbox"}
-              id={`default-checkbox`}
-              label={`Alert`}
-            />
-          </Form>
-        </Modal.Body>
-      </Modal>
       {subscription ? (
         <Button
           size={size ? size : ""}

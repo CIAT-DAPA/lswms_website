@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
+import noDataImg from "../../assets/img/noSubscription.png";
 import {
   Button,
   Col,
@@ -466,21 +467,30 @@ function HistoricalData() {
                       {t("data.source")}: AClimate Ethiopia
                     </p>
                     <p>{t("data.subseasonal-d")}</p>
-                    {subseasonal &&
-                      subseasonal.map((week, i) => {
-                        return (
-                          <Col className="col-12 col-md-3">
-                            <ForecastItem
-                              year={week.year}
-                              month={week.month}
-                              week={week.week}
-                              probabilities={week.probabilities}
-                              name={wp.name}
-                              key={i}
-                            />
-                          </Col>
-                        );
-                      })}
+                    {subseasonal && subseasonal.length > 0 ? (
+                      subseasonal.map((week, i) => (
+                        <Col className="col-12 col-md-3" key={i}>
+                          <ForecastItem
+                            year={week.year}
+                            month={week.month}
+                            week={week.week}
+                            probabilities={week.probabilities}
+                            name={wp.name}
+                          />
+                        </Col>
+                      ))
+                    ) : (
+                      <div className="d-flex flex-column align-items-center ">
+                        <h6 className=" mb-1 ">
+                          At the moment there is no data available
+                        </h6>
+                        <img
+                          src={noDataImg}
+                          alt="no data available"
+                          height={200}
+                        />
+                      </div>
+                    )}
                   </Row>
                   <Row className="mt-3 justify-content-around ">
                     <h5 className="mb-0">{t("data.seasonal")}</h5>
@@ -488,7 +498,7 @@ function HistoricalData() {
                       {t("data.source")}: AClimate Ethiopia
                     </p>
                     <p>{t("data.seasonal-d")}</p>
-                    {seasonal &&
+                    {seasonal && seasonal.length > 0 ? (
                       seasonal.map((month, i) => {
                         return (
                           <Col className="col-12 col-md-4">
@@ -501,7 +511,19 @@ function HistoricalData() {
                             />
                           </Col>
                         );
-                      })}
+                      })
+                    ) : (
+                      <div className="d-flex flex-column align-items-center ">
+                        <h6 className=" mb-1 ">
+                          At the moment there is no data available
+                        </h6>
+                        <img
+                          src={noDataImg}
+                          alt="no data available"
+                          height={200}
+                        />
+                      </div>
+                    )}
                   </Row>
                 </Tab>
               </Tabs>

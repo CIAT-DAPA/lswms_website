@@ -24,7 +24,6 @@ function SubscriptionButton({
   const fetchSubscription = () => {
     Services.get_one_subscription_by_user(idUser, idWater)
       .then((response) => {
-        console.log(response);
         if (response.length > 0) setSubscription(response);
         else setSubscription();
       })

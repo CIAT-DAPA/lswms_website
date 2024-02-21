@@ -32,7 +32,16 @@ function Forage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LayersControl position="topright">
-          <LayersControl.Overlay name={t("forage.show")} checked>
+          <LayersControl.Overlay name={t("forage.show-woredas")} checked>
+            <WMSTileLayer
+              url={Configuration.get_adm_level_url_geoserver()}
+              layers={`administrative:et_adm3_wp`}
+              format="image/png"
+              transparent={true}
+            />
+          </LayersControl.Overlay>
+		  
+		  <LayersControl.Overlay name={t("forage.show")} checked>
             <WMSTileLayer
               url={Configuration.get_url_geoserver()}
               layers={`waterpoints_et:Watershed_boundaries`}
@@ -40,6 +49,7 @@ function Forage() {
               transparent={true}
             />
           </LayersControl.Overlay>
+		  
         </LayersControl>
         <ZoomControl position="topright" />
         <TimelineController

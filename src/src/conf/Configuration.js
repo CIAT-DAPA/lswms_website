@@ -5,6 +5,7 @@ const GRAPHHOPPER_URL = "https://graphhopper.com/api/1";
 const PRODUCTION_API_URL = process.env.REACT_APP_PRODUCTION_API_URL;
 const GEOSERVER_PRODUCTION_URL =
   "https://geo.aclimate.org/geoserver/waterpoints_et/wms";
+const GEOSERVER_ADM_LEVEL_PRODUCTION_URL = "https://geo.aclimate.org/geoserver/administrative/wms"; 
 const KEYCLOAK_URL = "http://localhost:5004";
 const KEYCLOAK_URL_PRODUCTION = process.env.REACT_APP_KEYCLOAK_URL_PRODUCTION;
 const KEYCLOAK_REALM = "waterpoints-monitoring";
@@ -16,6 +17,13 @@ class Configuration {
       return GEOSERVER_URL;
     } else {
       return GEOSERVER_PRODUCTION_URL || GEOSERVER_URL;
+    }
+  }
+  get_adm_level_url_geoserver() {
+    if (process.env.REACT_APP_DEBUG === "true") {
+      return GEOSERVER_URL;
+    } else {
+      return GEOSERVER_ADM_LEVEL_PRODUCTION_URL || GEOSERVER_URL;
     }
   }
   get_url_api_base() {

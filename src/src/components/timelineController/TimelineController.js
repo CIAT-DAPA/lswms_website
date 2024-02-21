@@ -84,6 +84,10 @@ function TimelineController({ dimensionName, layer }) {
           targetLayer = layer;
           targetLayer.setZIndex(1000);
         }
+        if (layer.options.layers === 'administrative:et_adm3_wp') {
+          targetLayer = layer;
+          targetLayer.setZIndex(1000);
+        }
       });
     });
   }, [map]);

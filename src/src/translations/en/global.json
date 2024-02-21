@@ -152,6 +152,7 @@
     "unsubscribe": "Unsubscribe"
   },
   "forage": {
+	"show-woredas": "Show woredas",
     "show": "Show watershed"
   },
   "privacy": {

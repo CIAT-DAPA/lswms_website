@@ -312,21 +312,20 @@ function Userprofile() {
                               <div className="d-flex align-items-stretch ">
                                 <div
                                   className={`td-name text-center fw-medium px-4 me-2 ${
-                                    waterpoint.last_monitored_scaled_depth > 100
+                                    waterpoint.last_monitored_scaled_depth >
+                                    waterpoint.climatology_scaled_depth
                                       ? "td-green"
-                                      : waterpoint.last_monitored_scaled_depth <=
-                                          100 &&
-                                        waterpoint.last_monitored_scaled_depth >=
-                                          50
+                                      : waterpoint.last_monitored_scaled_depth /
+                                          waterpoint.climatology_scaled_depth >
+                                        0.5
                                       ? "td-yellow"
-                                      : waterpoint.last_monitored_scaled_depth <
-                                          50 &&
-                                        waterpoint.last_monitored_scaled_depth >=
-                                          3
+                                      : waterpoint.last_monitored_scaled_depth /
+                                          waterpoint.climatology_scaled_depth >
+                                        0.03
                                       ? "td-brown"
-                                      : waterpoint.last_monitored_scaled_depth <
-                                          3 &&
-                                        waterpoint.last_monitored_scaled_depth >
+                                      : waterpoint.last_monitored_scaled_depth ===
+                                          0 &&
+                                        waterpoint.climatology_scaled_depth ===
                                           0
                                       ? "td-red"
                                       : "td-gray"

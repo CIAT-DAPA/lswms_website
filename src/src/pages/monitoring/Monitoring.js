@@ -129,19 +129,32 @@ function Visualization() {
     const scaledDepthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;
-
+    const scaledDepthClimatologyValue = monitoredData
+      ? monitoredData.values.find(
+          (value) => value.type === "climatology_scaled_depth"
+        )
+      : null;
     const hasContentsWp =
       monitoredData.am || monitoredData.or || monitoredData.en;
 
     return !filter.green &&
-      scaledDepthValue.value > 100 ? null : !filter.yellow &&
-      scaledDepthValue.value <= 100 &&
-      scaledDepthValue.value >= 50 ? null : !filter.brown &&
-      scaledDepthValue.value < 50 &&
-      scaledDepthValue.value >= 3 ? null : !filter.red &&
-      scaledDepthValue.value < 3 &&
-      scaledDepthValue.value > 0 ? null : !filter.gray &&
-      scaledDepthValue.value === 0 ? null : (
+      scaledDepthValue.value >
+        scaledDepthClimatologyValue.value ? null : !filter.yellow &&
+      scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5 &&
+      scaledDepthValue.value <=
+        scaledDepthClimatologyValue.value ? null : !filter.brown &&
+      scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 &&
+      scaledDepthValue.value / scaledDepthClimatologyValue.value <=
+        0.5 ? null : !filter.red &&
+      scaledDepthValue.value === 0 &&
+      scaledDepthClimatologyValue.value === 0 ? null : !filter.gray &&
+      !(
+        scaledDepthValue.value > scaledDepthClimatologyValue.value ||
+        scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5 ||
+        scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 ||
+        (scaledDepthValue.value === 0 &&
+          scaledDepthClimatologyValue.value === 0)
+      ) ? null : (
       <>
         {hasContentsWp && (
           <Modal show={showWarning} onHide={handleClose} centered>
@@ -184,13 +197,15 @@ function Visualization() {
         <Marker
           position={[wp.lat, wp.lon]}
           icon={
-            scaledDepthValue.value > 100
+            scaledDepthValue.value > scaledDepthClimatologyValue.value
               ? greenIcon
-              : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
+              : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5
               ? yellowIcon
-              : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
+              : scaledDepthValue.value / scaledDepthClimatologyValue.value >
+                0.03
               ? brownIcon
-              : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
+              : scaledDepthValue.value === 0 &&
+                scaledDepthClimatologyValue.value === 0
               ? redIcon
               : grayIcon
           }
@@ -234,16 +249,19 @@ function Visualization() {
                   <td>
                     <div
                       className={`td-name text-center fw-medium ${
-                        scaledDepthValue.value > 100
+                        scaledDepthValue.value >
+                        scaledDepthClimatologyValue.value
                           ? "td-green"
-                          : scaledDepthValue.value <= 100 &&
-                            scaledDepthValue.value >= 50
+                          : scaledDepthValue.value /
+                              scaledDepthClimatologyValue.value >
+                            0.5
                           ? "td-yellow"
-                          : scaledDepthValue.value < 50 &&
-                            scaledDepthValue.value >= 3
+                          : scaledDepthValue.value /
+                              scaledDepthClimatologyValue.value >
+                            0.03
                           ? "td-brown"
-                          : scaledDepthValue.value < 3 &&
-                            scaledDepthValue.value > 0
+                          : scaledDepthValue.value === 0 &&
+                            scaledDepthClimatologyValue.value === 0
                           ? "td-red"
                           : "td-gray"
                       }`}
@@ -292,13 +310,16 @@ function Visualization() {
               </tbody>
             </table>
             <p className="fs-6 mt-0">
-              {scaledDepthValue.value > 100
+              {scaledDepthValue.value > scaledDepthClimatologyValue.value
                 ? t("monitoring.good-m")
-                : scaledDepthValue.value <= 100 && scaledDepthValue.value >= 50
+                : scaledDepthValue.value / scaledDepthClimatologyValue.value >
+                  0.5
                 ? t("monitoring.watch-m")
-                : scaledDepthValue.value < 50 && scaledDepthValue.value >= 3
+                : scaledDepthValue.value / scaledDepthClimatologyValue.value >
+                  0.03
                 ? t("monitoring.alert-m")
-                : scaledDepthValue.value < 3 && scaledDepthValue.value > 0
+                : scaledDepthValue.value === 0 &&
+                  scaledDepthClimatologyValue.value === 0
                 ? t("monitoring.near-m")
                 : t("monitoring.seasonally-m")}
             </p>

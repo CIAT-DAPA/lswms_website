@@ -146,15 +146,15 @@ function Visualization() {
       scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 &&
       scaledDepthValue.value / scaledDepthClimatologyValue.value <=
         0.5 ? null : !filter.red &&
-      scaledDepthValue.value === 0 &&
-      scaledDepthClimatologyValue.value === 0 ? null : !filter.gray &&
       !(
         scaledDepthValue.value > scaledDepthClimatologyValue.value ||
         scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5 ||
         scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 ||
         (scaledDepthValue.value === 0 &&
           scaledDepthClimatologyValue.value === 0)
-      ) ? null : (
+      ) ? null : !filter.gray &&
+      scaledDepthValue.value === 0 &&
+      scaledDepthClimatologyValue.value === 0 ? null : (
       <>
         {hasContentsWp && (
           <Modal show={showWarning} onHide={handleClose} centered>
@@ -206,8 +206,8 @@ function Visualization() {
               ? brownIcon
               : scaledDepthValue.value === 0 &&
                 scaledDepthClimatologyValue.value === 0
-              ? redIcon
-              : grayIcon
+              ? grayIcon
+              : redIcon
           }
           key={wp.id}
         >
@@ -262,8 +262,8 @@ function Visualization() {
                           ? "td-brown"
                           : scaledDepthValue.value === 0 &&
                             scaledDepthClimatologyValue.value === 0
-                          ? "td-red"
-                          : "td-gray"
+                          ? "td-gray"
+                          : "td-red"
                       }`}
                     >
                       {wp.name}
@@ -320,8 +320,8 @@ function Visualization() {
                 ? t("monitoring.alert-m")
                 : scaledDepthValue.value === 0 &&
                   scaledDepthClimatologyValue.value === 0
-                ? t("monitoring.near-m")
-                : t("monitoring.seasonally-m")}
+                ? t("monitoring.seasonally-m")
+                : t("monitoring.near-m")}
             </p>
             <div className="d-flex justify-content-between mt-3">
               {hasContentsWp && !monitoredData[i18n.language] ? (

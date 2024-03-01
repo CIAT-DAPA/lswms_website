@@ -327,8 +327,8 @@ function Userprofile() {
                                           0 &&
                                         waterpoint.climatology_scaled_depth ===
                                           0
-                                      ? "td-red"
-                                      : "td-gray"
+                                      ? "td-gray"
+                                      : "td-red"
                                   }`}
                                 >
                                   {waterpoint.waterpoint_name}

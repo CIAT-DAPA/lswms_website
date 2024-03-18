@@ -1,5 +1,5 @@
 table {
-  width: 350px;
+  width: 380px;
 }
 
 .td-name {
@@ -37,7 +37,7 @@ table {
 }
 
 .leaflet-popup-content {
-  min-width: 350px;
+  min-width: 380px;
 }
 
 .leaflet-popup-content-wrapper {

@@ -79,10 +79,27 @@ class Services {
       });
   }
 
-  get_route(final_lat, final_lon) {
+  get_route(inicio_lat, inicio_lon, final_lat, final_lon, profile) {
     const url = `${Configuration.get_url_graphhopper()}/route?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&point=4.895098486334106,38.09982605501463&point=${final_lat},${final_lon}&points_encoded=false&profile=foot`;
+    }&point=${inicio_lat},${inicio_lon}&point=${final_lat},${final_lon}&points_encoded=false&profile=${profile}&instructions=false`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          throw new Error(error.response.data.message); // Lanza una excepción con el mensaje de error
+        }
+        console.log(error, error.response);
+      });
+  }
+
+  get_geocoding(text) {
+    const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
+      process.env.REACT_APP_KEY_GRAPHHOPER
+    }&q=${text}&limit=2`;
     return axios
       .get(url)
       .then((response) => {
@@ -93,12 +110,64 @@ class Services {
       });
   }
 
-  get_geocoding(text) {
+  get_reverse_geocoding(lat, lon) {
     const url = `${Configuration.get_url_graphhopper()}/geocode?key=${
       process.env.REACT_APP_KEY_GRAPHHOPER
-    }&q=${text}`;
+    }&reverse=true&point=${lat},${lon}&limit=1`;
     return axios
       .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  post_subscription(userId, wpId, boletin) {
+    const url = `${Configuration.get_url_api_base()}/subscribe`;
+    return axios
+      .post(url, {
+        userId: userId,
+        waterpoint: wpId,
+        boletin: boletin,
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  get_all_subscription_by_user(userId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_user/${userId}`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  get_one_subscription_by_user(userId, wpId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/get_subscription_by_waterpoint/${wpId}/${userId}`;
+    return axios
+      .get(url)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  patch_unsubscribe(wpId, subscriptionId) {
+    const url = `${Configuration.get_url_api_base()}/subscribe/unsubscribe/${wpId}/${subscriptionId}`;
+    return axios
+      .patch(url)
       .then((response) => {
         return response.data;
       })

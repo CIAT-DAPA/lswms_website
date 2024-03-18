@@ -2,3 +2,11 @@ footer{
     background-color: #04335D;
     color: white;
 }
+
+.item-footer{
+    transition: all 0.3s ease-in-out;
+}
+
+.item-footer:hover{
+    text-decoration: underline;
+}

@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
 function ForecastItem({ year, month, week, probabilities, name }) {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   ChartJS.register(ArcElement, Tooltip, Legend);
   const data = {
     labels: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],

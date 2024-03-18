@@ -8,7 +8,7 @@ import grayImg from "../../assets/img/grayMarker.png";
 import { useTranslation } from "react-i18next";
 
 function Legend({ setFilter, filter }) {
-  const [t, i18n] = useTranslation("global");
+  const [t] = useTranslation("global");
   return (
     <div className="legend bg-white px-4 py-3 rounded-4">
       <p className="fw-medium mb-3">{t("monitoring.legend")}</p>

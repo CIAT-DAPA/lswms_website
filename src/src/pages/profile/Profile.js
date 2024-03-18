@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
-import downloadImg from "../../assets/svg/download.svg";
-import dataIcon from "../../assets/svg/data.svg";
-import emailImg from "../../assets/svg/email.svg";
 import {
   Button,
   Carousel,
   Col,
   Container,
   Modal,
+  OverlayTrigger,
+  Popover,
   Row,
   Spinner,
+  Toast,
+  ToastContainer,
+  Tooltip,
 } from "react-bootstrap";
 import "./Profile.css";
 import {
@@ -32,21 +34,39 @@ import ItemTable from "../../components/itemTable/ItemTable";
 import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
+import {
+  IconDownload,
+  IconChartLine,
+  IconShare,
+  IconBrandFacebook,
+  IconBrandX,
+  IconInfoCircleFilled,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
   const [t, i18n] = useTranslation("global");
-  const { idWater } = useParams();
+  const { idWater, language } = useParams();
   const [wp, setWp] = useState();
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);
   const [wsTable, setWsTable] = useState(null);
+  const [show, setShow] = useState(false);
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
+  const { userInfo } = useAuth();
 
   useEffect(() => {
     fetchWaterProfile();
   }, []);
 
   useEffect(() => {
-    console.log("cambio");
+    if (language && i18n.language !== language) {
+      setShow(true);
+    }
+
     fetchWaterProfile();
   }, [i18n.language]);
 
@@ -59,14 +79,17 @@ function Waterprofile() {
 
   // Función para obtener los datos del perfil del agua
   const fetchWaterProfile = () => {
+    const languageProfile = language || i18n.language;
     setLoading(true);
-    Services.get_waterpoints_profile(idWater, i18n.language)
+    Services.get_waterpoints_profile(idWater, languageProfile)
       .then((response) => {
         setWp(response[0]);
-        setWpProfile({
-          contents_wp: response[0].contents_wp,
-          contents_ws: response[0].contents_ws,
-        });
+        if (response[0].contents_wp.length > 0)
+          setWpProfile({
+            contents_wp: response[0].contents_wp,
+            contents_ws: response[0].contents_ws,
+          });
+        else setShow(true);
         setLoading(false);
       })
       .catch((error) => {
@@ -131,6 +154,39 @@ function Waterprofile() {
     }
   };
 
+  const popoverShare = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
+      <Popover.Body>
+        <Button
+          className="me-2 btn-facebook"
+          onClick={() => {
+            const url = window.location.href;
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
+              url
+            )}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandFacebook />
+        </Button>
+        <Button
+          className="btn-x"
+          onClick={() => {
+            const url = window.location.href;
+            const text = "Check this waterpoint profile!";
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(
+              url
+            )}&text=${encodeURI(text)}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandX />
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <>
       {idWater ? (
@@ -149,8 +205,92 @@ function Waterprofile() {
           </Modal>
         ) : (
           <>
+            <ToastContainer
+              className="p-3 position-fixed "
+              position="bottom-end"
+              style={{ zIndex: 1 }}
+            >
+              <Toast
+                show={show}
+                onClose={() => setShow(false)}
+                autohide
+                delay={3000}
+              >
+                <Toast.Header className="bg-warning-subtle">
+                  <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                  />
+                  <strong className="me-auto">
+                    {t("profile.toast-title") || "Warning"}
+                  </strong>
+                </Toast.Header>
+                <Toast.Body>
+                  {t("profile.toast-body") ||
+                    "The waterpoint profile is not available in the language selected"}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
+            <ToastContainer
+              className="p-3 position-fixed"
+              position="bottom-end"
+              style={{ zIndex: 2000 }}
+            >
+              <Toast
+                onClose={() => setShowToastSubscribe(false)}
+                show={showToastSubscribe}
+                delay={2000}
+                className={
+                  !toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`
+                }
+                autohide
+              >
+                <Toast.Body>
+                  {!toastSuccess
+                    ? `Woohoo, you've unsubscribe from the waterpoint!`
+                    : `Success! You're now subscribed to the waterpoint.`}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
             <div id="profile">
               <div className="profile-bg">
+                <div
+                  className="position-absolute z-3 d-flex "
+                  style={{ top: "43%", right: "3vw" }}
+                >
+                  <SubscriptionButton
+                    idWater={idWater}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                  />
+                  <Button
+                    className="rounded-4 me-2"
+                    onClick={downloadProfileAsPdf}
+                  >
+                    <IconDownload />
+                  </Button>
+                  <Link
+                    type="button"
+                    className="btn btn-primary me-2 rounded-4"
+                    to={`/dashboard/${wp.id}`}
+                  >
+                    <IconChartLine />
+                  </Link>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom"
+                    rootClose={true}
+                    overlay={popoverShare}
+                  >
+                    <Button className="rounded-4">
+                      <IconShare />
+                    </Button>
+                  </OverlayTrigger>
+                </div>
                 <Carousel
                   fade
                   controls={false}
@@ -160,7 +300,7 @@ function Waterprofile() {
                 >
                   <Carousel.Item>
                     <img src={bgImg} className="w-100 img-carousel" />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -168,14 +308,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <img src={downloadImg} alt="" className="" />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
@@ -184,7 +316,7 @@ function Waterprofile() {
                       style={{ filter: "grayscale(1)" }}
                       className="w-100 img-carousel"
                     />
-                    <Carousel.Caption>
+                    <Carousel.Caption className="mb-5 mb-md-0">
                       <h5 className="fw-medium">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</h5>
                       <h1 className="fw-normal my-2">{wp.name}</h1>
                       <p className="fw-normal">
@@ -192,14 +324,6 @@ function Waterprofile() {
                         {t("profile.population")}: {getPopulationByLanguage()}
                         <br /> Lat: {wp.lat}, Lon: {wp.lon}
                       </p>
-                      <div className="d-flex justify-content-end ">
-                        <Button
-                          className="rounded-4"
-                          onClick={downloadProfileAsPdf}
-                        >
-                          <img src={downloadImg} alt="" className="" />
-                        </Button>
-                      </div>
                     </Carousel.Caption>
                   </Carousel.Item>
                 </Carousel>
@@ -210,7 +334,7 @@ function Waterprofile() {
                     <h4 className="fw-medium">{t("profile.map")}</h4>
                     <MapContainer
                       center={[wp.lat, wp.lon]}
-                      zoom={8}
+                      zoom={9}
                       style={{
                         height: "400px",
                         width: "100%",
@@ -224,9 +348,10 @@ function Waterprofile() {
                         <LayersControl.Overlay name="Show watershred" checked>
                           <WMSTileLayer
                             url={Configuration.get_url_geoserver()}
-                            layers={`wp:Burra`}
+                            layers={`waterpoints_et:Watershed_boundaries`}
                             format="image/png"
                             transparent={true}
+                            cql_filter={`Name='${wp.watershed_name}'`}
                             zIndex={1000}
                           />
                         </LayersControl.Overlay>
@@ -262,7 +387,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -300,7 +424,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -348,7 +471,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -387,7 +509,6 @@ function Waterprofile() {
                               </h5>
                               {group.items.map((item, itemIndex) => (
                                 <div key={itemIndex}>
-                                  {/* Renderiza tus elementos aquí */}
                                   {renderWpItem(item, item.type, itemIndex)}
                                 </div>
                               ))}
@@ -399,23 +520,54 @@ function Waterprofile() {
                 </Row>
               </Container>
             </div>
-            <Container className="mb-5 mt-2">
-              <Button className="me-5 rounded-4" onClick={downloadProfileAsPdf}>
-                <img src={downloadImg} alt="" className="me-3" />
-                {t("profile.download")}
-              </Button>
-              {/* <Button disabled={true}>
-          <img src={emailImg} className="me-3" />
-          Send profile
-        </Button> */}
-              <Link
-                type="button"
-                className="btn btn-primary me-5 rounded-4"
-                to={`/dashboard/${wp.id}`}
-              >
-                <img src={dataIcon} alt="" className="me-3" />
-                {t("monitoring.data")}
-              </Link>
+            <Container className="mb-2 mt-2 d-flex justify-content-between ">
+              <div className="d-flex align-items-center ">
+                <Button
+                  className="me-3 rounded-4 mb-2 mb-sm-0"
+                  onClick={downloadProfileAsPdf}
+                >
+                  <IconDownload className="me-3" />
+                  {t("profile.download")}
+                </Button>
+                <Link
+                  type="button"
+                  className="btn btn-primary me-3 rounded-4"
+                  to={`/dashboard/${wp.id}`}
+                >
+                  <IconChartLine className="me-3" />
+                  {t("monitoring.data")}
+                </Link>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  rootClose={true}
+                  overlay={popoverShare}
+                >
+                  <Button className="rounded-4 mb-2 mb-sm-0">
+                    <IconShare className="me-3" />
+                    {t("profile.share")}
+                  </Button>
+                </OverlayTrigger>
+              </div>
+              <div className="d-flex align-items-center">
+                <OverlayTrigger
+                  placement="top"
+                  overlay={
+                    <Tooltip id={`tooltip-top`}>
+                      {t("monitoring.subscription-info")}
+                    </Tooltip>
+                  }
+                >
+                  <IconInfoCircleFilled />
+                </OverlayTrigger>
+                <SubscriptionButton
+                  idWater={idWater}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
+              </div>
             </Container>
           </>
         )

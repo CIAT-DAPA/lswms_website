@@ -7,24 +7,31 @@ import Profile from "./pages/profile/Profile";
 import Footer from "./components/footer/Footer";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFound from "./pages/notFound/NotFound";
-import Userprofile from "./pages/userprofile/Userprofile";
 import AboutUs from "./pages/aboutUs/AboutUs";
+import Forage from "./pages/forage/Forage";
+import { AuthProvider } from "./hooks/useAuth";
+import Privacy from "./pages/privacy/Privacy";
+import Userprofile from "./pages/userprofile/Userprofile";
 
 function App() {
   return (
-    <Router>
-      <Menu />
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route path="/monitoring" element={<Monitoring />} />
-        <Route path="/profile/:idWater" element={<Profile />} />
-        <Route path="/dashboard/:idWp" element={<Dashboard />} />
-        <Route path="/userprofile" element={<Userprofile />} />
-        <Route path="/aboutus" element={<AboutUs />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Menu />
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/forage" element={<Forage />} />
+          <Route path="/profile/:idWater/:language?" element={<Profile />} />
+          <Route path="/dashboard/:idWp" element={<Dashboard />} />
+          <Route path="/userprofile" element={<Userprofile />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 

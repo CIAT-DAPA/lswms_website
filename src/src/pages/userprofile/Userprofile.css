@@ -15,6 +15,10 @@
   top: 20vh;
 }
 
-.editIconBlack{
+.editIconBlack {
   filter: invert(1);
+}
+
+.text-wrap-pretty{
+  text-wrap: pretty;
 }

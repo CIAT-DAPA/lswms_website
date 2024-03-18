@@ -7,12 +7,15 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import logo from "../../assets/img/logo.png";
+import { useAuth } from "../../hooks/useAuth";
+import { IconLogin, IconLogout } from "@tabler/icons-react";
 
 function Menu() {
   const [t, i18n] = useTranslation("global");
   const [language, setLanguage] = useState(
     window.localStorage.getItem("language") || "en"
   );
+  const { userInfo, login, logout } = useAuth();
   useEffect(() => {
     window.localStorage.setItem("language", language);
     i18n.changeLanguage(language);
@@ -51,34 +54,39 @@ function Menu() {
             height="35"
             className="d-inline-block align-top"
           />{" "}
-          Waterpoint Monitoring System
+          Waterpoints Monitoring
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse
-          className="justify-content-end"
+          className="justify-content-end  "
           id="responsive-navbar-nav"
         >
-          <Nav className="justify-content-end">
+          <Nav className="justify-content-end align-items-lg-center">
             <Link className="nav-link text-black" to="/monitoring">
               {t("menu.monitoring")}
+            </Link>
+            <Link className="nav-link text-black" to="/forage">
+              {t("menu.forage")}
             </Link>
             <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}
             </Link>
-            {/* <Link className="nav-link text-black" to="/userprofile">
-              User Profile
-            </Link> */}
-            <Dropdown as={ButtonGroup} className="d-block">
+            <Dropdown
+              as={ButtonGroup}
+              className="d-block mb-2 ms-0 me-5 mt-1 mt-lg-0 mb-lg-0 ms-lg-2"
+            >
               <Button
-                variant="outline-secondary"
-                className="text-uppercase disabled"
+                variant="outline-secondary "
+                size="sm"
+                className="text-uppercase disabled "
               >
                 {window.localStorage.getItem("language") || "es"}
               </Button>
               <Dropdown.Toggle
                 variant="outline-secondary"
                 split
+                size="sm"
                 id="dropdown-split-basic"
               />
               <Dropdown.Menu>
@@ -93,6 +101,39 @@ function Menu() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            {userInfo ? (
+              <>
+                <Link className="nav-link py-0 " to="/userprofile">
+                  <div
+                    className="bg-black border border-5 rounded-circle d-flex flex-column justify-content-center align-items-center"
+                    style={{ height: "45px", width: "45px" }}
+                  >
+                    <span className="fw-bold text-white">
+                      {userInfo.name
+                        .split(" ")
+                        .slice(0, 2)
+                        .map(function (word) {
+                          return word.charAt(0);
+                        })
+                        .join("")}
+                    </span>
+                  </div>
+                </Link>
+                <Button
+                  onClick={logout}
+                  variant="outline-danger"
+                  className=""
+                >
+                  <IconLogout className="me-2" />
+                  {t("menu.log-out")}
+                </Button>
+              </>
+            ) : (
+              <Button onClick={login} variant="outline-primary">
+                <IconLogin className="me-2" />
+                {t("menu.log-in")}
+              </Button>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

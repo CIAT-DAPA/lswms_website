@@ -1,12 +1,12 @@
 import React from "react";
-import sourcesImg from "../../assets/svg/sources.svg";
+import { IconRipple } from "@tabler/icons-react";
 
 function ItemSimpleList(props) {
   return (
     <>
       <div className="d-flex align-items-center mt-4 mb-2">
         {props.item.title.toLowerCase() === "water sources" ? (
-          <img src={sourcesImg} alt="" className="me-2" />
+          <IconRipple size={20} color="#448fb9" className="me-2" />
         ) : (
           <></>
         )}

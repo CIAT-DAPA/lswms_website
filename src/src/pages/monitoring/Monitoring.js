@@ -283,9 +283,9 @@ function Visualization() {
                     >
                       <IconInfoCircleFilled />
                     </OverlayTrigger>
-                    {t("monitoring.depth")} (%) :
+                    {t("monitoring.depth")} (m) :
                   </td>
-                  <td>{depthValue.value}</td>
+                  <td>{depthValue.value.toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td className="d-flex align-items-center ">
@@ -301,12 +301,12 @@ function Visualization() {
                     </OverlayTrigger>
                     {t("monitoring.median-depth")} (%):
                   </td>
-                  <td>{scaledDepthValue.value}</td>
+                  <td>{scaledDepthValue.value.toFixed(2)}</td>
                 </tr>
-                <tr>
+                {/* <tr>
                   <td>{t("monitoring.area")} (ha):</td>
                   <td>{wp.area}</td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
             <p className="fs-6 mt-0">

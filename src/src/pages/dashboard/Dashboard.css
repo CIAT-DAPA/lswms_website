@@ -5,3 +5,13 @@
   top: -200px;
   transform-origin: left center;
 }
+
+.edacap-link {
+  text-decoration: none; 
+  color: inherit; 
+  transition: color 0.3s; 
+}
+
+.edacap-link:hover {
+  color: blue; 
+}

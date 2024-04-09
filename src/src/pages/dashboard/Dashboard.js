@@ -176,12 +176,12 @@ function HistoricalData() {
 
       const climatologyDepth = climatologyItem
         ? climatologyItem[0].values.find((value) => value.type === "depth")
-            .value
+          .value
         : null;
       const climatologyScaledDepth = climatologyItem
         ? climatologyItem[0].values.find(
-            (value) => value.type === "scaled_depth"
-          ).value
+          (value) => value.type === "scaled_depth"
+        ).value
         : null;
       const climatologyRain = climatologyItem
         ? climatologyItem[0].values.find((value) => value.type === "rain").value
@@ -443,7 +443,6 @@ function HistoricalData() {
                             }}
                             series={[
                               { name: t("data.evap"), data: evap },
-                              { name: t("data.climatology"), data: climaEvap },
                             ]}
                             type="line"
                             height={350}
@@ -463,9 +462,9 @@ function HistoricalData() {
                 <Tab eventKey="Climate Forecast" title={t("data.climate")}>
                   <Row className="mt-3">
                     <h5 className="mb-0">{t("data.subseasonal")}</h5>
-                    <p className="fw-light ">
-                      {t("data.source")}: AClimate Ethiopia
-                    </p>
+                      <p className="fw-light ">
+                        {t("data.source")}: <a className="edacap-link" href="https://edacap.ethioagroclimate.net/#/Home" target="_blank" rel="noopener noreferrer">AClimate Ethiopia </a>
+                      </p>
                     <p>{t("data.subseasonal-d")}</p>
                     {subseasonal && subseasonal.length > 0 ? (
                       subseasonal.map((week, i) => (

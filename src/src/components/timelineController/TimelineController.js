@@ -1,15 +1,19 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-timedimension";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
+import { Modal, Spinner } from "react-bootstrap"; 
+import { useTranslation } from "react-i18next";
 
 function TimelineController({ dimensionName, layer }) {
+const [t] = useTranslation("global");
+
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
+  const [loaded, setLoaded] = useState(true);
 
-  // Define your custom control
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function (date) {
       return (
@@ -17,7 +21,7 @@ function TimelineController({ dimensionName, layer }) {
         "-" +
         ("0" + (date.getUTCMonth() + 1)).slice(-2) +
         "-" +
-        ("0" + date.getUTCDate()).slice(-2) // Add this line
+        ("0" + date.getUTCDate()).slice(-2)
       );
     },
   });
@@ -58,12 +62,14 @@ function TimelineController({ dimensionName, layer }) {
       });
       map.timeDimension = timeDimension;
 
-      // Create and add a TimeDimension Layer to the map
       const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
         timeDimensionName: dimensionName,
       });
       tdWmsLayer.addTo(map);
-      // Create and add a TimeDimension Control to the map
+      tdWmsLayer.on("timeload", function (data) {
+        setLoaded(false);
+      });
+
       if (!timeDimensionControlRef.current) {
         const timeDimensionControl = new L.Control.TimeDimensionCustom({
           timeDimension: timeDimension,
@@ -78,6 +84,7 @@ function TimelineController({ dimensionName, layer }) {
         map.addControl(timeDimensionControl);
         timeDimensionControlRef.current = timeDimensionControl;
       }
+
       let targetLayer;
       map.eachLayer((layer) => {
         if (layer.options.layers === 'waterpoints_et:Watershed_boundaries') {
@@ -92,7 +99,23 @@ function TimelineController({ dimensionName, layer }) {
     });
   }, [map]);
 
-  return null;
+  return (
+    <>
+      {/* Modal que muestra un Spinner mientras el estado loaded es true */}
+      <Modal
+        show={loaded} // Cambiado a loaded en lugar de loading
+        backdrop="static"
+        keyboard={false}
+        centered
+        size="sm"
+      >
+        <Modal.Body className="d-flex align-items-center">
+          <Spinner animation="border" role="status" className="me-2" />
+          {t("forage.loading")}
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 }
 
 export default TimelineController;

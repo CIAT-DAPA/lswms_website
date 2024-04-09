@@ -30,7 +30,8 @@
     "feature4-description": "Find your path to the water! With our routing module, getting to the waterpoint has never been easier"
   },
   "monitoring": {
-    "legend": "Legend",
+    "condition": "Condition",
+    "legend": "Waterpoint Condition",
     "good": "Good",
     "watch": "Watch",
     "alert": "Alert",
@@ -163,7 +164,8 @@
   },
   "forage": {
     "show-woredas": "Show woredas",
-    "show": "Show watershed"
+    "show": "Show watershed",
+    "loading": "Getting the forage data..."
   },
   "privacy": {
     "title": "Privacy",

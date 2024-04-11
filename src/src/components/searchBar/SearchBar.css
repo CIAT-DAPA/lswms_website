@@ -1,3 +1,19 @@
+/* SearchBar.css */
+
+/* Definir el ancho máximo de 500px para pantallas grandes */
+.search-bar {
+  width: 450px;
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 767px) {
+  /* Reducir el ancho máximo a 350px en dispositivos móviles */
+  .search-bar {
+    width: 330px;
+  }
+}
+
+/* Mantener las reglas de estilo existentes */
 .bar-hints {
   position: absolute;
   top: 70px;

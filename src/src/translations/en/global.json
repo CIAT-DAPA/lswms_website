@@ -30,6 +30,7 @@
     "feature4-description": "Find your path to the water! With our routing module, getting to the waterpoint has never been easier"
   },
   "monitoring": {
+    "forecast": "Forecast",
     "condition": "Condition",
     "legend": "Waterpoint Condition",
     "good": "Good",
@@ -94,6 +95,7 @@
     "share": "Share"
   },
   "data": {
+    "filter": "Filter data by year",
     "monitored": "Monitored data",
     "monitored-d": "Explore a variety of charts covering depth of field, depth scale, precipitation and evapotranspiration. Customise your experience by filtering these graphs according to your preferred year.",
     "year": "Year",
@@ -116,10 +118,10 @@
     "forecast-2": "In the waterpoint",
     "forecast-3": "the climate forecast suggests that precipitation is most likely",
     "lower": "lower than normal",
-    "lower-label": "Lower",
-    "normal": "normal",
+    "lower-label": "Below",
+    "normal": "Normal",
     "upper": "above than normal",
-    "upper-label": "Upper",
+    "upper-label": "Above",
     "seasonal": "Seasonal forecast",
     "seasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific quarter. Below, you can find the most probable category for the selected waterpoint and the forecast quarter.",
     "notFound-title": "No aclimate ID was provided.",

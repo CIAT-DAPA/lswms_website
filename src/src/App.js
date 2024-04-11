@@ -12,6 +12,7 @@ import Forage from "./pages/forage/Forage";
 import { AuthProvider } from "./hooks/useAuth";
 import Privacy from "./pages/privacy/Privacy";
 import Userprofile from "./pages/userprofile/Userprofile";
+import Forecast from "./pages/forecast/forecast";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/userprofile" element={<Userprofile />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/forecast/:idWp" element={<Forecast />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

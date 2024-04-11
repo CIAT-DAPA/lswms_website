@@ -16,7 +16,6 @@ import {
   Spinner,
   OverlayTrigger,
   Tooltip,
-  Badge,
   Button,
   Dropdown,
   ToastContainer,
@@ -31,15 +30,16 @@ import {
   IconCar,
   IconRoad,
   IconWalk,
-  IconChartLine,
   IconId,
   IconInfoCircleFilled,
+  IconCloudRain,
+  IconChartDonut
+
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import WpLabel from "../../components/wpLabel/WpLabel";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
-import { IconInfoCircle } from "@tabler/icons-react";
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -351,12 +351,21 @@ function Visualization() {
                 className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
                 to={`/dashboard/${wp.id}`}
               >
-                <IconChartLine
+                <IconChartDonut
                   style={{ position: "inherit" }}
                   className="me-3"
                 />
                 {t("monitoring.data")}
               </Link>
+                        <Link
+                          type="button"
+                          className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
+                          to={`/forecast/${wp.id}`}
+                        >
+                          <IconCloudRain style={{ position: "inherit" }} className="me-3" />
+                          {t("monitoring.forecast")}
+                        </Link>
+
               <Dropdown variant="sm">
                 <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
                   <IconRoad style={{ position: "inherit" }} />

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
-import noDataImg from "../../assets/img/noSubscription.png";
 import {
   Button,
   Col,
@@ -9,10 +8,7 @@ import {
   Modal,
   Row,
   Spinner,
-  Tab,
-  Tabs,
 } from "react-bootstrap";
-import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
 import "./Dashboard.css";
@@ -34,10 +30,6 @@ function HistoricalData() {
   const [rain, setRain] = useState([]);
   const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
-  const [climaEvap, setClimaEvap] = useState([]);
-  const [aclimateId, setAclimateId] = useState(null);
-  const [subseasonal, setSubseasonal] = useState([]);
-  const [seasonal, setSeasonal] = useState([]);
   const [value, setValue] = useState(null);
   const { idWp } = useParams();
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
@@ -56,7 +48,6 @@ function HistoricalData() {
     Services.get_one_waterpoints(idWp)
       .then((response) => {
         setClimatology(response[0]);
-        setAclimateId(response[0].aclimate_id);
       })
       .catch((error) => {
         console.log(error);
@@ -119,30 +110,8 @@ function HistoricalData() {
       setClimaDepthData(result[0]);
       setClimaScaledDepthData(result[1]);
       setClimaRain(result[2]);
-      setClimaEvap(result[3]);
     }
   }, [value]);
-
-  useEffect(() => {
-    if (aclimateId) {
-      //Call to API to get forecast
-      Services.get_subseasonal(aclimateId)
-        .then((response) => {
-          setSubseasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      Services.get_seasonal(aclimateId)
-        .then((response) => {
-          setSeasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [aclimateId]);
 
   const filterData = (data, type) => {
     const filteredData = data
@@ -248,18 +217,12 @@ function HistoricalData() {
                 <h1 className="pt-2 mb-0">{wp.name}</h1>
                 <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
               </Row>
-              <Tabs
-                defaultActiveKey="Monitored-data"
-                id="fill-tab-example"
-                className="mb-3 bg-body-tertiary "
-                fill
-              >
-                <Tab eventKey="Monitored-data" title={t("data.monitored")}>
+
                   <Row className="mt-3 ">
                     <Col className="">
                       <h5>{t("data.monitored")}</h5>
                       <p>{t("data.monitored-d")}</p>
-                      <p className="mb-0">{t("data.year")}</p>
+
                       {(() => {
                         const years = [
                           ...new Set(
@@ -271,16 +234,7 @@ function HistoricalData() {
 
                         return (
                           <>
-                            <Row className="justify-content-around ">
-                              <Col className="col-auto">
-                                <p> {t("data.min-year")}</p>
-                                <h4>{value && value.min}</h4>
-                              </Col>
-                              <Col className="col-auto">
-                                <p> {t("data.max-year")}</p>
-                                <h4>{value && value.max}</h4>
-                              </Col>
-                            </Row>
+                           
                             <SliderYear
                               step={1}
                               min={Math.min(...years)}
@@ -290,6 +244,7 @@ function HistoricalData() {
                           </>
                         );
                       })()}
+
                     </Col>
                   </Row>
                   <Row>
@@ -458,74 +413,6 @@ function HistoricalData() {
                       </Button>
                     </Col>
                   </Row>
-                </Tab>
-                <Tab eventKey="Climate Forecast" title={t("data.climate")}>
-                  <Row className="mt-3">
-                    <h5 className="mb-0">{t("data.subseasonal")}</h5>
-                      <p className="fw-light ">
-                        {t("data.source")}: <a className="edacap-link" href="https://edacap.ethioagroclimate.net/#/Home" target="_blank" rel="noopener noreferrer">AClimate Ethiopia </a>
-                      </p>
-                    <p>{t("data.subseasonal-d")}</p>
-                    {subseasonal && subseasonal.length > 0 ? (
-                      subseasonal.map((week, i) => (
-                        <Col className="col-12 col-md-3" key={i}>
-                          <ForecastItem
-                            year={week.year}
-                            month={week.month}
-                            week={week.week}
-                            probabilities={week.probabilities}
-                            name={wp.name}
-                          />
-                        </Col>
-                      ))
-                    ) : (
-                      <div className="d-flex flex-column align-items-center ">
-                        <h6 className=" mb-1 ">
-                          At the moment there is no data available
-                        </h6>
-                        <img
-                          src={noDataImg}
-                          alt="no data available"
-                          height={200}
-                        />
-                      </div>
-                    )}
-                  </Row>
-                  <Row className="mt-3 justify-content-around ">
-                    <h5 className="mb-0">{t("data.seasonal")}</h5>
-                    <p className="fw-light ">
-                      {t("data.source")}: AClimate Ethiopia
-                    </p>
-                    <p>{t("data.seasonal-d")}</p>
-                    {seasonal && seasonal.length > 0 ? (
-                      seasonal.map((month, i) => {
-                        return (
-                          <Col className="col-12 col-md-4">
-                            <ForecastItem
-                              year={month.year}
-                              month={month.month}
-                              probabilities={month.probabilities}
-                              name={wp.name}
-                              key={i}
-                            />
-                          </Col>
-                        );
-                      })
-                    ) : (
-                      <div className="d-flex flex-column align-items-center ">
-                        <h6 className=" mb-1 ">
-                          At the moment there is no data available
-                        </h6>
-                        <img
-                          src={noDataImg}
-                          alt="no data available"
-                          height={200}
-                        />
-                      </div>
-                    )}
-                  </Row>
-                </Tab>
-              </Tabs>
             </Container>
           </>
         )

@@ -1,5 +1,6 @@
 {
   "menu": {
+    "advisories": "Advisories",
     "monitoring": "Monitoring",
     "forage": "Forage",
     "about-us": "About Us",
@@ -53,7 +54,7 @@
     "near-m": "Less than 3% median depth.",
     "seasonally-m": "Seasonally unavailable",
     "profile": "Profile",
-    "data": "Dashboard",
+    "data": "Data",
     "loading": "Getting the waterpoints...",
     "placeholder-search": "Search by waterpoint, woreda, zone or region",
     "modal-title": "Warning",
@@ -92,7 +93,10 @@
     "notFound-d": "Try to get the profile from the waterpoints display.",
     "toast-title": "Warning",
     "toast-body": "The waterpoint profile is not available in the language selected",
-    "share": "Share"
+    "share": "Share",
+    "data-popup": "Go to data",
+    "forecast-popup": "Go to forecast",
+    "subscribe-popup": "Subscribe"
   },
   "data": {
     "filter": "Filter data by year",
@@ -195,5 +199,26 @@
     "description-2-2": "where you will receive notifications on a regular weekly basis, or",
     "description-2-3": "to notify you immediately of any significant changes in the status of Waterpoint.",
     "edit-2": "Edit Subscribe"
+  },
+  "advisories": {
+    "title": "Advisories",
+    "status":"Waterpoint Status",
+    "status-d":"The states of the water point are as follows:",
+    "description-1": "Advisories are informative messages designed to be sent to users once the SMS service is operational. Their fundamental purpose is to keep users updated on any changes or developments in the water status. By providing detailed information about each water point, advisories enable users to make informed decisions in real-time. From precautionary alerts to indications of seasonal scarcity, these messages offer a clear view of the water landscape, empowering users to adapt and respond appropriately.",
+    "description-2": "Implementing advisories within the SMS service represents a significant step towards transparency and effective communication in water management. By receiving these notices directly on their devices, users can stay informed about any changes in water status, regardless of their location or access to other sources of information. This rapid and direct communication promotes greater awareness of local water resources and encourages more active participation in their conservation and responsible use.",
+    "description-3": "Ultimately, the introduction of advisories not only informs users but also empowers their ability to make informed, strategic decisions regarding water. By fully understanding the situation of each water point and the implications of its status, users can implement proactive measures to better manage their consumption and conserve this vital resource. In summary, advisories represent an essential tool for promoting sustainability and efficiency in water management, ensuring safe and equitable access for future generations.",
+    "good": "Good",
+    "watch": "Watch",
+    "alert": "Alert",
+    "near-dry": "Near Dry",
+    "seasonal-dry": "Seasonal Dry",
+    "messages-d":"Advisory for each condition of the water point",
+    "message":"Advisory Message",
+    "good-message":"pond is in Good condition. Manage the water consumption for other purposes",
+    "watch-message":"pond is in Watch condition. Reduce pond water consumption for other purposes and follow pond manager instructions",
+    "alert-message":"pond is in Alert condition and advised to use the pond water for drinking and weak animals only",
+    "near-dry-message":"pond is in Near-Dry condition and advised to use the pond water for drinking",  
+    "seasonal-dry-message":"pond is in Dry condition. please text “ponds” to get nearby available ponds"
+
   }
 }

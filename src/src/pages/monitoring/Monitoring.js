@@ -210,31 +210,59 @@ function Visualization() {
           }
           key={wp.id}
         >
-          <Popup closeButton={false}>
-            <div>
+          <Popup closeButton={false} className="popup">
+            <div >
               <div className="d-flex align-items-center justify-content-between ">
                 <h6 className="fw-medium mb-0">
                   {t("monitoring.waterpoint")} {wp.name}{" "}
                 </h6>
-                <div className="d-flex align-items-center ">
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-top`}>
-                        {t("monitoring.subscription-info")}
-                      </Tooltip>
-                    }
-                  >
-                    <IconInfoCircleFilled />
-                  </OverlayTrigger>
-                  <SubscriptionButton
-                    idWater={wp.id}
-                    idUser={userInfo?.sub}
-                    setShowToastSubscribe={setShowToastSubscribe}
-                    setToastSuccess={setToastSuccess}
-                    size="sm"
-                  />
-                </div>
+                <Dropdown variant="sm">
+                  <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
+                    <IconRoad style={{ position: "inherit" }} />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("foot");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconWalk
+                        style={{ position: "inherit" }}
+                        className="me-2"
+                      />
+                      {t("monitoring.walk")}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("car");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconCar style={{ position: "inherit" }} className="me-2" />
+                      {t("monitoring.car")}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("bike");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconBike
+                        style={{ position: "inherit" }}
+                        className="me-2"
+                      />
+                      {t("monitoring.bike")}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </div>
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
@@ -247,15 +275,15 @@ function Visualization() {
                   <td>
                     <div
                       className={`td-name text-center fw-medium ${scaledDepthValue.value > scaledDepthClimatologyValue.value
-                          ? "td-green"
-                          : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5
-                            ? "td-yellow"
-                            : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03
-                              ? "td-brown"
-                              : scaledDepthValue.value === 0 &&
-                                scaledDepthClimatologyValue.value === 0
-                                ? "td-gray"
-                                : "td-red"
+                        ? "td-green"
+                        : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5
+                          ? "td-yellow"
+                          : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03
+                            ? "td-brown"
+                            : scaledDepthValue.value === 0 &&
+                              scaledDepthClimatologyValue.value === 0
+                              ? "td-gray"
+                              : "td-red"
                         }`}
                     >
                       {scaledDepthValue.value > scaledDepthClimatologyValue.value
@@ -327,8 +355,7 @@ function Visualization() {
             <div className="d-flex justify-content-between mt-3">
               {hasContentsWp && !monitoredData[i18n.language] ? (
                 <Button
-                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
-                    }`}
+                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "}`}
                   onClick={() => setShowWarning(true)}
                 >
                   <IconId style={{ position: "inherit" }} className="me-3" />
@@ -337,82 +364,45 @@ function Visualization() {
               ) : (
                 <Link
                   type="button"
-                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
-                    }`}
+                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 ${hasContentsWp ? "" : "disabled "}`}
                   to={`/profile/${wp.id}`}
                 >
-                  <IconId style={{ position: "inherit" }} className="me-3" />
+                  <IconId style={{ position: "inherit" }} className="me-2" />
                   {t("monitoring.profile")}
                 </Link>
               )}
 
+              <a
+                href={`/dashboard/${wp.id}`}
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 mx-2"
+                role="button"
+              >
+                <IconChartDonut style={{ position: "inherit" }} className="me-2" />
+                {t("monitoring.data")}
+              </a>
+
               <Link
                 type="button"
-                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-                to={`/dashboard/${wp.id}`}
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 mx-2"
+                to={`/forecast/${wp.id}`}
               >
-                <IconChartDonut
-                  style={{ position: "inherit" }}
-                  className="me-3"
-                />
-                {t("monitoring.data")}
+                <IconCloudRain style={{ position: "inherit" }} className="me-2" />
+                {t("monitoring.forecast")}
               </Link>
-                        <Link
-                          type="button"
-                          className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-                          to={`/forecast/${wp.id}`}
-                        >
-                          <IconCloudRain style={{ position: "inherit" }} className="me-3" />
-                          {t("monitoring.forecast")}
-                        </Link>
 
-              <Dropdown variant="sm">
-                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
-                  <IconRoad style={{ position: "inherit" }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("foot");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconWalk
-                      style={{ position: "inherit" }}
-                      className="me-2"
-                    />
-                    {t("monitoring.walk")}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("car");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconCar style={{ position: "inherit" }} className="me-2" />
-                    {t("monitoring.car")}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("bike");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconBike
-                      style={{ position: "inherit" }}
-                      className="me-2"
-                    />
-                    {t("monitoring.bike")}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+              >
+                <div className="">
+                  <SubscriptionButton
+                    idWater={wp.id}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                  />
+                </div>
+              </OverlayTrigger>
             </div>
           </Popup>
         </Marker>

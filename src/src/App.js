@@ -13,6 +13,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import Privacy from "./pages/privacy/Privacy";
 import Userprofile from "./pages/userprofile/Userprofile";
 import Forecast from "./pages/forecast/forecast";
+import Advisories from "./pages/advisories/advisories";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/forecast/:idWp" element={<Forecast />} />
+          <Route path="/advisories" element={<Advisories />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

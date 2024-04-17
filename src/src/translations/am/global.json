@@ -1,5 +1,6 @@
 {
   "menu": {
+    "advisories":"መረጃዎች",
     "monitoring": "ክትትል",
     "forage": "መኖ",
     "about-us": "ስለ እኛ",
@@ -51,7 +52,7 @@
     "near-m": "ከ 3% ያነሰ መካከለኛ ጥልቀት",
     "seasonally-m": "በዚህ ወቅት አይገኝም",
     "profile": "መገለጫ",
-    "data": "የመረጃ ሰሌዳ",
+    "data": "መረጃ",
     "loading": "ኩሬዎቹን ያግኙ",
     "placeholder-search": "በውሃ ነጥብ፣ በወረዳ፣ በዞን ወይም በክልል ይፈልጉ",
     "modal-title": "ማስጠንቀቂያ",
@@ -90,7 +91,10 @@
     "notFound-d": "መገለጫውን ከውሃ ነጥቦች ማሳያ ለማግኘት ይሞክሩ",
     "toast-title": "ማስጠንቀቂያ",
     "toast-body": "የኩሬው መገለጫ በተመረጠው ቋንቋ አይገኝም",
-    "share": ""
+    "share": "",
+    "data-popup": "",
+    "forecast-popup": "",
+    "subscribe-popup": ""
   },
   "data": {
     "filter":"ዓመታት በግል አሳይ",
@@ -191,5 +195,25 @@
     "description-2-2": "",
     "description-2-3": "",
     "edit-2": ""
+  },
+  "advisories":{
+    "title":"መረጃዎች",
+    "status":"",
+    "status-d":"",
+    "description-1": "",
+    "description-2": "",
+    "description-3": "",
+    "good": "ጥሩ",
+    "watch": "ተጠንቀቅ",
+    "alert": "ማንቂያ",
+    "near-dry": "ሊደረቅ ያለ",
+    "seasonal-dry": "በወቅቱ -የደረቅ",
+    "good-message":"",
+    "watch-message":"",
+    "alert-message":"",
+    "near-dry-message":"",  
+    "seasonal-dry-message":""
   }
+  
+
 }

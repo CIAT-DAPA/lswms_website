@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
   Button,
@@ -8,6 +8,11 @@ import {
   Modal,
   Row,
   Spinner,
+  OverlayTrigger,
+  Popover,
+  Tooltip,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
 import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
@@ -16,8 +21,23 @@ import { useTranslation } from "react-i18next";
 import { IconDownload } from "@tabler/icons-react";
 import Papa from "papaparse";
 import SliderYear from "../../components/sliderYear/SliderYear";
+import { useAuth } from "../../hooks/useAuth";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
+import {
+  IconChartDonut,
+  IconShare,
+  IconBrandFacebook,
+  IconBrandX,
+  IconInfoCircleFilled,
+  IconInfoCircle,
+  IconCloudRain
+} from "@tabler/icons-react";
 function HistoricalData() {
+  const { userInfo } = useAuth();
+  const [show, setShow] = useState(false);
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
   const [t, i18n] = useTranslation("global");
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
@@ -193,6 +213,38 @@ function HistoricalData() {
     tempLink.setAttribute("download", `${wp.name}.csv`);
     tempLink.click();
   };
+  const popoverShare = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
+      <Popover.Body>
+        <Button
+          className="me-2 btn-facebook"
+          onClick={() => {
+            const url = window.location.href;
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
+              url
+            )}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandFacebook />
+        </Button>
+        <Button
+          className="btn-x"
+          onClick={() => {
+            const url = window.location.href;
+            const text = "Check this waterpoint profile!";
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(
+              url
+            )}&text=${encodeURI(text)}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandX />
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
 
   return (
     <div>
@@ -212,208 +264,359 @@ function HistoricalData() {
           </Modal>
         ) : (
           <>
+            <ToastContainer
+              className="p-3 position-fixed "
+              position="bottom-end"
+              style={{ zIndex: 1 }}
+            >
+              <Toast
+                show={show}
+                onClose={() => setShow(false)}
+                autohide
+                delay={3000}
+              >
+                <Toast.Header className="bg-warning-subtle">
+                  <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                  />
+                  <strong className="me-auto">
+                    {t("profile.toast-title") || "Warning"}
+                  </strong>
+                </Toast.Header>
+                <Toast.Body>
+                  {t("profile.toast-body") ||
+                    "The waterpoint profile is not available in the language selected"}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+
+            <ToastContainer
+              className="p-3 position-fixed"
+              position="bottom-end"
+              style={{ zIndex: 2000 }}
+            >
+              <Toast
+                onClose={() => setShowToastSubscribe(false)}
+                show={showToastSubscribe}
+                delay={2000}
+                className={
+                  !toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`
+                }
+                autohide
+              >
+                <Toast.Body>
+                  {!toastSuccess
+                    ? `Woohoo, you've unsubscribe from the waterpoint!`
+                    : `Success! You're now subscribed to the waterpoint.`}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
             <Container className="">
-              <Row className="pt-5 border-bottom border-2">
-                <h1 className="pt-2 mb-0">{wp.name}</h1>
-                <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
+
+            <Row className="pt-5 border-bottom border-2 align-items-center">
+  <Col xs={6}>
+    <div>
+      <h1 className="pt-2 mb-0">{wp.name}</h1>
+      <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
+    </div>
+  </Col>
+  <Col xs={6} className="d-flex justify-content-end">
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="dashboard-tooltip">{t("profile.forecast-popup")}</Tooltip>}
+    >
+      <Link
+        type="botton"
+        className="btn btn-primary me-2 rounded-4"
+        to={`/forecast/${wp.id}`}
+      >
+        <IconCloudRain />
+      </Link>
+    </OverlayTrigger>
+
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+    >
+      <div>
+        <OverlayTrigger
+          trigger="click"
+          placement="bottom"
+          rootClose={true}
+          overlay={popoverShare}
+        >
+          <Button className="rounded-4">
+            <IconShare />
+          </Button>
+        </OverlayTrigger>
+      </div>
+    </OverlayTrigger>
+
+    {/* Agregamos un espacio entre los botones */}
+    <div className="mx-2"></div>
+
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+    >
+      <div>
+        <SubscriptionButton
+          idWater={idWp}
+          idUser={userInfo?.sub}
+          setShowToastSubscribe={setShowToastSubscribe}
+          setToastSuccess={setToastSuccess}
+        />
+      </div>
+    </OverlayTrigger>
+  </Col>
+</Row>
+
+
+
+
+
+
+              <Row className="mt-3 ">
+                <Col className="">
+                  <h5>{t("data.monitored")}</h5>
+                  <p>{t("data.monitored-d")}</p>
+
+                  {(() => {
+                    const years = [
+                      ...new Set(
+                        wpData.map((item) =>
+                          new Date(item.date).getFullYear()
+                        )
+                      ),
+                    ];
+
+                    return (
+                      <>
+
+                        <SliderYear
+                          step={1}
+                          min={Math.min(...years)}
+                          max={Math.max(...years)}
+                          onChange={setValue}
+                        />
+                      </>
+                    );
+                  })()}
+
+                </Col>
               </Row>
-
-                  <Row className="mt-3 ">
-                    <Col className="">
-                      <h5>{t("data.monitored")}</h5>
-                      <p>{t("data.monitored-d")}</p>
-
-                      {(() => {
-                        const years = [
-                          ...new Set(
-                            wpData.map((item) =>
-                              new Date(item.date).getFullYear()
-                            )
-                          ),
-                        ];
-
-                        return (
-                          <>
-                           
-                            <SliderYear
-                              step={1}
-                              min={Math.min(...years)}
-                              max={Math.max(...years)}
-                              onChange={setValue}
-                            />
-                          </>
-                        );
-                      })()}
-
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mt-2">{t("data.depth")}</h6>
-                      {depthData?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.depth-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "depth",
-                                group: "historical",
-                                toolbar: {
-                                  export: {
-                                    csv: {
-                                      filename: `${wp.name}-${value.min}-${value.max}`,
-                                      dateFormatter(timestamp) {
-                                        const newDate = new Date(timestamp);
-                                        const formattedDate = newDate
-                                          .toISOString()
-                                          .split("T")[0];
-                                        return formattedDate;
-                                      },
-                                    },
+              <Row>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">{t("data.depth")}</h6>
+                  {depthData?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.depth-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
+                      </p>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "depth",
+                            group: "historical",
+                            toolbar: {
+                              export: {
+                                csv: {
+                                  filename: `${wp.name}-${value.min}-${value.max}`,
+                                  dateFormatter(timestamp) {
+                                    const newDate = new Date(timestamp);
+                                    const formattedDate = newDate
+                                      .toISOString()
+                                      .split("T")[0];
+                                    return formattedDate;
                                   },
                                 },
                               },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.depth"), data: depthData },
-                              {
-                                name: t("data.climatology"),
-                                data: climaDepthData,
-                              },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">m</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mt-2">{t("data.scaled")}</h6>
-                      <div id="line-scaled">
-                        {scaledDepthData?.length > 0 && (
-                          <>
-                            <p>
-                              {t("data.scaled-description")}{" "}
-                              <span className="fw-bold ">{wp.name}</span>,{" "}
-                              {t("data.depth-year")} {t("data.between")}{" "}
-                              <span className="fw-bold ">{value.min}</span> and{" "}
-                              <span className="fw-bold ">{value.max}</span>.
-                            </p>
-                            <ReactApexChart
-                              options={{
-                                chart: {
-                                  id: "scaled",
-                                  group: "historical",
-                                },
-                                xaxis: {
-                                  type: "datetime",
-                                },
-                              }}
-                              series={[
-                                {
-                                  name: t("data.scaled"),
-                                  data: scaledDepthData,
-                                },
-                                {
-                                  name: t("data.climatology"),
-                                  data: climaScaledDepthData,
-                                },
-                              ]}
-                              type="line"
-                              height={350}
-                            />
-                            <p className="label-y">%</p>
-                          </>
-                        )}
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mb-0">{t("data.rain")}</h6>
-                      <p className="fw-light ">{t("data.source")}: RFE</p>
-                      {rain?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.rain-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "rain",
-                                group: "historical",
-                              },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.rain"), data: rain },
-                              { name: t("data.climatology"), data: climaRain },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">mm</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mb-0">{t("data.evap")}</h6>
-                      <p className="fw-light ">
-                        {t("data.source")}: Global GDAS
+                            },
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.depth"), data: depthData },
+                          {
+                            name: t("data.climatology"),
+                            data: climaDepthData,
+                          },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">m</p>
+                    </>
+                  )}
+                </Col>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">{t("data.scaled")}</h6>
+                  <div id="line-scaled">
+                    {scaledDepthData?.length > 0 && (
+                      <>
+                        <p>
+                          {t("data.scaled-description")}{" "}
+                          <span className="fw-bold ">{wp.name}</span>,{" "}
+                          {t("data.depth-year")} {t("data.between")}{" "}
+                          <span className="fw-bold ">{value.min}</span> and{" "}
+                          <span className="fw-bold ">{value.max}</span>.
+                        </p>
+                        <ReactApexChart
+                          options={{
+                            chart: {
+                              id: "scaled",
+                              group: "historical",
+                            },
+                            xaxis: {
+                              type: "datetime",
+                            },
+                          }}
+                          series={[
+                            {
+                              name: t("data.scaled"),
+                              data: scaledDepthData,
+                            },
+                            {
+                              name: t("data.climatology"),
+                              data: climaScaledDepthData,
+                            },
+                          ]}
+                          type="line"
+                          height={350}
+                        />
+                        <p className="label-y">%</p>
+                      </>
+                    )}
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mb-0">{t("data.rain")}</h6>
+                  <p className="fw-light ">{t("data.source")}: RFE</p>
+                  {rain?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.rain-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
                       </p>
-                      {evap?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.evap-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "evap",
-                                group: "historical",
-                              },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.evap"), data: evap },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">mm</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="mb-4">
-                      <Button onClick={() => downloadAllData()}>
-                        <IconDownload className="me-2" />
-                        {t("data.download")}
-                      </Button>
-                    </Col>
-                  </Row>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "rain",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.rain"), data: rain },
+                          { name: t("data.climatology"), data: climaRain },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
+                  )}
+                </Col>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mb-0">{t("data.evap")}</h6>
+                  <p className="fw-light ">
+                    {t("data.source")}: Global GDAS
+                  </p>
+                  {evap?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.evap-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
+                      </p>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "evap",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.evap"), data: evap },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
+                  )}
+                </Col>
+
+              </Row>
             </Container>
+            <Container className="mb-2 mt-2">
+              <div className="d-flex align-items-center">
+                <Button className="me-2" onClick={() => downloadAllData()}>
+                  <IconDownload className="me-2" />
+                  {t("data.download")}
+                </Button>
+                <div className="d-flex align-items-center">
+                  <Link
+                    type="button"
+                    className="btn btn-primary me-3 rounded-4"
+                    to={`/forecast/${wp.id}`}
+                  >
+                    <IconCloudRain className="me-3" />
+                    {t("monitoring.forecast")}
+                  </Link>
+
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="right"
+                    rootClose={true}
+                    overlay={popoverShare}
+                  >
+                    <Button className="rounded-4 mb-2 mb-sm-0 me-3">
+                      <IconShare className="me-3" />
+                      {t("profile.share")}
+                    </Button>
+                  </OverlayTrigger>
+                  <SubscriptionButton
+                    idWater={idWp}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                    label
+                  />
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-top`}>
+                        {t("monitoring.subscription-info")}
+                      </Tooltip>
+                    }
+                  >
+                    <IconInfoCircleFilled />
+                  </OverlayTrigger>
+                </div>
+              </div>
+            </Container>
+
           </>
         )
       ) : (

@@ -1,5 +1,6 @@
 {
   "menu": {
+    "advisories":"qabsoo",
     "monitoring": "Hordoffii",
     "forage": "Nyaata horii",
     "about-us": "Waa'ee keenya",
@@ -51,7 +52,7 @@
     "near-m": "Gadi fageenya giduu galeessa dhibbeentaa 3 gad.",
     "seasonally-m": "Waqtii kana hin jiru",
     "profile": "Ibsa",
-    "data": "Boordii odeeffannoo",
+    "data": "maqaa",
     "loading": "Madda bishaanii argachuu",
     "placeholder-search": "Qabxii bishaanii, aanaa, zoonii ykn naannootiin barbaadi",
     "modal-title": "Akeekkachiisa",
@@ -90,7 +91,10 @@
     "notFound-d": "Agarsiisa qabxiiwwan bishaanii irraa piroofaayilii argachuuf yaali",
     "toast-title": "Akeekkachiisa",
     "toast-body": "Profaayilli haroo afaan filatameen hin argamu",
-    "share": ""
+    "share": "",
+    "data-popup": "",
+    "forecast-popup": "",
+    "subscribe-popup": ""
   },
   "data": {
     "filter":"Magalu fiilitti dabalataa irraa guddifachuuf",
@@ -191,5 +195,25 @@
     "description-2-2": "",
     "description-2-3": "",
     "edit-2": ""
+  },
+  "advisories":{
+    "title":"qabsoo",
+    "status":"",
+    "status-d":"",
+    "description-1": "",
+    "description-2": "",
+    "description-3": "",
+    "good": "Gaarii",
+    "watch": "Wayyaadha",
+    "alert": "Dammaqsituu",
+    "near-dry": "Googuuf jedha",
+    "seasonal-dry": "Waqtii gogaa",
+    "messages-d":"Advisory for each condition of the water point",
+    "message":"Advisory Message",
+    "good-message":"",
+    "watch-message":"",
+    "alert-message":"",
+    "near-dry-message":"",  
+    "seasonal-dry-message":""
   }
 }

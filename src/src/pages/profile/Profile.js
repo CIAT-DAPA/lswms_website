@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
+import L from "leaflet";
+import Simplelegend from "../../components/simpleLegend/Simplelegend";
+
 import {
   Button,
   Carousel,
@@ -22,6 +25,7 @@ import {
   MapContainer,
   TileLayer,
   WMSTileLayer,
+  Marker
 } from "react-leaflet";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
@@ -48,6 +52,27 @@ import SubscriptionButton from "../../components/subscriptionButton/Subscription
 import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
+
+  const greenIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/greenMarker.png`),
+    iconSize: [32, 32],
+  });
+  const yellowIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/yellowMarker.png`),
+    iconSize: [32, 32],
+  });
+  const brownIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/brownMarker.png`),
+    iconSize: [32, 32],
+  });
+  const redIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/redMarker.png`),
+    iconSize: [32, 32],
+  });
+  const grayIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/grayMarker.png`),
+    iconSize: [32, 32],
+  });
   const [t, i18n] = useTranslation("global");
   const { idWater, language } = useParams();
   const [wp, setWp] = useState();
@@ -154,7 +179,6 @@ function Waterprofile() {
       return <></>;
     }
   };
-
   const popoverShare = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
@@ -279,13 +303,13 @@ function Waterprofile() {
                     placement="top"
                     overlay={<Tooltip id="dashboard-tooltip">{t("profile.data-popup")}</Tooltip>}
                   >
-                    <Link
-                      type="button"
+                    <a
+                      href={`/dashboard/${wp.id}`}
                       className="btn btn-primary me-2 rounded-4"
-                      to={`/dashboard/${wp.id}`}
                     >
                       <IconChartDonut />
-                    </Link>
+                    </a>
+
                   </OverlayTrigger>
 
                   <OverlayTrigger
@@ -378,12 +402,29 @@ function Waterprofile() {
                     <h4 className="fw-medium">{t("profile.map")}</h4>
                     <MapContainer
                       center={[wp.lat, wp.lon]}
-                      zoom={9}
+                      zoom={14}
                       style={{
                         height: "400px",
                         width: "100%",
                       }}
                     >
+                      <Marker
+                        position={[wp.lat, wp.lon]}
+                        icon={
+                          wp.latest_monitored_scaled_depth > wp.climatology_scaled_depth
+                            ? greenIcon
+                            : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth > 0.5
+                              ? yellowIcon
+                              : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth >
+                                0.03
+                                ? brownIcon
+                                : wp.latest_monitored_scaled_depth === 0 &&
+                                  wp.climatology_scaled_depth === 0
+                                  ? grayIcon
+                                  : redIcon
+                        }
+                        key={wp.id}
+                      ></Marker>
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -400,6 +441,7 @@ function Waterprofile() {
                           />
                         </LayersControl.Overlay>
                       </LayersControl>
+                      <Simplelegend />
                     </MapContainer>
                     <h4 className="mt-4 mb-3">{t("profile.watershed")}</h4>
 
@@ -573,14 +615,15 @@ function Waterprofile() {
                   <IconDownload className="me-3" />
                   {t("profile.download")}
                 </Button>
-                <Link
-                  type="button"
+                <a
+                  href={`/dashboard/${wp.id}`}
                   className="btn btn-primary me-3 rounded-4"
-                  to={`/dashboard/${wp.id}`}
                 >
                   <IconChartDonut className="me-3" />
                   {t("monitoring.data")}
-                </Link>
+                </a>
+
+
                 <Link
                   type="button"
                   className="btn btn-primary me-3 rounded-4"
@@ -618,6 +661,7 @@ function Waterprofile() {
                   <IconInfoCircleFilled />
                 </OverlayTrigger>
               </div>
+
             </Container>
 
           </>

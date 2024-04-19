@@ -36,7 +36,7 @@ function Advisories() {
                     {" "}
                     {t("advisories.messages-d")}
                     <ul>
-                        <li className="jejej">{t("advisories.good")}: {t("advisories.good-message")}</li>
+                        <li >{t("advisories.good")}: {t("advisories.good-message")}</li>
                         <li>{t("advisories.watch")}: {t("advisories.watch-message")}</li>
                         <li>{t("advisories.alert")}: {t("advisories.alert-message")}</li>
                         <li>{t("advisories.near-dry")}: {t("advisories.near-dry-message")}</li>

@@ -383,7 +383,7 @@ function Visualization() {
 
               <Link
                 type="button"
-                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 mx-2"
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between"
                 to={`/forecast/${wp.id}`}
               >
                 <IconCloudRain style={{ position: "inherit" }} className="me-2" />
@@ -394,7 +394,7 @@ function Visualization() {
                 placement="top"
                 overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
               >
-                <div className="">
+                <div className="mx-2">
                   <SubscriptionButton
                     idWater={wp.id}
                     idUser={userInfo?.sub}

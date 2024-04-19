@@ -125,6 +125,7 @@ class Services {
   }
 
   post_subscription(userId, wpId, boletin) {
+    console.log(userId, wpId, boletin);
     const url = `${Configuration.get_url_api_base()}/subscribe`;
     return axios
       .post(url, {

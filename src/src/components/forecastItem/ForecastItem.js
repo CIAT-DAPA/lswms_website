@@ -6,15 +6,22 @@ import { useTranslation } from "react-i18next";
 function ForecastItem({ year, month, week, probabilities, name }) {
   const [t] = useTranslation("global");
   ChartJS.register(ArcElement, Tooltip, Legend);
+
+  const roundedProbabilities = {
+    lower: Math.round(probabilities[0].lower * 100),
+    normal: Math.round(probabilities[0].normal * 100),
+    upper: Math.round(probabilities[0].upper * 100),
+  };
+
   const data = {
     labels: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],
     datasets: [
       {
         label: t("data.precipitation"),
         data: [
-          probabilities[0].lower * 100,
-          probabilities[0].normal * 100,
-          probabilities[0].upper * 100,
+          roundedProbabilities.lower,
+          roundedProbabilities.normal,
+          roundedProbabilities.upper,
         ],
         backgroundColor: [
           "rgba(249, 108, 105, 0.2)",
@@ -55,9 +62,9 @@ function ForecastItem({ year, month, week, probabilities, name }) {
   let maxKey = null;
   let maxValue = 0;
 
-  for (const key in probabilities[0]) {
-    if (probabilities[0].hasOwnProperty(key)) {
-      const value = probabilities[0][key];
+  for (const key in roundedProbabilities) {
+    if (roundedProbabilities.hasOwnProperty(key)) {
+      const value = roundedProbabilities[key];
       if (value > maxValue) {
         maxValue = value;
         maxKey = key;

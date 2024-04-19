@@ -1,5 +1,6 @@
 {
   "menu": {
+    "advisories":"qabsoo",
     "monitoring": "Hordoffii",
     "forage": "Nyaata horii",
     "about-us": "Waa'ee keenya",
@@ -51,7 +52,7 @@
     "near-m": "Gadi fageenya giduu galeessa dhibbeentaa 3 gad.",
     "seasonally-m": "Waqtii kana hin jiru",
     "profile": "Ibsa",
-    "data": "Boordii odeeffannoo",
+    "data": "maqaa",
     "loading": "Madda bishaanii argachuu",
     "placeholder-search": "Qabxii bishaanii, aanaa, zoonii ykn naannootiin barbaadi",
     "modal-title": "Akeekkachiisa",
@@ -90,9 +91,13 @@
     "notFound-d": "Agarsiisa qabxiiwwan bishaanii irraa piroofaayilii argachuuf yaali",
     "toast-title": "Akeekkachiisa",
     "toast-body": "Profaayilli haroo afaan filatameen hin argamu",
-    "share": ""
+    "share": "",
+    "data-popup": "",
+    "forecast-popup": "",
+    "subscribe-popup": ""
   },
   "data": {
+    "filter":"Magalu fiilitti dabalataa irraa guddifachuuf",
     "monitored": "Hordoffii daataa",
     "monitored-d": "Chaartiiwwan garaagaraa gadi fageenya madda bishaanii, iskeelii gadi fageenyaa, roobaa fi hurka biqiltootaa fi lafa irraa ka'u hubadhaa. Giraafota baroota filattanii  baasuudhaan muuxannoo keessan waliin fayyadamaa. ",
     "year": "Bara",
@@ -115,17 +120,17 @@
     "forecast-2": "",
     "forecast-3": "",
     "lower": "Kan idilee irraa gadi",
-    "lower-label": "Gadaanaa",
+    "lower-label": "dhiigan",
     "normal": "Idilee",
     "upper": "Yeroo idilee caalaa",
-    "upper-label": "Olaanaa",
+    "upper-label": "nagaan",
     "seasonal": "Raaga waqtii",
     "seasonal-d": "Raagni haala qilleensaa carraa roobaa dhibbeentaa carraa rooba eddoo tokkoo ji'oota murtaa'eef idileen wal bira qabuun kennama. Armaan gaditti raaga haala qelleensaa godina filatamee kanaa argattu",
     "notFound-title": "",
     "notFound-d": "Odeeffannoo fuula agarsiisa qabxiiwwan bishaanii irraa argachuuf yaali.",
     "climate": "Raaga haala qilleensaa",
     "climatology": "Qilleensa baramaa",
-    "loading": "",
+    "loading": "ውንግል መረጃ አገናኝ",
     "min-year": "",
     "max-year": "",
     "between": "",
@@ -137,12 +142,22 @@
     "description": "Fuulli barbaaddan kaartaa dijitaalaa keenya irratti argamuu hin dandeenye."
   },
   "aboutUs": {
-    "title": "Waa'ee keenya",
-    "description": "The Alliance of Biodiversity International and International Center for Tropical Agriculture qonna qorannoon deeggaramee kan heddummina lubbu qabeeyyii fayyadamu, dhiibbaa qilleensaa jalatti sirna nyaataa itti fufiinsaan jijjiiru, fi jireenya hawaasaa fooyyessuuf hojjetu.",
-    "about-project": "Waa'ee pirojektichaa",
-    "about-project-d": "Alliance of Bioversity International fi CIAT Ministeera Qonnaa (MoA), Inistiitiyuutii Qorannoo Qonnaa Itiyoophiyaa (EIAR), Institiutii Qorannoo Qonna Oromiyaa (IQQO), Qorannoo Ji’ooloojii Yunaayitid Isteetis (USGS) waliin ta’uun dhaabbilee ijoo biyyaalessaa fi biyya keessaa biroo waliin ta’uun... Pirojektii Sirna Hordoffii fi Bulchiinsa Balaa Bishaan Beeyladaa (LWMRMS) deeggarsa maallaqaa Faawundeeshinii Biil fi Meeliindaa Geetis (BMGF) irraa argameen hojiirra oolchaa tureera. Pirojektichi odeeffannoo bishaan gubbaa yeroo qabatamaatti dhihoo ta’ee fi koorniyaa fi hawaasummaan kan hammate naannoo tiksee Itoophiyaa keessatti dhiyeessuuf kan akeekedha. Pirojektichi bulchiinsa gogiinsa tiksitootaa fooyyessuu fi balaa haala qilleensaatiin dhufu dandamachuu danda’uu qilleensaa ijaaruuf, kanaanis jireenya isaanii fooyyessuuf waltajjii dijitaalaa LWMRMS qopheesse. LWMRMS dijitaalaa yeroo qabatamaatti dhihootti argama bishaanii fi odeeffannoo sadarkaa kennuudhaaf web-platform kalaqaa dha. Waltajjichi odeeffannoo tamsaasuun oomishtoonni beeyladaa fi/ykn dhaabbileen murtii haala qilleensaa dandamatu akka murteessan deeggaruufis ni danda’ama. Waltajjichi murtee fi tarkaanfii bu’a qabeessa ta’eef odeeffannoo yeroo dhiyootti argama bishaanii fi sadarkaa kennuudhaan qonna qilleensaa dandamatu Itiyoophiyaa keessatti ijaaruuf gumaacha ni taasisa.",
-    "product": "",
-    "product-d": "LWMRMS Dijiitaalaa oomishtoota qonnaa naannoo tiksee Itoophiyaa keessatti odeeffannoo kana argachuu hin dandeenyeef odeeffannoo bishaan gubbaa ni kenna. Waltajjichi odeeffannoo yeroo qabatamaatti dhihoo ta’e kan 1) teessuma lafaa qabxiiwwan bishaanii, odeeffannoo ji’oospaasii fi amala qabxiiwwan bishaanii dabalatee; 2) rooba; 3) danfisuu; 4) gadi fageenya bishaanii iskeelii; fi 5) haala bishaan-qabxii. Web-platform kun odeeffannoo guyyaa guyyaan yeroo dhugaatti dhihoo ta’een tamsaasuufis ni fayyadama. Hawaasni tiksee fi agro-pastoral jijjiirama qilleensaa fi jijjiirama qilleensaaf baay’ee saaxilamoo dha. Haala kanaan, waltajjiin dijitaalaa kun gosa isaatiin isa jalqabaa fi meeshaalee deeggarsa murtii ijoo balaa qilleensaa bulchuu fi dandeettii madaqsuu tiksitootaa fi tiksitoota qonnaa guddisuuf gargaara. Waltajjiin kun dhaabbilee mootummaa, dhaabbilee miti mootummaa, fi qooda fudhattoonni biroo akeekkachiisa dursaa fi murtee kennuufis itti fayyadamuu ni danda’u."
+    "title": "About Us",
+    "description-1": "Ethiopian Institute of Agricultural Research is one of the oldest and largest agricultural research institutes in Africa. EIAR was established in 1966 by Proclamation. It was then called Institute of Agricultural Research (IAR). In 1997 was renamed as Ethiopian Agricultural Research Organization (EARO). At the moment the institute is named as Ethiopian Institute Agricultural Research (EIAR). EIAR has 23 research centers located in various agro-ecologies of the country . These research centers are endowed with research setups that make them conducive and preferable for research endeavors. The headquarter of EIAR is located in the capital Addis Ababa. ",
+    "description-2": "EIAR made tremendous efforts to build the national capacity of doing agricultural research, produce, and introduce improved technologies focusing on fostering agricultural growth and development in the country. As a result, over the last four decades, the release of improved technologies in crop, livestock, soils and water, forestry and agricultural mechanization have increased dramatically. To date, the contribution of improved agricultural technologies generated and introduced by EIAR has become fundamental in the national economy.",
+    "description-3": "EIAR is doing its level best to introduce and generate agricultural technologies while also contributing to meet the national demands of transforming Ethiopian agriculture.",
+    "vision": "Vision",
+    "vision-d": "EIAR inspires to see improved livelihood of all Ethiopians engaged in agriculture, agro-pastoralism, and pastoralism through market competitive agricultural technologies",
+    "mission": "Mission",
+    "mission-d": "EIAR has a mission to conduct research that will provide market competitive agricultural technologies that will contribute to increased agricultural productivity and nutrition quality, sustainable food security, economic development, and conservation of the integrity of natural resources and the environment.",
+    "core-values": "Core Values",
+    "core-values-d": "EIAR sustains the commitments included in the following set of core values:",
+    "core-values-1": "Excellence",
+    "core-values-2": "Effectiveness",
+    "core-values-3": "Quality",
+    "core-values-4": "Integrity and professionalism",
+    "core-values-5": "Tolerance and mutual respect",
+    "core-values-6": "Social responsibility and public services"
   },
   "subscriptionButton": {
     "weekly": "",
@@ -180,5 +195,25 @@
     "description-2-2": "",
     "description-2-3": "",
     "edit-2": ""
+  },
+  "advisories":{
+    "title":"qabsoo",
+    "status":"",
+    "status-d":"",
+    "description-1": "",
+    "description-2": "",
+    "description-3": "",
+    "good": "Gaarii",
+    "watch": "Wayyaadha",
+    "alert": "Dammaqsituu",
+    "near-dry": "Googuuf jedha",
+    "seasonal-dry": "Waqtii gogaa",
+    "messages-d":"Advisory for each condition of the water point",
+    "message":"Advisory Message",
+    "good-message":"",
+    "watch-message":"",
+    "alert-message":"",
+    "near-dry-message":"",  
+    "seasonal-dry-message":""
   }
 }

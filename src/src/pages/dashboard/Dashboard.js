@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
-import noDataImg from "../../assets/img/noSubscription.png";
 import {
   Button,
   Col,
@@ -9,10 +8,12 @@ import {
   Modal,
   Row,
   Spinner,
-  Tab,
-  Tabs,
+  OverlayTrigger,
+  Popover,
+  Tooltip,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
-import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
 import "./Dashboard.css";
@@ -20,8 +21,23 @@ import { useTranslation } from "react-i18next";
 import { IconDownload } from "@tabler/icons-react";
 import Papa from "papaparse";
 import SliderYear from "../../components/sliderYear/SliderYear";
+import { useAuth } from "../../hooks/useAuth";
+import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
+import {
+  IconChartDonut,
+  IconShare,
+  IconBrandFacebook,
+  IconBrandX,
+  IconInfoCircleFilled,
+  IconInfoCircle,
+  IconCloudRain
+} from "@tabler/icons-react";
 function HistoricalData() {
+  const { userInfo } = useAuth();
+  const [show, setShow] = useState(false);
+  const [showToastSubscribe, setShowToastSubscribe] = useState(false);
+  const [toastSuccess, setToastSuccess] = useState();
   const [t, i18n] = useTranslation("global");
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
@@ -34,10 +50,6 @@ function HistoricalData() {
   const [rain, setRain] = useState([]);
   const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
-  const [climaEvap, setClimaEvap] = useState([]);
-  const [aclimateId, setAclimateId] = useState(null);
-  const [subseasonal, setSubseasonal] = useState([]);
-  const [seasonal, setSeasonal] = useState([]);
   const [value, setValue] = useState(null);
   const { idWp } = useParams();
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
@@ -56,7 +68,6 @@ function HistoricalData() {
     Services.get_one_waterpoints(idWp)
       .then((response) => {
         setClimatology(response[0]);
-        setAclimateId(response[0].aclimate_id);
       })
       .catch((error) => {
         console.log(error);
@@ -119,30 +130,8 @@ function HistoricalData() {
       setClimaDepthData(result[0]);
       setClimaScaledDepthData(result[1]);
       setClimaRain(result[2]);
-      setClimaEvap(result[3]);
     }
   }, [value]);
-
-  useEffect(() => {
-    if (aclimateId) {
-      //Call to API to get forecast
-      Services.get_subseasonal(aclimateId)
-        .then((response) => {
-          setSubseasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      Services.get_seasonal(aclimateId)
-        .then((response) => {
-          setSeasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [aclimateId]);
 
   const filterData = (data, type) => {
     const filteredData = data
@@ -176,12 +165,12 @@ function HistoricalData() {
 
       const climatologyDepth = climatologyItem
         ? climatologyItem[0].values.find((value) => value.type === "depth")
-            .value
+          .value
         : null;
       const climatologyScaledDepth = climatologyItem
         ? climatologyItem[0].values.find(
-            (value) => value.type === "scaled_depth"
-          ).value
+          (value) => value.type === "scaled_depth"
+        ).value
         : null;
       const climatologyRain = climatologyItem
         ? climatologyItem[0].values.find((value) => value.type === "rain").value
@@ -224,6 +213,38 @@ function HistoricalData() {
     tempLink.setAttribute("download", `${wp.name}.csv`);
     tempLink.click();
   };
+  const popoverShare = (
+    <Popover id="popover-basic">
+      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
+      <Popover.Body>
+        <Button
+          className="me-2 btn-facebook"
+          onClick={() => {
+            const url = window.location.href;
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
+              url
+            )}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandFacebook />
+        </Button>
+        <Button
+          className="btn-x"
+          onClick={() => {
+            const url = window.location.href;
+            const text = "Check this waterpoint profile!";
+            const shareUrl = `https://twitter.com/share?url=${encodeURI(
+              url
+            )}&text=${encodeURI(text)}`;
+            window.open(shareUrl, "_blank");
+          }}
+        >
+          <IconBrandX />
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
 
   return (
     <div>
@@ -243,291 +264,359 @@ function HistoricalData() {
           </Modal>
         ) : (
           <>
-            <Container className="">
-              <Row className="pt-5 border-bottom border-2">
-                <h1 className="pt-2 mb-0">{wp.name}</h1>
-                <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
-              </Row>
-              <Tabs
-                defaultActiveKey="Monitored-data"
-                id="fill-tab-example"
-                className="mb-3 bg-body-tertiary "
-                fill
+            <ToastContainer
+              className="p-3 position-fixed "
+              position="bottom-end"
+              style={{ zIndex: 1 }}
+            >
+              <Toast
+                show={show}
+                onClose={() => setShow(false)}
+                autohide
+                delay={3000}
               >
-                <Tab eventKey="Monitored-data" title={t("data.monitored")}>
-                  <Row className="mt-3 ">
-                    <Col className="">
-                      <h5>{t("data.monitored")}</h5>
-                      <p>{t("data.monitored-d")}</p>
-                      <p className="mb-0">{t("data.year")}</p>
-                      {(() => {
-                        const years = [
-                          ...new Set(
-                            wpData.map((item) =>
-                              new Date(item.date).getFullYear()
-                            )
-                          ),
-                        ];
+                <Toast.Header className="bg-warning-subtle">
+                  <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                  />
+                  <strong className="me-auto">
+                    {t("profile.toast-title") || "Warning"}
+                  </strong>
+                </Toast.Header>
+                <Toast.Body>
+                  {t("profile.toast-body") ||
+                    "The waterpoint profile is not available in the language selected"}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
 
-                        return (
-                          <>
-                            <Row className="justify-content-around ">
-                              <Col className="col-auto">
-                                <p> {t("data.min-year")}</p>
-                                <h4>{value && value.min}</h4>
-                              </Col>
-                              <Col className="col-auto">
-                                <p> {t("data.max-year")}</p>
-                                <h4>{value && value.max}</h4>
-                              </Col>
-                            </Row>
-                            <SliderYear
-                              step={1}
-                              min={Math.min(...years)}
-                              max={Math.max(...years)}
-                              onChange={setValue}
-                            />
-                          </>
-                        );
-                      })()}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mt-2">{t("data.depth")}</h6>
-                      {depthData?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.depth-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "depth",
-                                group: "historical",
-                                toolbar: {
-                                  export: {
-                                    csv: {
-                                      filename: `${wp.name}-${value.min}-${value.max}`,
-                                      dateFormatter(timestamp) {
-                                        const newDate = new Date(timestamp);
-                                        const formattedDate = newDate
-                                          .toISOString()
-                                          .split("T")[0];
-                                        return formattedDate;
-                                      },
-                                    },
+            <ToastContainer
+              className="p-3 position-fixed"
+              position="bottom-end"
+              style={{ zIndex: 2000 }}
+            >
+              <Toast
+                onClose={() => setShowToastSubscribe(false)}
+                show={showToastSubscribe}
+                delay={2000}
+                className={
+                  !toastSuccess ? `bg-danger-subtle` : `bg-success-subtle`
+                }
+                autohide
+              >
+                <Toast.Body>
+                  {!toastSuccess
+                    ? `Woohoo, you've unsubscribe from the waterpoint!`
+                    : `Success! You're now subscribed to the waterpoint.`}
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+            <Container className="">
+
+            <Row className="pt-5 border-bottom border-2 align-items-center">
+  <Col xs={6}>
+    <div>
+      <h1 className="pt-2 mb-0">{wp.name}</h1>
+      <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
+    </div>
+  </Col>
+  <Col xs={6} className="d-flex justify-content-end">
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="dashboard-tooltip">{t("profile.forecast-popup")}</Tooltip>}
+    >
+      <Link
+        type="botton"
+        className="btn btn-primary me-2 rounded-4"
+        to={`/forecast/${wp.id}`}
+      >
+        <IconCloudRain />
+      </Link>
+    </OverlayTrigger>
+
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+    >
+      <div>
+        <OverlayTrigger
+          trigger="click"
+          placement="bottom"
+          rootClose={true}
+          overlay={popoverShare}
+        >
+          <Button className="rounded-4">
+            <IconShare />
+          </Button>
+        </OverlayTrigger>
+      </div>
+    </OverlayTrigger>
+
+    {/* Agregamos un espacio entre los botones */}
+    <div className="mx-2"></div>
+
+    <OverlayTrigger
+      placement="bottom"
+      overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+    >
+      <div>
+        <SubscriptionButton
+          idWater={idWp}
+          idUser={userInfo?.sub}
+          setShowToastSubscribe={setShowToastSubscribe}
+          setToastSuccess={setToastSuccess}
+        />
+      </div>
+    </OverlayTrigger>
+  </Col>
+</Row>
+
+
+
+
+
+
+              <Row className="mt-3 ">
+                <Col className="">
+                  <h5>{t("data.monitored")}</h5>
+                  <p>{t("data.monitored-d")}</p>
+
+                  {(() => {
+                    const years = [
+                      ...new Set(
+                        wpData.map((item) =>
+                          new Date(item.date).getFullYear()
+                        )
+                      ),
+                    ];
+
+                    return (
+                      <>
+
+                        <SliderYear
+                          step={1}
+                          min={Math.min(...years)}
+                          max={Math.max(...years)}
+                          onChange={setValue}
+                        />
+                      </>
+                    );
+                  })()}
+
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">{t("data.depth")}</h6>
+                  {depthData?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.depth-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
+                      </p>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "depth",
+                            group: "historical",
+                            toolbar: {
+                              export: {
+                                csv: {
+                                  filename: `${wp.name}-${value.min}-${value.max}`,
+                                  dateFormatter(timestamp) {
+                                    const newDate = new Date(timestamp);
+                                    const formattedDate = newDate
+                                      .toISOString()
+                                      .split("T")[0];
+                                    return formattedDate;
                                   },
                                 },
                               },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.depth"), data: depthData },
-                              {
-                                name: t("data.climatology"),
-                                data: climaDepthData,
-                              },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">m</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mt-2">{t("data.scaled")}</h6>
-                      <div id="line-scaled">
-                        {scaledDepthData?.length > 0 && (
-                          <>
-                            <p>
-                              {t("data.scaled-description")}{" "}
-                              <span className="fw-bold ">{wp.name}</span>,{" "}
-                              {t("data.depth-year")} {t("data.between")}{" "}
-                              <span className="fw-bold ">{value.min}</span> and{" "}
-                              <span className="fw-bold ">{value.max}</span>.
-                            </p>
-                            <ReactApexChart
-                              options={{
-                                chart: {
-                                  id: "scaled",
-                                  group: "historical",
-                                },
-                                xaxis: {
-                                  type: "datetime",
-                                },
-                              }}
-                              series={[
-                                {
-                                  name: t("data.scaled"),
-                                  data: scaledDepthData,
-                                },
-                                {
-                                  name: t("data.climatology"),
-                                  data: climaScaledDepthData,
-                                },
-                              ]}
-                              type="line"
-                              height={350}
-                            />
-                            <p className="label-y">%</p>
-                          </>
-                        )}
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mb-0">{t("data.rain")}</h6>
-                      <p className="fw-light ">{t("data.source")}: RFE</p>
-                      {rain?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.rain-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "rain",
-                                group: "historical",
-                              },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.rain"), data: rain },
-                              { name: t("data.climatology"), data: climaRain },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">mm</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="col-12 col-lg-6">
-                      <h6 className="mb-0">{t("data.evap")}</h6>
-                      <p className="fw-light ">
-                        {t("data.source")}: Global GDAS
+                            },
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.depth"), data: depthData },
+                          {
+                            name: t("data.climatology"),
+                            data: climaDepthData,
+                          },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">m</p>
+                    </>
+                  )}
+                </Col>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mt-2">{t("data.scaled")}</h6>
+                  <div id="line-scaled">
+                    {scaledDepthData?.length > 0 && (
+                      <>
+                        <p>
+                          {t("data.scaled-description")}{" "}
+                          <span className="fw-bold ">{wp.name}</span>,{" "}
+                          {t("data.depth-year")} {t("data.between")}{" "}
+                          <span className="fw-bold ">{value.min}</span> and{" "}
+                          <span className="fw-bold ">{value.max}</span>.
+                        </p>
+                        <ReactApexChart
+                          options={{
+                            chart: {
+                              id: "scaled",
+                              group: "historical",
+                            },
+                            xaxis: {
+                              type: "datetime",
+                            },
+                          }}
+                          series={[
+                            {
+                              name: t("data.scaled"),
+                              data: scaledDepthData,
+                            },
+                            {
+                              name: t("data.climatology"),
+                              data: climaScaledDepthData,
+                            },
+                          ]}
+                          type="line"
+                          height={350}
+                        />
+                        <p className="label-y">%</p>
+                      </>
+                    )}
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mb-0">{t("data.rain")}</h6>
+                  <p className="fw-light ">{t("data.source")}: RFE</p>
+                  {rain?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.rain-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
                       </p>
-                      {evap?.length > 0 && (
-                        <>
-                          <p>
-                            {t("data.evap-description")}{" "}
-                            <span className="fw-bold ">{wp.name}</span>,{" "}
-                            {t("data.depth-year")} {t("data.between")}{" "}
-                            <span className="fw-bold ">{value.min}</span> and{" "}
-                            <span className="fw-bold ">{value.max}</span>.
-                          </p>
-                          <ReactApexChart
-                            options={{
-                              chart: {
-                                id: "evap",
-                                group: "historical",
-                              },
-                              xaxis: {
-                                type: "datetime",
-                              },
-                            }}
-                            series={[
-                              { name: t("data.evap"), data: evap },
-                              { name: t("data.climatology"), data: climaEvap },
-                            ]}
-                            type="line"
-                            height={350}
-                          />
-                          <p className="label-y">mm</p>
-                        </>
-                      )}
-                    </Col>
-                    <Col className="mb-4">
-                      <Button onClick={() => downloadAllData()}>
-                        <IconDownload className="me-2" />
-                        {t("data.download")}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Tab>
-                <Tab eventKey="Climate Forecast" title={t("data.climate")}>
-                  <Row className="mt-3">
-                    <h5 className="mb-0">{t("data.subseasonal")}</h5>
-                    <p className="fw-light ">
-                      {t("data.source")}: AClimate Ethiopia
-                    </p>
-                    <p>{t("data.subseasonal-d")}</p>
-                    {subseasonal && subseasonal.length > 0 ? (
-                      subseasonal.map((week, i) => (
-                        <Col className="col-12 col-md-3" key={i}>
-                          <ForecastItem
-                            year={week.year}
-                            month={week.month}
-                            week={week.week}
-                            probabilities={week.probabilities}
-                            name={wp.name}
-                          />
-                        </Col>
-                      ))
-                    ) : (
-                      <div className="d-flex flex-column align-items-center ">
-                        <h6 className=" mb-1 ">
-                          At the moment there is no data available
-                        </h6>
-                        <img
-                          src={noDataImg}
-                          alt="no data available"
-                          height={200}
-                        />
-                      </div>
-                    )}
-                  </Row>
-                  <Row className="mt-3 justify-content-around ">
-                    <h5 className="mb-0">{t("data.seasonal")}</h5>
-                    <p className="fw-light ">
-                      {t("data.source")}: AClimate Ethiopia
-                    </p>
-                    <p>{t("data.seasonal-d")}</p>
-                    {seasonal && seasonal.length > 0 ? (
-                      seasonal.map((month, i) => {
-                        return (
-                          <Col className="col-12 col-md-4">
-                            <ForecastItem
-                              year={month.year}
-                              month={month.month}
-                              probabilities={month.probabilities}
-                              name={wp.name}
-                              key={i}
-                            />
-                          </Col>
-                        );
-                      })
-                    ) : (
-                      <div className="d-flex flex-column align-items-center ">
-                        <h6 className=" mb-1 ">
-                          At the moment there is no data available
-                        </h6>
-                        <img
-                          src={noDataImg}
-                          alt="no data available"
-                          height={200}
-                        />
-                      </div>
-                    )}
-                  </Row>
-                </Tab>
-              </Tabs>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "rain",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.rain"), data: rain },
+                          { name: t("data.climatology"), data: climaRain },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
+                  )}
+                </Col>
+                <Col className="col-12 col-lg-6">
+                  <h6 className="mb-0">{t("data.evap")}</h6>
+                  <p className="fw-light ">
+                    {t("data.source")}: Global GDAS
+                  </p>
+                  {evap?.length > 0 && (
+                    <>
+                      <p>
+                        {t("data.evap-description")}{" "}
+                        <span className="fw-bold ">{wp.name}</span>,{" "}
+                        {t("data.depth-year")} {t("data.between")}{" "}
+                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.max}</span>.
+                      </p>
+                      <ReactApexChart
+                        options={{
+                          chart: {
+                            id: "evap",
+                            group: "historical",
+                          },
+                          xaxis: {
+                            type: "datetime",
+                          },
+                        }}
+                        series={[
+                          { name: t("data.evap"), data: evap },
+                        ]}
+                        type="line"
+                        height={350}
+                      />
+                      <p className="label-y">mm</p>
+                    </>
+                  )}
+                </Col>
+
+              </Row>
             </Container>
+            <Container className="mb-2 mt-2">
+              <div className="d-flex align-items-center">
+                <Button className="me-2" onClick={() => downloadAllData()}>
+                  <IconDownload className="me-2" />
+                  {t("data.download")}
+                </Button>
+                <div className="d-flex align-items-center">
+                  <Link
+                    type="button"
+                    className="btn btn-primary me-3 rounded-4"
+                    to={`/forecast/${wp.id}`}
+                  >
+                    <IconCloudRain className="me-3" />
+                    {t("monitoring.forecast")}
+                  </Link>
+
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="right"
+                    rootClose={true}
+                    overlay={popoverShare}
+                  >
+                    <Button className="rounded-4 mb-2 mb-sm-0 me-3">
+                      <IconShare className="me-3" />
+                      {t("profile.share")}
+                    </Button>
+                  </OverlayTrigger>
+                  <SubscriptionButton
+                    idWater={idWp}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                    label
+                  />
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id={`tooltip-top`}>
+                        {t("monitoring.subscription-info")}
+                      </Tooltip>
+                    }
+                  >
+                    <IconInfoCircleFilled />
+                  </OverlayTrigger>
+                </div>
+              </div>
+            </Container>
+
           </>
         )
       ) : (

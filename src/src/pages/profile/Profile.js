@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
+import L from "leaflet";
+import Simplelegend from "../../components/simpleLegend/Simplelegend";
+
 import {
   Button,
   Carousel,
@@ -22,6 +25,7 @@ import {
   MapContainer,
   TileLayer,
   WMSTileLayer,
+  Marker
 } from "react-leaflet";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
@@ -36,17 +40,39 @@ import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
 import {
   IconDownload,
-  IconChartLine,
+  IconChartDonut,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
   IconInfoCircle,
+  IconCloudRain
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
+
+  const greenIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/greenMarker.png`),
+    iconSize: [32, 32],
+  });
+  const yellowIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/yellowMarker.png`),
+    iconSize: [32, 32],
+  });
+  const brownIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/brownMarker.png`),
+    iconSize: [32, 32],
+  });
+  const redIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/redMarker.png`),
+    iconSize: [32, 32],
+  });
+  const grayIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/grayMarker.png`),
+    iconSize: [32, 32],
+  });
   const [t, i18n] = useTranslation("global");
   const { idWater, language } = useParams();
   const [wp, setWp] = useState();
@@ -153,7 +179,6 @@ function Waterprofile() {
       return <></>;
     }
   };
-
   const popoverShare = (
     <Popover id="popover-basic">
       <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
@@ -261,35 +286,78 @@ function Waterprofile() {
                   className="position-absolute z-3 d-flex "
                   style={{ top: "43%", right: "3vw" }}
                 >
-                  <SubscriptionButton
-                    idWater={idWater}
-                    idUser={userInfo?.sub}
-                    setShowToastSubscribe={setShowToastSubscribe}
-                    setToastSuccess={setToastSuccess}
-                  />
-                  <Button
-                    className="rounded-4 me-2"
-                    onClick={downloadProfileAsPdf}
-                  >
-                    <IconDownload />
-                  </Button>
-                  <Link
-                    type="button"
-                    className="btn btn-primary me-2 rounded-4"
-                    to={`/dashboard/${wp.id}`}
-                  >
-                    <IconChartLine />
-                  </Link>
+
                   <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    rootClose={true}
-                    overlay={popoverShare}
+                    placement="top"
+                    overlay={<Tooltip id="download-tooltip">{t("profile.download")}</Tooltip>}
                   >
-                    <Button className="rounded-4">
-                      <IconShare />
+                    <Button
+                      className="rounded-4 me-2"
+                      onClick={downloadProfileAsPdf}
+                    >
+                      <IconDownload />
                     </Button>
                   </OverlayTrigger>
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="dashboard-tooltip">{t("profile.data-popup")}</Tooltip>}
+                  >
+                    <a
+                      href={`/dashboard/${wp.id}`}
+                      className="btn btn-primary me-2 rounded-4"
+                    >
+                      <IconChartDonut />
+                    </a>
+
+                  </OverlayTrigger>
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="forecast-tooltip">{t("profile.forecast-popup")}</Tooltip>}
+                  >
+                    <Link
+                      type="button"
+                      className="btn btn-primary me-2 rounded-4"
+                      to={`/forecast/${wp.id}`}
+                    >
+                      <IconCloudRain />
+                    </Link>
+                  </OverlayTrigger>
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+                  >
+                    <div>
+                      <SubscriptionButton
+                        idWater={idWater}
+                        idUser={userInfo?.sub}
+                        setShowToastSubscribe={setShowToastSubscribe}
+                        setToastSuccess={setToastSuccess}
+                      />
+                    </div>
+                  </OverlayTrigger>
+
+
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+                  >
+                    <div>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="bottom"
+                        rootClose={true}
+                        overlay={popoverShare}
+                      >
+                        <Button className="rounded-4">
+                          <IconShare />
+                        </Button>
+                      </OverlayTrigger>
+                    </div>
+                  </OverlayTrigger>
+
                 </div>
                 <Carousel
                   fade
@@ -334,12 +402,29 @@ function Waterprofile() {
                     <h4 className="fw-medium">{t("profile.map")}</h4>
                     <MapContainer
                       center={[wp.lat, wp.lon]}
-                      zoom={9}
+                      zoom={14}
                       style={{
                         height: "400px",
                         width: "100%",
                       }}
                     >
+                      <Marker
+                        position={[wp.lat, wp.lon]}
+                        icon={
+                          wp.latest_monitored_scaled_depth > wp.climatology_scaled_depth
+                            ? greenIcon
+                            : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth > 0.5
+                              ? yellowIcon
+                              : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth >
+                                0.03
+                                ? brownIcon
+                                : wp.latest_monitored_scaled_depth === 0 &&
+                                  wp.climatology_scaled_depth === 0
+                                  ? grayIcon
+                                  : redIcon
+                        }
+                        key={wp.id}
+                      ></Marker>
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -356,6 +441,7 @@ function Waterprofile() {
                           />
                         </LayersControl.Overlay>
                       </LayersControl>
+                      <Simplelegend />
                     </MapContainer>
                     <h4 className="mt-4 mb-3">{t("profile.watershed")}</h4>
 
@@ -521,7 +607,7 @@ function Waterprofile() {
               </Container>
             </div>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
-              <div className="d-flex align-items-center ">
+              <div className="d-flex align-items-center">
                 <Button
                   className="me-3 rounded-4 mb-2 mb-sm-0"
                   onClick={downloadProfileAsPdf}
@@ -529,13 +615,22 @@ function Waterprofile() {
                   <IconDownload className="me-3" />
                   {t("profile.download")}
                 </Button>
+                <a
+                  href={`/dashboard/${wp.id}`}
+                  className="btn btn-primary me-3 rounded-4"
+                >
+                  <IconChartDonut className="me-3" />
+                  {t("monitoring.data")}
+                </a>
+
+
                 <Link
                   type="button"
                   className="btn btn-primary me-3 rounded-4"
-                  to={`/dashboard/${wp.id}`}
+                  to={`/forecast/${wp.id}`}
                 >
-                  <IconChartLine className="me-3" />
-                  {t("monitoring.data")}
+                  <IconCloudRain className="me-3" />
+                  {t("monitoring.forecast")}
                 </Link>
                 <OverlayTrigger
                   trigger="click"
@@ -543,13 +638,18 @@ function Waterprofile() {
                   rootClose={true}
                   overlay={popoverShare}
                 >
-                  <Button className="rounded-4 mb-2 mb-sm-0">
+                  <Button className="rounded-4 mb-2 mb-sm-0 me-3">
                     <IconShare className="me-3" />
                     {t("profile.share")}
                   </Button>
                 </OverlayTrigger>
-              </div>
-              <div className="d-flex align-items-center">
+                <SubscriptionButton
+                  idWater={idWater}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
                 <OverlayTrigger
                   placement="top"
                   overlay={
@@ -560,15 +660,10 @@ function Waterprofile() {
                 >
                   <IconInfoCircleFilled />
                 </OverlayTrigger>
-                <SubscriptionButton
-                  idWater={idWater}
-                  idUser={userInfo?.sub}
-                  setShowToastSubscribe={setShowToastSubscribe}
-                  setToastSuccess={setToastSuccess}
-                  label
-                />
               </div>
+
             </Container>
+
           </>
         )
       ) : (

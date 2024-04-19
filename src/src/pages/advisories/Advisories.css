@@ -1,0 +1,12 @@
+.advisories-list li {
+    display: inline-block;
+    margin-right: 20px; /* Ajusta el espacio entre los elementos si es necesario */
+}
+
+.advisories-list li p {
+    display: inline; /* Esto asegura que los mensajes se muestren en línea */
+    margin-left: 5px; /* Ajusta el espacio entre el texto y los mensajes */
+}
+.jejej{
+    display: inline;
+}

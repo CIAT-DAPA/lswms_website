@@ -15,7 +15,7 @@ function Advisories() {
             <p>{t("advisories.description-1")}</p>
             <p>{t("advisories.description-2")}</p>
             <p>{t("advisories.description-3")}</p>
-            <h2 className="mt-3">{t("advisories.status")}</h2>
+            <h2 className="mt-3">{t("advisories.condition")}</h2>
             <ul>
                 <li>
                     {" "}

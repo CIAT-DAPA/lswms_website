@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link,useLocation  } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
   Button,
@@ -18,7 +18,6 @@ import Services from "../../services/apiService";
 import ReactApexChart from "react-apexcharts";
 import "./Dashboard.css";
 import { useTranslation } from "react-i18next";
-import { IconDownload } from "@tabler/icons-react";
 import Papa from "papaparse";
 import SliderYear from "../../components/sliderYear/SliderYear";
 import { useAuth } from "../../hooks/useAuth";
@@ -31,9 +30,12 @@ import {
   IconBrandX,
   IconInfoCircleFilled,
   IconInfoCircle,
-  IconCloudRain
+  IconCloudRain,
+  IconDownload
 } from "@tabler/icons-react";
 function HistoricalData() {
+  const location = useLocation();
+    const [previousPath, setPreviousPath] = useState(null);
   const { userInfo } = useAuth();
   const [show, setShow] = useState(false);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
@@ -53,7 +55,7 @@ function HistoricalData() {
   const [value, setValue] = useState(null);
   const { idWp } = useParams();
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
-
+  
   useEffect(() => {
     //Call to API to get waterpoint
     Services.get_waterpoints_profile(idWp, i18n.language)
@@ -133,6 +135,8 @@ function HistoricalData() {
     }
   }, [value]);
 
+
+
   const filterData = (data, type) => {
     const filteredData = data
       .filter((item) => {
@@ -152,7 +156,7 @@ function HistoricalData() {
     formattedData.sort((a, b) => new Date(a.x) - new Date(b.x));
     return formattedData;
   };
-
+  
   const downloadAllData = () => {
     const dataToDownload = wpData.map((item) => {
       const date = new Date(item.date);
@@ -315,63 +319,75 @@ function HistoricalData() {
             </ToastContainer>
             <Container className="">
 
-            <Row className="pt-5 border-bottom border-2 align-items-center">
-  <Col xs={6}>
-    <div>
-      <h1 className="pt-2 mb-0">{wp.name}</h1>
-      <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
-    </div>
-  </Col>
-  <Col xs={6} className="d-flex justify-content-end">
-    <OverlayTrigger
-      placement="bottom"
-      overlay={<Tooltip id="dashboard-tooltip">{t("profile.forecast-popup")}</Tooltip>}
-    >
-      <Link
-        type="botton"
-        className="btn btn-primary me-2 rounded-4"
-        to={`/forecast/${wp.id}`}
-      >
-        <IconCloudRain />
-      </Link>
-    </OverlayTrigger>
+              <Row className="pt-5 border-bottom border-2 align-items-center">
+                
+                <Col xs={6}>
+                  <div>
+                    <h1 className="pt-2 mb-0">{wp.name}</h1>
+                    <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
+                  </div>
+                </Col>
+                <Col xs={6} className="d-flex justify-content-end">
+                <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip id="download">{t("data.download")}</Tooltip>}
+                  >
+                    <div>
+                      
+                        <Button onClick={downloadAllData} className="rounded-4 mx-2">
+                          <IconDownload />
+                        </Button>
+                    </div>
+                  </OverlayTrigger>
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip id="dashboard-tooltip">{t("profile.forecast-popup")}</Tooltip>}
+                  >
+                    <Link
+                      type="botton"
+                      className="btn btn-primary me-2 rounded-4"
+                      to={`/forecast/${wp.id}`}
+                    >
+                      <IconCloudRain />
+                    </Link>
+                  </OverlayTrigger>
 
-    <OverlayTrigger
-      placement="bottom"
-      overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
-    >
-      <div>
-        <OverlayTrigger
-          trigger="click"
-          placement="bottom"
-          rootClose={true}
-          overlay={popoverShare}
-        >
-          <Button className="rounded-4">
-            <IconShare />
-          </Button>
-        </OverlayTrigger>
-      </div>
-    </OverlayTrigger>
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+                  >
+                    <div>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="bottom"
+                        rootClose={true}
+                        overlay={popoverShare}
+                      >
+                        <Button className="rounded-4">
+                          <IconShare />
+                        </Button>
+                      </OverlayTrigger>
+                    </div>
+                  </OverlayTrigger>
 
-    {/* Agregamos un espacio entre los botones */}
-    <div className="mx-2"></div>
+                  {/* Agregamos un espacio entre los botones */}
+                  <div className="mx-1"></div>
 
-    <OverlayTrigger
-      placement="bottom"
-      overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
-    >
-      <div>
-        <SubscriptionButton
-          idWater={idWp}
-          idUser={userInfo?.sub}
-          setShowToastSubscribe={setShowToastSubscribe}
-          setToastSuccess={setToastSuccess}
-        />
-      </div>
-    </OverlayTrigger>
-  </Col>
-</Row>
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+                  >
+                    <div>
+                      <SubscriptionButton
+                        idWater={idWp}
+                        idUser={userInfo?.sub}
+                        setShowToastSubscribe={setShowToastSubscribe}
+                        setToastSuccess={setToastSuccess}
+                      />
+                    </div>
+                  </OverlayTrigger>
+                </Col>
+              </Row>
 
 
 
@@ -578,10 +594,10 @@ function HistoricalData() {
                 <div className="d-flex align-items-center">
                   <Link
                     type="button"
-                    className="btn btn-primary me-3 rounded-4"
+                    className="btn btn-primary me-2 rounded-4"
                     to={`/forecast/${wp.id}`}
                   >
-                    <IconCloudRain className="me-3" />
+                    <IconCloudRain className="me-2" />
                     {t("monitoring.forecast")}
                   </Link>
 
@@ -591,8 +607,8 @@ function HistoricalData() {
                     rootClose={true}
                     overlay={popoverShare}
                   >
-                    <Button className="rounded-4 mb-2 mb-sm-0 me-3">
-                      <IconShare className="me-3" />
+                    <Button className="rounded-4 mb-2 mb-sm-0 me-2">
+                      <IconShare className="me-2" />
                       {t("profile.share")}
                     </Button>
                   </OverlayTrigger>

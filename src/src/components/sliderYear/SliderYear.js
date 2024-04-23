@@ -42,7 +42,7 @@ function SliderYear({ step, min, max, value, onChange }) {
 
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ marginRight: "10px" }}>
-          <label htmlFor="min">Min:</label>
+          <label htmlFor="min">Start:</label>
           <Form.Select id="min" value={minValue} onChange={handleMinChange}>
             {Array.from({ length: max - min + 1 }, (_, i) => (
               <option key={max - i} value={max - i}>{max - i}</option>
@@ -51,7 +51,7 @@ function SliderYear({ step, min, max, value, onChange }) {
         </div>
 
         <div>
-          <label htmlFor="max">Max:</label>
+          <label htmlFor="max">End:</label>
           <Form.Select id="max" value={maxValue} onChange={handleMaxChange} >
             {Array.from({ length: max - min + 1 }, (_, i) => (
               <option  key={min + i} value={min + i} >{min + i} </option>

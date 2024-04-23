@@ -94,7 +94,8 @@
     "share": "",
     "data-popup": "",
     "forecast-popup": "",
-    "subscribe-popup": ""
+    "subscribe-popup": "",
+    "loading-wateshed": ""
   },
   "data": {
     "filter":"ዓመታት በግል አሳይ",
@@ -212,7 +213,8 @@
     "watch-message":"",
     "alert-message":"",
     "near-dry-message":"",  
-    "seasonal-dry-message":""
+    "seasonal-dry-message":"",
+    "condition": "መፍቻ"
   }
   
 

@@ -69,12 +69,13 @@ function Menu() {
             <Link className="nav-link text-black" to="/forage">
               {t("menu.forage")}
             </Link>
-            <Link className="nav-link text-black" to="/aboutus">
-              {t("menu.about-us")}
-            </Link>
             <Link className="nav-link text-black" to="/advisories">
               {t("menu.advisories")}
             </Link>
+            <Link className="nav-link text-black" to="/aboutus">
+              {t("menu.about-us")}
+            </Link>
+            
             <Dropdown
               as={ButtonGroup}
               className="d-block mb-2 ms-0 me-5 mt-1 mt-lg-0 mb-lg-0 ms-lg-2"

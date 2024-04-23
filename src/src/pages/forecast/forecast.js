@@ -90,7 +90,11 @@ function Forecast() {
     }
   }, [wpData]);
 
-
+  useEffect(() => {
+    window.addEventListener('popstate', (event) => {
+      window.location.reload()
+    });
+  }, []);
 
   useEffect(() => {
     if (aclimateId) {
@@ -234,7 +238,8 @@ function Forecast() {
                       <a
                         href={`/dashboard/${wp.id}`}
                         className="btn btn-primary me-2 rounded-4"
-                        role="button" // Agregamos el atributo role para mantener la accesibilidad
+                        role="button"
+                        onClick={()=>window.location.reload()} 
                       >
                         <IconChartDonut />
                       </a>

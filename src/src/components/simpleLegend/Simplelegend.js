@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 function Simplelegend() {
   const [t] = useTranslation("global");
   return (
-    <div className="legend bg-white px-4 py-3 rounded-4">
+    <div className="legendd bg-white px-4 py-3 rounded-4">
       <p className="fw-medium mb-3">{t("monitoring.legend")}</p>
       <div className="d-flex align-items-center mb-1">
         <img src={greenImg} alt="" className="me-1" />

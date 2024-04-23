@@ -38,6 +38,7 @@ import ItemTable from "../../components/itemTable/ItemTable";
 import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
+
 import {
   IconDownload,
   IconChartDonut,
@@ -78,6 +79,8 @@ function Waterprofile() {
   const [wp, setWp] = useState();
   const [wpProfile, setWpProfile] = useState();
   const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(true);
+
   const [wsTable, setWsTable] = useState(null);
   const [show, setShow] = useState(false);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
@@ -216,6 +219,7 @@ function Waterprofile() {
     <>
       {idWater ? (
         loading ? (
+
           <Modal
             show={loading}
             backdrop="static"
@@ -230,6 +234,7 @@ function Waterprofile() {
           </Modal>
         ) : (
           <>
+
             <ToastContainer
               className="p-3 position-fixed "
               position="bottom-end"
@@ -397,6 +402,19 @@ function Waterprofile() {
                 </Carousel>
               </div>
               <Container className="mt-3">
+                <Modal
+                  show={loaded}
+                  backdrop="static"
+                  keyboard={false}
+                  centered
+                  size="sm"
+                  zIndex={1000}
+                >
+                  <Modal.Body className="d-flex align-items-center">
+                    <Spinner animation="border" role="status" className="me-2" />
+                    {t("profile.loading-wateshed")}
+                  </Modal.Body>
+                </Modal>
                 <Row>
                   <Col className="col-12 col-md-8">
                     <h4 className="fw-medium">{t("profile.map")}</h4>
@@ -408,6 +426,7 @@ function Waterprofile() {
                         width: "100%",
                       }}
                     >
+
                       <Marker
                         position={[wp.lat, wp.lon]}
                         icon={
@@ -438,10 +457,17 @@ function Waterprofile() {
                             transparent={true}
                             cql_filter={`Name='${wp.watershed_name}'`}
                             zIndex={1000}
+                            eventHandlers={{
+                              load: () => {
+                                setLoaded(false);
+                              },
+                            }}
+
                           />
                         </LayersControl.Overlay>
                       </LayersControl>
                       <Simplelegend />
+
                     </MapContainer>
                     <h4 className="mt-4 mb-3">{t("profile.watershed")}</h4>
 

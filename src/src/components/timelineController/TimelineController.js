@@ -66,7 +66,7 @@ const [t] = useTranslation("global");
         timeDimensionName: dimensionName,
       });
       tdWmsLayer.addTo(map);
-      tdWmsLayer.on("timeload", function (data) {
+      tdWmsLayer.on("timeload", function() {
         setLoaded(false);
       });
 
@@ -101,9 +101,9 @@ const [t] = useTranslation("global");
 
   return (
     <>
-      {/* Modal que muestra un Spinner mientras el estado loaded es true */}
+      
       <Modal
-        show={loaded} // Cambiado a loaded en lugar de loading
+        show={loaded} 
         backdrop="static"
         keyboard={false}
         centered

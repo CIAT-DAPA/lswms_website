@@ -86,6 +86,8 @@ function Visualization() {
   const [toastSuccess, setToastSuccess] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const { userInfo } = useAuth();
+  const [wpstolabel, SetWpstolabel] = useState();
+
 
   const handleClose = () => setShowWarning(false);
 
@@ -119,10 +121,49 @@ function Visualization() {
     }
   }, [waterpoints.length]);
 
+monitored.forEach(val => {
+  const scaledDepth = val.values.find(val => val.type === "scaled_depth").value;
+  const climatologyScaledDepth = val.values.find(val => val.type === "climatology_scaled_depth").value;
+  let color;
+  if (scaledDepth === 0) {
+    color = "gray";
+  } else if (scaledDepth > climatologyScaledDepth) {
+    color = "green";
+  } else if (climatologyScaledDepth === 0) {
+    color = "gray";
+  } else {
+    const ratio = scaledDepth / climatologyScaledDepth;
+    if (ratio > 0.5) {
+      color = "yellow";
+    } else if (ratio > 0.03) {
+      color = "brown";
+    } else {
+      color = "red";
+    }
+  }
+  const waterpointId = val.waterpointId;
+  const first = waterpoints.find(item => item.id === waterpointId);
+  if (first) {
+    first.color = color;
+  }
+});
+waterpoints.forEach(waterpoint => {
+  waterpoint.show = true;
+});
+
+
+useEffect(() => {
+  waterpoints.forEach(waterpoint => {
+    if (filter[waterpoint.color] === false) {
+      waterpoint.show = false;
+    }
+  });
+  SetWpstolabel(waterpoints.filter(wp => wp.show));
+}, [filter, waterpoints]);
+
+
   const popupData = (wp) => {
-    // Find the corresponding monitored data for the current waterpoint
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-    // Get the value of depth if the monitored data is foun
     const depthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "depth")
       : null;
@@ -517,7 +558,8 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {waterpoints && <WpLabel waterpoints={waterpoints} />}
+        {waterpoints && <WpLabel waterpoints={wpstolabel} />}
+
 
         {route && (
           <Polyline

@@ -96,7 +96,8 @@
     "share": "Share",
     "data-popup": "Go to data",
     "forecast-popup": "Go to forecast",
-    "subscribe-popup": "Subscribe"
+    "subscribe-popup": "Subscribe",
+    "loading-wateshed": "Getting the watershed..."
   },
   "data": {
     "filter": "Filter data by year",
@@ -108,9 +109,9 @@
     "depth-year": "in the year",
     "scaled": "Modeled Scaled Depth",
     "scaled-description": "These graphs show the scaled depth and daily historical average for the scaled depth of waterpoint",
-    "rain": "Monthly Precipitation",
-    "rain-description": "These graphs show the average precipitation monthly and monthly historical average for the precipitation of waterpoint",
-    "evap": "Evaporation",
+    "rain": "Modeled Precipitation",
+    "rain-description": "These graphs show the precipitation  and daily historical average for the precipitation of waterpoint",
+    "evap": "Modeled Evaporation",
     "evap-description": "These graphs show the evaporation and daily historical average for the evaporation of waterpoint",
     "subseasonal": "Sub-seasonal forecast",
     "subseasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific month. Below, you can find the most probable category for the selected municipality and the forecast month.",
@@ -131,7 +132,7 @@
     "notFound-title": "No aclimate ID was provided.",
     "notFound-d": "Try to get the data from the waterpoints display.",
     "climate": "Climate Forecast",
-    "climatology": "Daily historical average",
+    "climatology": "Modeled Daily historical average",
     "climatology-monthly": "Monthly historical average",
     "loading": "Getting the waterpoint data...",
     "min-year": "Min-year",
@@ -218,7 +219,8 @@
     "watch-message":"pond is in Watch condition. Reduce pond water consumption for other purposes and follow pond manager instructions",
     "alert-message":"pond is in Alert condition and advised to use the pond water for drinking and weak animals only",
     "near-dry-message":"pond is in Near-Dry condition and advised to use the pond water for drinking",  
-    "seasonal-dry-message":"pond is in Dry condition. please text “ponds” to get nearby available ponds"
+    "seasonal-dry-message":"pond is in Dry condition. please text “ponds” to get nearby available ponds",
+    "condition": "Waterpoint Condition"
 
   }
 }

@@ -1,10 +1,6 @@
-.edacap-link {
-    text-decoration: none; 
-    color: inherit; 
-    transition: color 0.3s; 
-  }
+
   
-  .edacap-link:hover {
+  .edacap-link {
     color: blue; 
   }
   

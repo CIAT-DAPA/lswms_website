@@ -39,6 +39,7 @@ function SliderYear({ step, min, max, value, onChange }) {
   return (
     <div>
       <p className="mb-1">{t("data.filter")}</p>
+      
       <Row >
         <Col className="col-4 col-lg-2">
           <label className="mb-1 d-flex aling-items-center" htmlFor="min"><IconCalendarTime stroke={1} className="me-2"/>Start:</label>

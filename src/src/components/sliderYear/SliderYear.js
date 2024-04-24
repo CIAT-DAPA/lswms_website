@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form,Col,Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { IconCalendarTime } from "@tabler/icons-react";
 
 function SliderYear({ step, min, max, value, onChange }) {
   const [t, i18n] = useTranslation("global");
@@ -37,28 +38,27 @@ function SliderYear({ step, min, max, value, onChange }) {
 
   return (
     <div>
-      <h6>{t("data.filter")}</h6>
-      <p className="mb-1">{t("data.year")}</p>
+      <p className="mb-1">{t("data.filter")}</p>
 
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ marginRight: "10px" }}>
-          <label htmlFor="min">Start:</label>
-          <Form.Select id="min" value={minValue} onChange={handleMinChange}>
+      <Row >
+        <Col className="col-4 col-lg-2">
+          <label className="mb-1 d-flex aling-items-center" htmlFor="min"><IconCalendarTime stroke={1} className="me-2"/>Start:</label>
+          <Form.Select size="lg" id="min" value={minValue} onChange={handleMinChange}>
             {Array.from({ length: max - min + 1 }, (_, i) => (
               <option key={max - i} value={max - i}>{max - i}</option>
             ))}
           </Form.Select>
-        </div>
-
-        <div>
-          <label htmlFor="max">End:</label>
-          <Form.Select id="max" value={maxValue} onChange={handleMaxChange} >
+        </Col>
+            <Col className="col-2 col-lg-1 d-flex flex-column fs-2 justify-content-end text-center w-auto">-</Col>
+        <Col className="col-4 col-lg-2">
+          <label className="mb-1 d-flex aling-items-center" htmlFor="max"><IconCalendarTime stroke={1} className="me-2"/>End:</label>
+          <Form.Select size="lg"id="max" value={maxValue} onChange={handleMaxChange} >
             {Array.from({ length: max - min + 1 }, (_, i) => (
               <option  key={min + i} value={min + i} >{min + i} </option>
             ))}
           </Form.Select>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 }

@@ -1,8 +1,11 @@
 /* SearchBar.css */
 
 /* Definir el ancho máximo de 500px para pantallas grandes */
-.search-bar {
+.search-bar-big {
   width: 50vw;
+}
+.search-bar {
+  width: 350px;
 }
 
 /* Media query para dispositivos móviles */

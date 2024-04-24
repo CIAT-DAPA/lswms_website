@@ -523,6 +523,7 @@ useEffect(() => {
         <Modal.Body className="d-flex flex-column">
           <p>{t("monitoring.modal-search")}</p>
           <SearchBar
+
             waterpoints={waterpoints}
             type="places"
             onWpClick={handlePlaceClick}
@@ -573,6 +574,7 @@ useEffect(() => {
         ))}
       </MapContainer>
       <SearchBar
+        bigSize={true}
         waterpoints={waterpoints}
         onWpClick={handleWpClick}
         type="waterpoints"

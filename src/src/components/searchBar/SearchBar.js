@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Modal } from "react-bootstrap";
 import { useDebouncedCallback } from "use-debounce";
 
-function SearchBar({ waterpoints, onWpClick, type }) {
+function SearchBar({ waterpoints, onWpClick, type,bigSize }) {
   const [t] = useTranslation("global");
   const [filterText, setFilterText] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
@@ -114,13 +114,13 @@ function SearchBar({ waterpoints, onWpClick, type }) {
       </Modal>
       <div className={`${type === "waterpoints" ? "bar-hints " : ""}`}>
         <div
-          className={`search-bar d-flex px-3  bg-white align-items-center border-bottom justify-content-between ${
+          className={` d-flex px-3  bg-white align-items-center border-bottom justify-content-between ${
             type === "waterpoints" ? "py-2" : ""
           } ${
             filterText === "" || filterText.length < 3
               ? "search-bar-unfocused "
               : "search-bar-focused "
-          }`}
+          }${bigSize ? "search-bar-big" : ""}`}
         >
           <input
             type="search"

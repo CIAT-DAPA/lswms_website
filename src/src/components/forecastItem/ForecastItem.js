@@ -1,11 +1,10 @@
+
 import React from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+import ReactApexChart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
 
 function ForecastItem({ year, month, week, probabilities, name }) {
   const [t] = useTranslation("global");
-  ChartJS.register(ArcElement, Tooltip, Legend);
 
   const roundedProbabilities = {
     lower: Math.round(probabilities[0].lower * 100),
@@ -14,30 +13,67 @@ function ForecastItem({ year, month, week, probabilities, name }) {
   };
 
   const data = {
-    labels: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],
-    datasets: [
+    series: [
       {
-        label: t("data.precipitation"),
+        name: t("data.precipitation"),
         data: [
           roundedProbabilities.lower,
           roundedProbabilities.normal,
           roundedProbabilities.upper,
         ],
-        backgroundColor: [
-          "rgba(249, 108, 105, 0.2)",
-          "rgba(96, 228, 99, 0.2)",
-          "rgba(94, 177, 216, 0.2)",
-        ],
-        borderColor: [
-          "rgba(249, 108, 105, 1)",
-          "rgba(96, 228, 99, 1)",
-          "rgba(94, 177, 216, 1)",
-        ],
-        borderWidth: 1,
       },
     ],
-  };
+    options: {
+      chart: {
+        height: 200,
+        type: 'bar',
+        offsetY: 16,
+        toolbar: {
+            show: false,
+        },
+    },
+    plotOptions: {
+        bar: {
+            distributed: true, // this line is mandatory
+            horizontal: false,
+            barHeight: '75%',
+            columnWidth: '55%',
+          endingShape: 'rounded',
+        },
+    },
+    colors: [ "#e3bab2","#b3e4b3", "#97cdd8"],
 
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+      },
+      xaxis: {
+        categories: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],
+      },
+      yaxis: {
+        max: 100,
+        title: {
+          text: t("data.precipitation") + ' (%)',
+           
+        }
+      },
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + "%";
+          }
+        }
+      }
+    },
+  };
+console.log(data)
   const getMonthName = (monthNumber) => {
     const date = new Date();
     date.setMonth(monthNumber - 1);
@@ -78,7 +114,7 @@ function ForecastItem({ year, month, week, probabilities, name }) {
       <h5 className="text-center">{getMonthName(month)}</h5>
       <h6 className="text-center">{t("data.precipitation")} (%)</h6>
       {week && <h5 className="text-center">{t("data.week")} {week}</h5>}
-      <Doughnut data={data} />
+      <ReactApexChart options={data.options} series={data.series} type="bar" height={350} />
       <p className="text-center">
         {week
           ? t("data.forecast-sub-1a") + ` ${week} ` + t("data.forecast-sub-1b")

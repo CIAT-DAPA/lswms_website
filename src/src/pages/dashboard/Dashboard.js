@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link,useLocation  } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
   Button,
@@ -35,7 +35,7 @@ import {
 } from "@tabler/icons-react";
 function HistoricalData() {
   const location = useLocation();
-    const [previousPath, setPreviousPath] = useState(null);
+  const [previousPath, setPreviousPath] = useState(null);
   const { userInfo } = useAuth();
   const [show, setShow] = useState(false);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
@@ -53,9 +53,10 @@ function HistoricalData() {
   const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
   const [value, setValue] = useState(null);
+  const [dataFilterByYearsToDownload, setDataFilterByYearsToDownload] = useState([]);
   const { idWp } = useParams();
   const typeNames = ["depth", "scaled_depth", "rain", "evp"];
-  
+
   useEffect(() => {
     //Call to API to get waterpoint
     Services.get_waterpoints_profile(idWp, i18n.language)
@@ -96,6 +97,23 @@ function HistoricalData() {
       years.sort((a, b) => b - a);
     }
   }, [wpData]);
+
+  useEffect(() => {
+    filterData2();
+  }, [value]);
+
+  const filterData2 = () => {
+    if (!wpData) return;
+
+    const { min, max } = value;
+    const filteredValues = wpData.filter(item => {
+      
+      const itemDate = new Date(item.date);
+      const itemYear = itemDate.getFullYear();
+      return itemYear >= min && itemYear <= max;
+    });
+    setDataFilterByYearsToDownload(filteredValues);
+  };
 
   useEffect(() => {
     if (value) {
@@ -156,9 +174,8 @@ function HistoricalData() {
     formattedData.sort((a, b) => new Date(a.x) - new Date(b.x));
     return formattedData;
   };
-  
   const downloadAllData = () => {
-    const dataToDownload = wpData.map((item) => {
+    const dataToDownload = dataFilterByYearsToDownload.map((item) => {
       const date = new Date(item.date);
       const month = date.getMonth() + 1;
       const day = date.getDate();
@@ -249,7 +266,21 @@ function HistoricalData() {
       </Popover.Body>
     </Popover>
   );
+  function groupAndSum(data, groupSize) {
+    let result = [];
+    for (let i = 0; i < data.length; i += groupSize) {
+        let group = data.slice(i, i + groupSize);
+        let sum = group.reduce((acc, curr) => acc + parseFloat(curr.y), 0);
+        let startDate = group[0].x;
+        let endDate = group[group.length - 1].x; 
+        result.push({x: `${startDate} - ${endDate}`, y: sum.toFixed(2)});
+    }
+    return result;
+}
 
+const rainTendaysSum = groupAndSum(rain, 10);
+console.log(rain)
+console.log(rainTendaysSum)
   return (
     <div>
       {idWp ? (
@@ -320,7 +351,7 @@ function HistoricalData() {
             <Container className="">
 
               <Row className="pt-5 border-bottom border-2 align-items-center">
-                
+
                 <Col xs={6}>
                   <div>
                     <h1 className="pt-2 mb-0">{wp.name}</h1>
@@ -328,15 +359,15 @@ function HistoricalData() {
                   </div>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end">
-                <OverlayTrigger
+                  <OverlayTrigger
                     placement="bottom"
                     overlay={<Tooltip id="download">{t("data.download")}</Tooltip>}
                   >
                     <div>
-                      
-                        <Button onClick={downloadAllData} className="rounded-4 mx-2">
-                          <IconDownload />
-                        </Button>
+
+                      <Button onClick={downloadAllData} className="rounded-4 mx-2">
+                        <IconDownload />
+                      </Button>
                     </div>
                   </OverlayTrigger>
                   <OverlayTrigger
@@ -462,7 +493,7 @@ function HistoricalData() {
                         series={[
                           { name: t("data.depth"), data: depthData },
                           {
-                            name: t("data.climatology"),
+                            name: t("data.depth_daily_average"),
                             data: climaDepthData,
                           },
                         ]}
@@ -474,7 +505,7 @@ function HistoricalData() {
                   )}
                 </Col>
                 <Col className="col-12 col-lg-6">
-                  <h6 className="mt-2">{t("data.scaled")}</h6>
+                  <h6 className="mt-2">{t("data.scaled_depth_daily_average")}</h6>
                   <div id="line-scaled">
                     {scaledDepthData?.length > 0 && (
                       <>
@@ -489,11 +520,14 @@ function HistoricalData() {
                           options={{
                             chart: {
                               id: "scaled",
-                              group: "historical",
+                              group: "",
                             },
                             xaxis: {
                               type: "datetime",
                             },
+                            yaxis:{
+                              max: 100,
+                            }
                           }}
                           series={[
                             {
@@ -501,7 +535,7 @@ function HistoricalData() {
                               data: scaledDepthData,
                             },
                             {
-                              name: t("data.climatology"),
+                              name: t("data.scaled_depth_daily_average"),
                               data: climaScaledDepthData,
                             },
                           ]}
@@ -518,7 +552,7 @@ function HistoricalData() {
                 <Col className="col-12 col-lg-6">
                   <h6 className="mb-0">{t("data.rain")}</h6>
                   <p className="fw-light ">{t("data.source")}: RFE</p>
-                  {rain?.length > 0 && (
+                  {rainTendaysSum?.length > 0 && (
                     <>
                       <p>
                         {t("data.rain-description")}{" "}
@@ -531,23 +565,44 @@ function HistoricalData() {
                         options={{
                           chart: {
                             id: "rain",
-                            group: "historical",
+                            group: "rain",
+
                           },
                           xaxis: {
-                            type: "datetime",
+                            type: "",
+                            tickAmount: 3 ,
+                            labels: {
+                              show: false,}
+                          },
+                          
+                          legend: {
+                            show: true,
                           },
                         }}
                         series={[
-                          { name: t("data.rain"), data: rain },
-                          { name: t("data.climatology"), data: climaRain },
+                          { name: t("data.rain"), data: rainTendaysSum },
                         ]}
                         type="line"
                         height={350}
+
                       />
+
+
+
                       <p className="label-y">mm</p>
+
+                      <div className="text-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',marginTop:"-35px" }}>
+                        <span className="apexcharts-legend-text" rel="1" i="0" data-default-text={t("data.rain")} data-collapsed="false" style={{ color: 'rgb(55, 61, 63)', fontSize: '12px', fontWeight: 400, fontFamily: 'Helvetica, Arial, sans-serif', display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'inline-block', width: '13px', height: '13px', borderRadius: '50%', backgroundColor: '#008ffb', marginRight: '5px' }}></span>
+                          {t("data.rain")}
+                        </span>
+                      </div>
+
                     </>
+
                   )}
                 </Col>
+
                 <Col className="col-12 col-lg-6">
                   <h6 className="mb-0">{t("data.evap")}</h6>
                   <p className="fw-light ">
@@ -566,7 +621,7 @@ function HistoricalData() {
                         options={{
                           chart: {
                             id: "evap",
-                            group: "historical",
+                            group: "evap",
                           },
                           xaxis: {
                             type: "datetime",
@@ -579,6 +634,12 @@ function HistoricalData() {
                         height={350}
                       />
                       <p className="label-y">mm</p>
+                      <div className="text-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',marginTop:"-35px" }}>
+                        <span className="apexcharts-legend-text" rel="1" i="0" data-default-text={t("data.rain")} data-collapsed="false" style={{ color: 'rgb(55, 61, 63)', fontSize: '12px', fontWeight: 400, fontFamily: 'Helvetica, Arial, sans-serif', display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'inline-block', width: '13px', height: '13px', borderRadius: '50%', backgroundColor: '#008ffb', marginRight: '5px' }}></span>
+                          {t("data.evap")}
+                        </span>
+                      </div>
                     </>
                   )}
                 </Col>

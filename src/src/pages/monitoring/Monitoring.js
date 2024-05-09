@@ -121,45 +121,45 @@ function Visualization() {
     }
   }, [waterpoints.length]);
 
-monitored.forEach(val => {
-  const scaledDepth = val.values.find(val => val.type === "scaled_depth").value;
-  const climatologyScaledDepth = val.values.find(val => val.type === "climatology_scaled_depth").value;
-  let color;
-  if (scaledDepth === 0) {
-    color = "gray";
-  } else if (scaledDepth > climatologyScaledDepth) {
-    color = "green";
-  } else if (climatologyScaledDepth === 0) {
-    color = "gray";
-  } else {
-    const ratio = scaledDepth / climatologyScaledDepth;
-    if (ratio > 0.5) {
-      color = "yellow";
-    } else if (ratio > 0.03) {
-      color = "brown";
+  monitored.forEach(val => {
+    const scaledDepth = val.values.find(val => val.type === "scaled_depth").value;
+    const climatologyScaledDepth = val.values.find(val => val.type === "climatology_scaled_depth").value;
+    let color;
+    if (scaledDepth === 0) {
+      color = "gray";
+    } else if (scaledDepth > climatologyScaledDepth) {
+      color = "green";
+    } else if (climatologyScaledDepth === 0) {
+      color = "gray";
     } else {
-      color = "red";
+      const ratio = scaledDepth / climatologyScaledDepth;
+      if (ratio > 0.5) {
+        color = "yellow";
+      } else if (ratio > 0.03) {
+        color = "brown";
+      } else {
+        color = "red";
+      }
     }
-  }
-  const waterpointId = val.waterpointId;
-  const first = waterpoints.find(item => item.id === waterpointId);
-  if (first) {
-    first.color = color;
-  }
-});
-waterpoints.forEach(waterpoint => {
-  waterpoint.show = true;
-});
-
-
-useEffect(() => {
-  waterpoints.forEach(waterpoint => {
-    if (filter[waterpoint.color] === false) {
-      waterpoint.show = false;
+    const waterpointId = val.waterpointId;
+    const first = waterpoints.find(item => item.id === waterpointId);
+    if (first) {
+      first.color = color;
     }
   });
-  SetWpstolabel(waterpoints.filter(wp => wp.show));
-}, [filter, waterpoints]);
+  waterpoints.forEach(waterpoint => {
+    waterpoint.show = true;
+  });
+
+
+  useEffect(() => {
+    waterpoints.forEach(waterpoint => {
+      if (filter[waterpoint.color] === false) {
+        waterpoint.show = false;
+      }
+    });
+    SetWpstolabel(waterpoints.filter(wp => wp.show));
+  }, [filter, waterpoints]);
 
 
   const popupData = (wp) => {
@@ -340,23 +340,7 @@ useEffect(() => {
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td className="d-flex align-items-center ">
-                    {" "}
-                    <OverlayTrigger
-                      placement="left"
-                      overlay={
-                        <Tooltip id={`tooltip-left`}>
-                          {t("monitoring.depth-info")}
-                        </Tooltip>
-                      }
-                    >
-                      <IconInfoCircleFilled />
-                    </OverlayTrigger>
-                    {t("monitoring.depth")} (m) :
-                  </td>
-                  <td>{depthValue.value.toFixed(2)}</td>
-                </tr>
+
                 <tr>
                   <td className="d-flex align-items-center ">
                     <OverlayTrigger
@@ -424,26 +408,21 @@ useEffect(() => {
 
               <Link
                 type="button"
-                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between"
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between "
                 to={`/forecast/${wp.id}`}
               >
                 <IconCloudRain style={{ position: "inherit" }} className="me-2" />
                 {t("monitoring.forecast")}
               </Link>
-
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
-              >
-                <div className="mx-2">
-                  <SubscriptionButton
-                    idWater={wp.id}
-                    idUser={userInfo?.sub}
-                    setShowToastSubscribe={setShowToastSubscribe}
-                    setToastSuccess={setToastSuccess}
-                  />
-                </div>
-              </OverlayTrigger>
+              <div className="mx-2">
+              <SubscriptionButton
+                  idWater={wp.id}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
+              </div>
             </div>
           </Popup>
         </Marker>

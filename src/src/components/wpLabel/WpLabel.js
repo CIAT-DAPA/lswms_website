@@ -22,8 +22,8 @@ function WpLabel({ waterpoints }) {
     <>
   {zoom > 1 && waterpoints && waterpoints.length > 0 &&
     waterpoints.map((wp, i) => (
-      <Marker key={i} position={[wp.lat, wp.lon]} icon={invisibleIcon}>
-        <Tooltip permanent>{wp.name}</Tooltip>
+      <Marker key={i} position={[wp.lat, wp.lon]}  icon={invisibleIcon}>
+        <Tooltip direction="top"  permanent>{wp.name}</Tooltip>
       </Marker>
     ))
   }

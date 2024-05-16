@@ -31,6 +31,8 @@
     "feature4-description": "ወደ ኩሬዎች መዳረሻ መንገድዎን ያግኙ! የrouting module ከሌለ፣ ወደ ውሃ ኩሬ መድረስ ቀላል ሆኖ አያውቅም።"
   },
   "monitoring": {
+    "forecast": "",
+    "condition": "መፍቻ",
     "legend": "መፍቻ",
     "good": "ጥሩ",
     "watch": "ተጠንቀቅ",
@@ -168,7 +170,8 @@
   },
   "forage": {
 	"show-woredas": "",
-    "show": ""
+    "show": "",
+    "loading": ""
   },
   "privacy": {
     "title": "",

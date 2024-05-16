@@ -31,6 +31,8 @@
     "feature4-description": "karaa bishaan itti argattan barbaadaa; akeektuu/ mojuula agarsiistuu karaa malee haroowwan argachuun salphaa miti"
   },
   "monitoring": {
+    "forecast": "",
+    "condition":"Furtuu",
     "legend": "Furtuu",
     "good": "Gaarii",
     "watch": "Wayyaadha",
@@ -168,7 +170,8 @@
   },
   "forage": {
 	"show-woredas": "",  
-    "show": ""
+    "show": "",
+    "loading": ""
   },
   "privacy": {
     "title": "",
@@ -209,8 +212,8 @@
     "alert": "Dammaqsituu",
     "near-dry": "Googuuf jedha",
     "seasonal-dry": "Waqtii gogaa",
-    "messages-d":"Advisory for each condition of the water point",
-    "message":"Advisory Message",
+    "messages-d":"",
+    "message":"",
     "good-message":"",
     "watch-message":"",
     "alert-message":"",

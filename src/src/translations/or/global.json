@@ -4,16 +4,16 @@
     "monitoring": "Hordoffii",
     "forage": "Nyaata horii",
     "about-us": "Waa'ee keenya",
-    "log-in": "",
-    "log-out": ""
+    "log-in": "Seeni",
+    "log-out": "Bahi"
   },
   "footer": {
     "partners": "waahillan",
     "rights": "Alliance of Bioversity International and CIAT mirgi eegameera",
     "email": "Imeelii",
-    "sections": "",
-    "home": "",
-    "privacy": ""
+    "sections": "Qooddii",
+    "home": "Fuula Jalqabaa",
+    "privacy": "Iccitii Dhuunfaa"
   },
   "home": {
     "title": "Murtoo odeeffannoo irratti hundaa'e taasisuu",
@@ -31,6 +31,8 @@
     "feature4-description": "karaa bishaan itti argattan barbaadaa; akeektuu/ mojuula agarsiistuu karaa malee haroowwan argachuun salphaa miti"
   },
   "monitoring": {
+    "forecast": "Raaga",
+    "condition":"Furtuu",
     "legend": "Furtuu",
     "good": "Gaarii",
     "watch": "Wayyaadha",
@@ -70,7 +72,7 @@
     "warning-default": "Oops! Dogoggorri hin beekamne uumame.",
     "warning-browser": "Geolocation browser kana keessatti hin argamu. Maaloo bakka jalqabaa bakka adda ta’e irraa filachuu yaadaa.",
     "modal-search": "Eessaa jalqabuu barbaadda?",
-    "subscription-info": ""
+    "subscription-info": "Miseensummaaf galmaa'ii amma. Ragaa haala bishaani argachuuf fi akkaataa odeefannoon itti si dhaqqabuu danda'uu filadhu. Odeeffannoo ariifataa haal qabiyyee bishaanii 'Email' n yeroo gabaabaa keessatti argachuu fi jijjirama haala qabiyyee bishaani torbanitti argachuu keessaa filadhu."
   },
   "route": {
     "title": "Odeeffannoo daandii",
@@ -91,11 +93,11 @@
     "notFound-d": "Agarsiisa qabxiiwwan bishaanii irraa piroofaayilii argachuuf yaali",
     "toast-title": "Akeekkachiisa",
     "toast-body": "Profaayilli haroo afaan filatameen hin argamu",
-    "share": "",
-    "data-popup": "",
-    "forecast-popup": "",
-    "subscribe-popup": "",
-    "loading-wateshed": ""
+    "share": "Nama Dhibiif Ergi",
+    "data-popup": "Gara Odeeffanno Deemii",
+    "forecast-popup": "Gara Odeeffanno Deemii",
+    "subscribe-popup": "Miseensa Ta'i",
+    "loading-wateshed": "Lafa Dhangala'a Bishaanii fi Galaanaa/Lola'aa"
   },
   "data": {
     "filter":"Magalu fiilitti dabalataa irraa guddifachuuf",
@@ -104,10 +106,10 @@
     "year": "Bara",
     "depth": "Gad-fageenya",
     "depth-description": "Giraafin kun gadi fageenya qabxii bishaanii fi haala qilleensaa agarsiisu",
-    "depth-year": "",
+    "depth-year": "Bara",
     "scaled": "Gad-fageenya safarame",
     "scaled-description": "Giraafin kun gadi fageenya qabxii bishaanii fi haala qilleensaa walgitu agarsiisu",
-    "rain": "",
+    "rain": "Tilmaama Jiidha Lafaa Moodeelaan",
     "rain-description": "Giraafin kun qabxii bishaanii roobaafi haala qilleensaa agarsiisu",
     "evap": "Hurka",
     "evap-description": "Giraafin kun danfaa bishaanii fi haala qilleensaa agarsiisu",
@@ -118,8 +120,8 @@
     "forecast-sub-1a": "Torban tokkoof",
     "forecast-sub-1b": "Ji'a tokkoof",
     "forecast-seasonal-1": "Waggaa tokkoof",
-    "forecast-2": "",
-    "forecast-3": "",
+    "forecast-2": "Hara Keessa",
+    "forecast-3": "Raagni haala qilleensaa irraa caalan jiidhi lafaa kan bokkaa/rooba agarsiisa.",
     "lower": "Kan idilee irraa gadi",
     "lower-label": "dhiigan",
     "normal": "Idilee",
@@ -132,11 +134,11 @@
     "climate": "Raaga haala qilleensaa",
     "climatology": "Qilleensa baramaa",
     "loading": "ውንግል መረጃ አገናኝ",
-    "min-year": "",
-    "max-year": "",
-    "between": "",
-    "source": "",
-    "download": ""
+    "min-year": "Bara Bishaan diqqaate",
+    "max-year": "Bara Bishaan Baayyate",
+    "between": "Giddugalleessa",
+    "source": "Madda/Argama",
+    "download": "Odeeffannoo Filatte Buusuf"
   },
   "notFound": {
     "title": "Oops! Naannoo hin beekamne keessa waan deemte fakkaata.",
@@ -161,29 +163,30 @@
     "core-values-6": "Social responsibility and public services"
   },
   "subscriptionButton": {
-    "weekly": "",
-    "alert": "",
-    "subscribe": "",
-    "unsubscribe": ""
+    "weekly": "Torbanitti",
+    "alert": "Yaadachiisa",
+    "subscribe": "Miseensummaaf Galmaa'uu.",
+    "unsubscribe": "Miseensummaa keessaa bahuu."
   },
   "forage": {
 	"show-woredas": "",  
-    "show": ""
+    "show": "",
+    "loading": "Odeeffannoo Marraa Argachuuf"
   },
   "privacy": {
-    "title": "",
-    "description-1": "",
-    "description-2": "",
-    "description-2-1": "",
-    "description-2-2": "",
-    "description-3": "",
-    "description-3-1": "",
-    "description-3-2": "",
-    "description-3-3": "",
-    "description-3-4": "",
-    "description-3-5": "",
-    "description-3-6": "",
-    "description-3-7": ""
+    "title": "Icciti Dhuunfaa",
+    "description-1": "Nuti bakka bu'oota garee qorannoo sagantaa jijjirama qilleensa dhaabbilee 'Alliance Bioversity International and CIAT'  fi 'Ethiopian Agricultural Research Institute' ti. Gareen tuni ummata dhaattuu haroo tanaa jiraatan irratti qorannoo geggeessaa jirti. Kaayon pirojektichaa Itiyoophiyaa keessatti rakkoolee ummata dhaattuu haroo tanaa jiraatan qunnamaa jiruuf fala ammayyaawaa dhiyeessuu ta'a. Qorannoon tuni fala ammayyaawaa kan akka dhaamsa barruu gabaabaa 'SMS', 'E-mail' dhiheessuf ummata kana irraa waa'ee haroo tanaa ragaa sassaabuu barbaaddi.",
+    "description-2": "Ati, akka jiraataa ykn jiraattuu lafa tanaatti, kaayoo qorannoo tana keessatti akka hirmaattu dhimmoota armaan gadiitif filatamtee jirta.",
+    "description-2-1": "Ragaa 'dimograafii' keessanii sassaabuu",
+    "description-2-2": "Ragaa dhuunfaa waa'ee keessanii sassaabuu",
+    "description-3": "Sababni odeeffannoon kuni sassaabamuuf ragaa kana kuufama ragaa keessaa galchuudhaan yeroo barbaachisaa ta'etti haala qilleensaa akkaataa itti fufiinsa qabuun isiniff erguufi. Kana akkanatti beeksisuun dansaadha.",
+    "description-3-1": "Odeeffannoon sassaabamu cuftinuu iccitiidhaan kan eegamu tahee kan xiinxilamuu qorattoota dhaabbata 'Alliance Bioversity International and CIAT' fi dhaabbata  'Ethiopian Agricultural Research Institute' qofaan taha. Barbaachisummaa iccitii eeguu irraa kan ka'e, qorannoo tana keessatti ado eenyummaa kankee ofi hin saaxille hirmaachuun sodaa waliif qoodinsa muuxannoo fi dinqisifannaa sagantaa madaalamuuf tahu kan hanbisu ta'a.  Iccitii eeguun dabalataan kani mirkaneessu  hirmaannaa waliif qoodinsa hubannoo fi muuxannoo sirna hordoffii bishaan beeladaa irraa argachuu malee balaa kamiyyuuf si hin saaxilu.",
+    "description-3-2": "Qorannoon tuni iccitii eenyummaa keetii xiyyeffannaa cimaan kan eeydu yommuu tahu ragaan argamu cuftinuu iccitiidhaan kan kuufamu ta'a. Qorattoota dhaabbatichaa qofatu mirga ilaaluu ragaa kanaa qabaata. Haala kamiinu eenyummaa namaa in saaxilamu. Qorannoo tanaan wal-qabatee akkaataa ragaan isinirraa funaaname itti eegame/qabame irratti gaafii yooni qabaattan hooganaa pirojeekti kan ta'an Aabba Sintayehu Alemayehu              'e-msil' isaani  s.alemayehu@cgiar.org  irratti gaafachuu dandeessu.",
+    "description-3-3": "Odeeffannoon ati kennitu cuftinuu dhimma qorannoo kanaa qofaaf kan itti fayyadamnu ta'a.",
+    "description-3-4": "Yeroo barbaachisaa ta'etti adeemsa odeeffannoo sassaabuu kana keessaa ofi baasuu ykn  odeeffannoo kennuu irraa ofi-qabuu ni dandeessu.",
+    "description-3-5": "Waan ciccimoo gabaafamuu qaban kani hirmaattonni adeemsa qorannoo tana keessatti jedhan gabaasa argama qorannoo tanaa keessattii fi ykn maxxansa qorannoo tanaa keessatti kan fayyadamnu yommuu ta'u waliigaltee jalqaba irratti nama odeeffannoo gaafatamu waliin taasifamu irratti kan hundaa'u ta'a.",
+    "description-3-6": "Yeroo gaafii fi deebisaan geggeeffamu maqaa, bilbila, 'e-mail' fi fulaa jireenya keetii kan sassaabamu taha. Sababni kuni taheefis - gaafii fi deebiin kan taasifamu lafa fagoo irraa waan taheef.",
+    "description-3-7": "Waliigaltee tana mallatteessinaan ykn fudhannaan kaayon qorannoo tana akka sitti himamee hubattee fi waan armaan olitti tuqame hunda irratti waliigaluu kankee mirkaneessaa qorannoo tana keessatti hirmaachuuf fedhii qabaachuu kankee mirkaneessa."
   },
   "user-profile": {
     "edit": "",
@@ -198,24 +201,24 @@
     "edit-2": ""
   },
   "advisories":{
-    "title":"qabsoo",
-    "status":"",
-    "status-d":"",
-    "description-1": "",
-    "description-2": "",
-    "description-3": "",
+    "title":"Gorsoota",
+    "status":"Haala qabiyyee bishaanii kan ammaa",
+    "status-d":"Sadarkaalen qabiyyee bishaanii kan ammaa akka armaan gadi kana:",
+    "description-1": "Gorsootni odeeffannoo dhaamsan qophaa'ee ta'ee fayyadamtootaaf  tajaajila 'SMS' tiin kan ergamu. Kaayoon gorsootaa inni guddaan haala jijjirama qabiyyee bishaanii fayyadamtoota bishaanitiff odeeffannoo dabarsuudha. Odeeffannoo bal'aa ta'e kan fulaa/madda bishaanii cufa hammate dhiyeessuudhaan, gorsootni haala qilleensaa fayyadamtootni murtii odeeffannoo irratti hundaa'e yeroo sirritti akka murteessan isaan dandeessisa. Akeekkachiisa ofi-eeggannoo irraa jalqabee hanga agarsiistuu hanqina/fooqqacha bishaani kan waqtii, gorsootni kuni haala qabiyyee bishaanii fulaa sanii hubannoo ifa ta'e fayyadamtootaaf kennuudhaan haala qabatamaaf ofi qopheessuudhaan deebii/fala sirrii ta'e akka fudhatan kan isaan jajjabeessu ta'a. ",
+    "description-2": "Gorsoota 'SMS' tin dabarsuu hojii irra oolchuun finna bishaani keessatti iftoominaa fi wal-qunnamtii dansaa uumuudhaaf  tarkaanfi guddaa fuuldura deemmaa agarsiisa. Akeekkachiisa kana kallattiidhaan moobaayili irratti argachuudhaan, fayyadamtooti   haala jijjirama qabiyyee bishaanii fulaa kamiiyyuu taa'anii odeeffannoo argachuu danda'an.  Qunnamtiin kallattii fi ariifatan kuni hubannoo qabeenya bishaaniikan cimsuu ta'ee fayyadamtoonni qusannaa fi itti gaafatamummaan akka fayyadaman  kan jajjabeessu ta'a.",
+    "description-3": "Xumura irratti, gorsoota dabarsuu jalqabuun hubannoo fayyadamtoota cimsuudhaan cinaatti dandeettii murtii kenniinsa fayyadamtootaa tan hubannoo irratti hundaa'ee fi kan tarsimaawaa ta'e waa'ee finna bishaanii keessatti akka murteessan isan jajjabeessa.  Haala qabiyyee bishaanii haroo cufaati fi ergaa qabiyyeen bishaanii agarsiiftu hubachuudhaan, fayyadamtoonni  murtee fooyya'aa hooggansaa fi qusannaa bishaanitiif isaan gargaaru dursanii murteesudhaan qabeenya murteessaa kanaan fayyadamuu danda'an. Gabaabinatti, gorsi waa'ee madda/fulaa bishaanii meeshaa barbaachisa finna bishaanii kan bakka bu'u yommu ta'u finna itti fufiinsa fi qabeenya xiqqaadhaan fidamuu fi mirkaneessummaa itti fayyadama walqixxummaa fi wal-dhabiinsa iraa bilisa ta'e dhaloota dhufuuf uumuu kan jajjabeessu ta'a. ",
     "good": "Gaarii",
     "watch": "Wayyaadha",
     "alert": "Dammaqsituu",
     "near-dry": "Googuuf jedha",
     "seasonal-dry": "Waqtii gogaa",
-    "messages-d":"Advisory for each condition of the water point",
-    "message":"Advisory Message",
-    "good-message":"",
-    "watch-message":"",
-    "alert-message":"",
-    "near-dry-message":"",  
-    "seasonal-dry-message":"",
+    "messages-d":"Dhaamsa gorsaa",
+    "message":"Dhaamsa gorsaa",
+    "good-message":"Haroon haala dansaa irra jirti. Finna itti fayyadama bishaanii kan dhimma dhibii irratti xiyyeeffadhu.",
+    "watch-message":"Haroon haala xiyyeeffannaa barbaadu irra jirti. Itti fayyadama bishaan haroo tanaa dhimma dhibiif fayyadamuu diqqeessi, ajaja Abbaa Herregaa hordofi/kabaji.",
+    "alert-message":"Haroon haala akeekkachiisa bishaan gadi bu'uu irra jirti. Itti fayyadama bishaan haroo tanaa dhugaatii namaati fi dhugaatii horii dadhabaa qofaaf oolch.",
+    "near-dry-message":"Haroon fooqqachuuf dhiyaattee jirti kanaafuu bishaan haroo tanaa dhugaatii namaa qofaaf itti fayyadami.",  
+    "seasonal-dry-message":"Haroon fooqqattee jirti. Kanaafuu haroo dhibii dhaattuu jirtuu tan bishaan qabdu odeeffanno/daa'imtuu argachuuf '' Ponds  jedhii 'SMS'n ergi.",
     "condition":"Furtuu"
   }
 }

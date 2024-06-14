@@ -5,7 +5,6 @@ import noDataImg from "../../assets/img/noSubscription.png";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
-
 import {
   Col,
   Container,
@@ -17,7 +16,7 @@ import {
   Popover,
   Tooltip,
   ToastContainer,
-  Toast
+  Toast,
 } from "react-bootstrap";
 import {
   IconDownload,
@@ -27,12 +26,12 @@ import {
   IconBrandX,
   IconInfoCircleFilled,
   IconInfoCircle,
-  IconCloudRain
+  IconCloudRain,
 } from "@tabler/icons-react";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
-import "./Forecast.css"
+import "./Forecast.css";
 
 function Forecast() {
   const { userInfo } = useAuth();
@@ -91,8 +90,8 @@ function Forecast() {
   }, [wpData]);
 
   useEffect(() => {
-    window.addEventListener('popstate', (event) => {
-      window.location.reload()
+    window.addEventListener("popstate", (event) => {
+      window.location.reload();
     });
   }, []);
 
@@ -217,11 +216,6 @@ function Forecast() {
               </Toast>
             </ToastContainer>
             <Container className="">
-
-
-
-
-
               <Row className="pt-5 border-bottom border-2">
                 <Container className="d-flex justify-content-between align-items-center">
                   <div>
@@ -229,28 +223,31 @@ function Forecast() {
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
                   <div className="d-flex">
-
-
                     <OverlayTrigger
                       placement="bottom"
-                      overlay={<Tooltip id="dashboard-tooltip">{t("profile.data-popup")}</Tooltip>}
+                      overlay={
+                        <Tooltip id="dashboard-tooltip">
+                          {t("profile.data-popup")}
+                        </Tooltip>
+                      }
                     >
                       <a
                         href={`/dashboard/${wp.id}`}
                         className="btn btn-primary me-2 rounded-4"
                         role="button"
-                        onClick={()=>window.location.reload()} 
+                        onClick={() => window.location.reload()}
                       >
                         <IconChartDonut />
                       </a>
                     </OverlayTrigger>
 
-
-
-
                     <OverlayTrigger
                       placement="bottom"
-                      overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+                      overlay={
+                        <Tooltip id="subscription-tooltip">
+                          {t("profile.subscribe-popup")}
+                        </Tooltip>
+                      }
                     >
                       <div>
                         <SubscriptionButton
@@ -264,7 +261,11 @@ function Forecast() {
 
                     <OverlayTrigger
                       placement="bottom"
-                      overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+                      overlay={
+                        <Tooltip id="share-tooltip">
+                          {t("profile.share")}
+                        </Tooltip>
+                      }
                     >
                       <div>
                         <OverlayTrigger
@@ -283,11 +284,18 @@ function Forecast() {
                 </Container>
               </Row>
 
-
               <Row className="mt-3">
                 <h5 className="mb-0">{t("data.subseasonal")}</h5>
                 <p className="fw-light ">
-                  {t("data.source")}: <a className="edacap-link" href="https://edacap.ethioagroclimate.net/#/Home" target="_blank" rel="noopener noreferrer">AClimate Ethiopia </a>
+                  {t("data.source")}:{" "}
+                  <a
+                    className="edacap-link"
+                    href="https://edacap.ethioagroclimate.net/#/Home"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    AClimate Ethiopia{" "}
+                  </a>
                 </p>
                 <p>{t("data.subseasonal-d")}</p>
                 {subseasonal && subseasonal.length > 0 ? (
@@ -307,11 +315,7 @@ function Forecast() {
                     <h6 className=" mb-1 ">
                       At the moment there is no data available
                     </h6>
-                    <img
-                      src={noDataImg}
-                      alt="no data available"
-                      height={200}
-                    />
+                    <img src={noDataImg} alt="no data available" height={200} />
                   </div>
                 )}
               </Row>
@@ -340,18 +344,13 @@ function Forecast() {
                     <h6 className=" mb-1 ">
                       At the moment there is no data available
                     </h6>
-                    <img
-                      src={noDataImg}
-                      alt="no data available"
-                      height={200}
-                    />
+                    <img src={noDataImg} alt="no data available" height={200} />
                   </div>
                 )}
               </Row>
             </Container>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center">
-
                 <a
                   href={`/dashboard/${wp.id}`}
                   className="btn btn-primary me-3 rounded-4"

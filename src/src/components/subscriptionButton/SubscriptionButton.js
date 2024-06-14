@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { IconMailOff, IconMailPlus } from "@tabler/icons-react";
-import { Button, Dropdown, Form, Modal } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
 import Services from "../../services/apiService";
 import { useAuth } from "../../hooks/useAuth";
 import { useTranslation } from "react-i18next";
+import "./SubscriptionButton.css";
 
 function SubscriptionButton({
   idWater,
@@ -12,6 +13,7 @@ function SubscriptionButton({
   setShowToastSubscribe,
   setToastSuccess,
   size,
+  isMonitoringBtn,
 }) {
   const [t] = useTranslation("global");
   const [subscription, setSubscription] = useState();
@@ -85,10 +87,15 @@ function SubscriptionButton({
       <Dropdown>
         <Dropdown.Toggle
           size={size ? size : ""}
-          className={`me-2 btn ${size ? "rounded-3" : "rounded-4"}`}
+          className={`me-2 btn ${size ? "rounded-3" : "rounded-4"} ${
+            isMonitoringBtn ? "btn-monitoring" : ""
+          }`}
           id="dropdown-basic"
         >
-          <IconMailPlus size={20} className={label ? "me-2" : ""} />{" "}
+          <IconMailPlus
+            size={isMonitoringBtn ? 24 : 20}
+            className={label ? "me-2" : ""}
+          />{" "}
           {label ? t("subscriptionButton.subscribe") : ""}
         </Dropdown.Toggle>
 

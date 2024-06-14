@@ -25,7 +25,7 @@ import {
   MapContainer,
   TileLayer,
   WMSTileLayer,
-  Marker
+  Marker,
 } from "react-leaflet";
 import html2canvas from "html2canvas";
 import JsPDF from "jspdf";
@@ -47,13 +47,12 @@ import {
   IconBrandX,
   IconInfoCircleFilled,
   IconInfoCircle,
-  IconCloudRain
+  IconCloudRain,
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
 function Waterprofile() {
-
   const greenIcon = new L.Icon({
     iconUrl: require(`../../assets/img/greenMarker.png`),
     iconSize: [32, 32],
@@ -219,7 +218,6 @@ function Waterprofile() {
     <>
       {idWater ? (
         loading ? (
-
           <Modal
             show={loading}
             backdrop="static"
@@ -234,7 +232,6 @@ function Waterprofile() {
           </Modal>
         ) : (
           <>
-
             <ToastContainer
               className="p-3 position-fixed "
               position="bottom-end"
@@ -291,10 +288,13 @@ function Waterprofile() {
                   className="position-absolute z-3 d-flex "
                   style={{ top: "43%", right: "3vw" }}
                 >
-
                   <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip id="download-tooltip">{t("profile.download")}</Tooltip>}
+                    overlay={
+                      <Tooltip id="download-tooltip">
+                        {t("profile.download")}
+                      </Tooltip>
+                    }
                   >
                     <Button
                       className="rounded-4 me-2"
@@ -306,7 +306,11 @@ function Waterprofile() {
 
                   <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip id="dashboard-tooltip">{t("profile.data-popup")}</Tooltip>}
+                    overlay={
+                      <Tooltip id="dashboard-tooltip">
+                        {t("profile.data-popup")}
+                      </Tooltip>
+                    }
                   >
                     <a
                       href={`/dashboard/${wp.id}`}
@@ -314,12 +318,15 @@ function Waterprofile() {
                     >
                       <IconChartDonut />
                     </a>
-
                   </OverlayTrigger>
 
                   <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip id="forecast-tooltip">{t("profile.forecast-popup")}</Tooltip>}
+                    overlay={
+                      <Tooltip id="forecast-tooltip">
+                        {t("profile.forecast-popup")}
+                      </Tooltip>
+                    }
                   >
                     <Link
                       type="button"
@@ -332,7 +339,11 @@ function Waterprofile() {
 
                   <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip id="subscription-tooltip">{t("profile.subscribe-popup")}</Tooltip>}
+                    overlay={
+                      <Tooltip id="subscription-tooltip">
+                        {t("profile.subscribe-popup")}
+                      </Tooltip>
+                    }
                   >
                     <div>
                       <SubscriptionButton
@@ -344,10 +355,11 @@ function Waterprofile() {
                     </div>
                   </OverlayTrigger>
 
-
                   <OverlayTrigger
                     placement="top"
-                    overlay={<Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>}
+                    overlay={
+                      <Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>
+                    }
                   >
                     <div>
                       <OverlayTrigger
@@ -362,7 +374,6 @@ function Waterprofile() {
                       </OverlayTrigger>
                     </div>
                   </OverlayTrigger>
-
                 </div>
                 <Carousel
                   fade
@@ -411,7 +422,11 @@ function Waterprofile() {
                   zIndex={1000}
                 >
                   <Modal.Body className="d-flex align-items-center">
-                    <Spinner animation="border" role="status" className="me-2" />
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      className="me-2"
+                    />
                     {t("profile.loading-wateshed")}
                   </Modal.Body>
                 </Modal>
@@ -426,21 +441,24 @@ function Waterprofile() {
                         width: "100%",
                       }}
                     >
-
                       <Marker
                         position={[wp.lat, wp.lon]}
                         icon={
-                          wp.latest_monitored_scaled_depth > wp.climatology_scaled_depth
+                          wp.latest_monitored_scaled_depth >
+                          wp.climatology_scaled_depth
                             ? greenIcon
-                            : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth > 0.5
-                              ? yellowIcon
-                              : wp.latest_monitored_scaled_depth / wp.climatology_scaled_depth >
-                                0.03
-                                ? brownIcon
-                                : wp.latest_monitored_scaled_depth === 0 &&
-                                  wp.climatology_scaled_depth === 0
-                                  ? grayIcon
-                                  : redIcon
+                            : wp.latest_monitored_scaled_depth /
+                                wp.climatology_scaled_depth >
+                              0.5
+                            ? yellowIcon
+                            : wp.latest_monitored_scaled_depth /
+                                wp.climatology_scaled_depth >
+                              0.03
+                            ? brownIcon
+                            : wp.latest_monitored_scaled_depth === 0 &&
+                              wp.climatology_scaled_depth === 0
+                            ? grayIcon
+                            : redIcon
                         }
                         key={wp.id}
                       ></Marker>
@@ -462,12 +480,10 @@ function Waterprofile() {
                                 setLoaded(false);
                               },
                             }}
-
                           />
                         </LayersControl.Overlay>
                       </LayersControl>
                       <Simplelegend />
-
                     </MapContainer>
                     <h4 className="mt-4 mb-3">{t("profile.watershed")}</h4>
 
@@ -633,7 +649,7 @@ function Waterprofile() {
               </Container>
             </div>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center mb-2 mt-4">
                 <Button
                   className="me-3 rounded-4 mb-2 mb-sm-0"
                   onClick={downloadProfileAsPdf}
@@ -648,7 +664,6 @@ function Waterprofile() {
                   <IconChartDonut className="me-3" />
                   {t("monitoring.data")}
                 </a>
-
 
                 <Link
                   type="button"
@@ -687,9 +702,7 @@ function Waterprofile() {
                   <IconInfoCircleFilled />
                 </OverlayTrigger>
               </div>
-
             </Container>
-
           </>
         )
       ) : (

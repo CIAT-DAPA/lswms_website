@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
   Button,
@@ -24,18 +24,14 @@ import { useAuth } from "../../hooks/useAuth";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
 import {
-  IconChartDonut,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
-  IconInfoCircle,
   IconCloudRain,
   IconDownload,
 } from "@tabler/icons-react";
 function HistoricalData() {
-  const location = useLocation();
-  const [previousPath, setPreviousPath] = useState(null);
   const { userInfo } = useAuth();
   const [show, setShow] = useState(false);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
@@ -277,8 +273,7 @@ function HistoricalData() {
   }
 
   const rainTendaysSum = groupAndSum(rain, 10);
-  console.log(rain);
-  console.log(rainTendaysSum);
+
   return (
     <div>
       {idWp ? (
@@ -341,8 +336,8 @@ function HistoricalData() {
               >
                 <Toast.Body>
                   {!toastSuccess
-                    ? `Woohoo, you've unsubscribe from the waterpoint!`
-                    : `Success! You're now subscribed to the waterpoint.`}
+                    ? t("subscriptionToast.unsubscribed")
+                    : t("subscriptionToast.subscribed")}
                 </Toast.Body>
               </Toast>
             </ToastContainer>

@@ -165,8 +165,8 @@ function Userprofile() {
         >
           <Toast.Body>
             {!toastEdit
-              ? `Woohoo, you've unsubscribe from the waterpoint!`
-              : `Success! You've edited your subscription.`}
+              ? t("subscriptionToast.unsubscribed")
+              : t("subscriptionToast.subscribed")}
           </Toast.Body>
         </Toast>
       </ToastContainer>
@@ -367,12 +367,14 @@ function Userprofile() {
               ) : (
                 <>
                   <h3 className="text-center mb-1 ">
-                    At the moment you dont have subscriptions
+                    {t("user-profile.no-subscription")}
                   </h3>
                   <p className="text-center">
-                    try going to the{" "}
-                    <Link to="/monitoring">waterpoint display</Link> and
-                    subscribing to a waterpoint
+                    {t("user-profile.no-subscription-sub-1")}{" "}
+                    <Link to="/monitoring">
+                      {t("user-profile.no-subscription-sub-2")}
+                    </Link>{" "}
+                    {t("user-profile.no-subscription-sub-3")}
                   </p>
                   <img
                     src={noSubscriptionImg}

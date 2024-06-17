@@ -1,6 +1,6 @@
 {
   "menu": {
-    "advisories":"መረጃዎች",
+    "advisories": "መረጃዎች",
     "monitoring": "ክትትል",
     "forage": "መኖ",
     "about-us": "ስለ እኛ",
@@ -100,10 +100,12 @@
     "loading-wateshed": "የተፋሰስ መረጃ"
   },
   "data": {
-    "filter":"ዓመታት በግል አሳይ",
+    "filter": "ዓመታት በግል አሳይ",
     "monitored": "ክትትል የተደረገበት ዳታ",
     "monitored-d": "የ የኩሬ ጥልቀት, ጥልቀት ስፋት, የውሃ እና የመጓጓዣ የሚሸፍን የተለያዩ ሰንጠረዦች ይቃኙ. እነዚህን ግራፎች በመረጥከው ዓመት መሠረት በማጣራት ተሞክሮህን ማስተካከል ትችላለህ። የመስክ ጥልቀት, ጥልቀት ስፋት, የውሃ እና evapo፟transpiration የሚሸፍን የተለያዩ ሰንጠረዦች ይቃኙ. እነዚህን ግራፎች በመረጥከው ዓመት መሠረት በማጣራት ተሞክሮህን ማስተካከል ትችላለህ።",
     "year": "አመት",
+    "depth_daily_average": "",
+    "scaled_depth_daily_average": "",
     "depth": "ጥልቀት",
     "depth-description": "እነዚህ ግራፎች የውሃ ነጥብ ጥልቀትና ወቅታዊ የአየር ሁኔታን መረጃ ያሳያል",
     "depth-year": "በዓመቱ ውስጥ",
@@ -133,18 +135,20 @@
     "notFound-d": "መረጃዉን ከውሃ ነጥቦች ማሳያ ገፅ ለማግኘት ይሞክሩ።",
     "climate": "የአየር ንብረት ትንበያ",
     "climatology": "የአየር ንብረት",
-    "loading": "Dataa miiidhaa qorannoo afaanii ittisuuf dhihoo",
+    "climatology-monthly": "",
+    "loading": "ውንግል መረጃ አገናኝ",
     "min-year": "ዝቅተኛ-ዓመት",
     "max-year": "ከፍተኛ-ዓመት",
     "between": "መካከል",
     "source": "ምንጭ",
-    "download": "የተመረጠውን ውሂብ አውርድ"
+    "download": "የተመረጠውን ውሂብ አውርድ",
+    "no-forecast": ""
   },
   "notFound": {
     "title": "ውይ! ያልታወቀ ክልል ውስጥ የገባህ ይመስላል።",
     "description": "የሚፈልጉት ገጽ በእኛ ዲጂታል ካርታ ላይ ሊገኝ አልቻለም።"
   },
-  "aboutUs":{
+  "aboutUs": {
     "title": "About Us",
     "description-1": "Ethiopian Institute of Agricultural Research is one of the oldest and largest agricultural research institutes in Africa. EIAR was established in 1966 by Proclamation. It was then called Institute of Agricultural Research (IAR). In 1997 was renamed as Ethiopian Agricultural Research Organization (EARO). At the moment the institute is named as Ethiopian Institute Agricultural Research (EIAR). EIAR has 23 research centers located in various agro-ecologies of the country . These research centers are endowed with research setups that make them conducive and preferable for research endeavors. The headquarter of EIAR is located in the capital Addis Ababa. ",
     "description-2": "EIAR made tremendous efforts to build the national capacity of doing agricultural research, produce, and introduce improved technologies focusing on fostering agricultural growth and development in the country. As a result, over the last four decades, the release of improved technologies in crop, livestock, soils and water, forestry and agricultural mechanization have increased dramatically. To date, the contribution of improved agricultural technologies generated and introduced by EIAR has become fundamental in the national economy.",
@@ -168,10 +172,15 @@
     "subscribe": "አባል ይሁኑ",
     "unsubscribe": "አባልነት ያቋርጡ"
   },
+  "subscriptionToast": {
+    "subscribed": "",
+    "unsubscribed": ""
+  },
   "forage": {
-	"show-woredas": "",
+    "show-woredas": "",
     "show": "",
-    "loading": "የግጦሽ መረጃ"
+    "loading": "የግጦሽ መረጃ",
+    "biomass": ""
   },
   "privacy": {
     "title": "ግላዊነት",
@@ -198,12 +207,16 @@
     "description-2-1": "",
     "description-2-2": "",
     "description-2-3": "",
-    "edit-2": ""
+    "edit-2": "",
+    "no-subscription": "At the moment you dont have subscriptions",
+    "no-subscription-sub-1": "try going to the",
+    "no-subscription-sub-2": "waterpoint display",
+    "no-subscription-sub-3": "and subscribing to a waterpoint"
   },
-  "advisories":{
-    "title":"ጠቃሚ ምክሮች",
-    "status":"የውሃ ጉድጓድ ሁኔታ",
-    "status-d":"የውኃ ጉድጓድ ሁኔታ እንደሚከተለው ነው",
+  "advisories": {
+    "title": "ጠቃሚ ምክሮች",
+    "status": "የውሃ ጉድጓድ ሁኔታ",
+    "status-d": "የውኃ ጉድጓድ ሁኔታ እንደሚከተለው ነው",
     "description-1": "ምክሮች የኤስኤምኤስ አገልግሎት አንዴ እንደጀመረ ለተጠቃሚዎች እንዲላኩ የተነደፉ መረጃ ሰጪ መልእክቶች ናቸው። የእነሱ መሠረታዊ ዓላማ ተጠቃሚዎች በውሃ ሁኔታ ላይ ስለሚደረጉ ማናቸውም ለውጦች ወይም ለውጦች ማዘመን ነው። ስለ እያንዳንዱ የውሃ ነጥብ ዝርዝር መረጃ በመስጠት፣ ምክሮች ተጠቃሚዎች በእውነተኛ ጊዜ በመረጃ ላይ የተመሰረተ ውሳኔ እንዲያደርጉ ያስችላቸዋል። ከቅድመ ጥንቃቄ ማንቂያዎች እስከ ወቅታዊ እጥረት ምልክቶች፣ እነዚህ መልዕክቶች የውሃውን ገጽታ ግልፅ እይታን ይሰጣሉ፣ ይህም ተጠቃሚዎች እንዲለምዷቸው እና ተገቢውን ምላሽ እንዲሰጡ ያስችላቸዋል።",
     "description-2": "በኤስኤምኤስ አገልግሎት ውስጥ ምክሮችን መተግበር በውሃ አስተዳደር ውስጥ ግልጽነት እና ውጤታማ ግንኙነት ለማምጣት ጉልህ እርምጃን ይወክላል። እነዚህን ማሳወቂያዎች በቀጥታ በመሳሪያዎቻቸው ላይ በመቀበል፣ አካባቢቸው ወይም የሌላ የመረጃ ምንጮች መዳረሻ ምንም ይሁን ምን ተጠቃሚዎች በውሃ ሁኔታ ላይ ስለሚደረጉ ማናቸውም ለውጦች መረጃን ማግኘት ይችላሉ። ይህ ፈጣን እና ቀጥተኛ ግንኙነት ስለአካባቢው የውሃ ሀብት የበለጠ ግንዛቤን የሚያበረታታ ሲሆን በጥበቃ እና በኃላፊነት አጠቃቀማቸው ላይ ንቁ ተሳትፎን ያበረታታል።",
     "description-3": "በመጨረሻም የምክር አገልግሎት ተጠቃሚዎችን ማሳወቅ ብቻ ሳይሆን ውሃን በተመለከተ በመረጃ ላይ የተመሰረተ ስልታዊ ውሳኔዎችን የመወሰን ችሎታቸውን ያጎናጽፋል። የእያንዳንዱን የውሃ ነጥብ ሁኔታ እና የሁኔታውን አንድምታ ሙሉ በሙሉ በመረዳት ተጠቃሚዎች ፍጆታቸውን በተሻለ ሁኔታ ለማስተዳደር እና ይህንን ጠቃሚ ሃብት ለመጠበቅ ንቁ እርምጃዎችን መተግበር ይችላሉ። በማጠቃለያው ፣ ምክሮች በውሃ አያያዝ ውስጥ ዘላቂነትን እና ቅልጥፍናን ለማስተዋወቅ ፣ ለወደፊት ትውልዶች ደህንነቱ የተጠበቀ እና ፍትሃዊ ተደራሽነትን ለማረጋገጥ አስፈላጊ መሣሪያን ይወክላሉ።",
@@ -212,14 +225,13 @@
     "alert": "ማንቂያ",
     "near-dry": "ሊደረቅ ያለ",
     "seasonal-dry": "በወቅቱ -የደረቅ",
-    "good-message":"ሀይቁ በጥሩ ሁኔታ ላይ ነው እና የውሃ ፍጆታን ለሌሎች ዓላማዎች መቆጠብ ይመከራል",
-    "watch-message":"ሐይቁ ትኩረት የሚሻ ሁኔታ ላይ ነው እና ለሌላ ዓላማዎች የኩሬ ውሃ ፍጆታን ይቀንሱ እና የኩሬውን አስተዳዳሪ መመሪያዎችን ይከተሉ",
-    "alert-message":"ሐይቁ ዝቅተኛ የውሃ ማንቂያ ደረጃ ላይ ነው እና የኩሬውን ውሃ ለመጠጥ እና ለደካማ እንስሳት ብቻ እንዲጠቀሙ ይመከራል",
-    "near-dry-message":"ሐይቁ ሊደረቅ-ቅርብ ላይ ነው እና የኩሬውን ውሃ ለመጠጥ እንዲጠቀሙ ይመከራል",  
-    "seasonal-dry-message":"ሐይቁ በደረቅ ሁኔታ ላይ ነው. በአቅራቢያ የሚገኙ ኩሬዎችን ለማግኘት እባክዎ “ኩሬዎች” ብለው ይጻፉ",
-    "condition": "መፍቻ",
-    "message": "የምክር መልእክት"
+    "messages-d": "Advisory for each condition of the water point",
+    "message": "የምክር መልእክት",
+    "good-message": "ሀይቁ በጥሩ ሁኔታ ላይ ነው እና የውሃ ፍጆታን ለሌሎች ዓላማዎች መቆጠብ ይመከራል",
+    "watch-message": "ሐይቁ ትኩረት የሚሻ ሁኔታ ላይ ነው እና ለሌላ ዓላማዎች የኩሬ ውሃ ፍጆታን ይቀንሱ እና የኩሬውን አስተዳዳሪ መመሪያዎችን ይከተሉ",
+    "alert-message": "ሐይቁ ዝቅተኛ የውሃ ማንቂያ ደረጃ ላይ ነው እና የኩሬውን ውሃ ለመጠጥ እና ለደካማ እንስሳት ብቻ እንዲጠቀሙ ይመከራል",
+    "near-dry-message": "ሐይቁ ሊደረቅ-ቅርብ ላይ ነው እና የኩሬውን ውሃ ለመጠጥ እንዲጠቀሙ ይመከራል",
+    "seasonal-dry-message": "ሐይቁ በደረቅ ሁኔታ ላይ ነው. በአቅራቢያ የሚገኙ ኩሬዎችን ለማግኘት እባክዎ “ኩሬዎች” ብለው ይጻፉ",
+    "condition": "መፍቻ"
   }
-  
-
 }

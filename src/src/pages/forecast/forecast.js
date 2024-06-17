@@ -210,8 +210,8 @@ function Forecast() {
               >
                 <Toast.Body>
                   {!toastSuccess
-                    ? `Woohoo, you've unsubscribe from the waterpoint!`
-                    : `Success! You're now subscribed to the waterpoint.`}
+                    ? t("subscriptionToast.unsubscribed")
+                    : t("subscriptionToast.subscribed")}
                 </Toast.Body>
               </Toast>
             </ToastContainer>
@@ -312,9 +312,7 @@ function Forecast() {
                   ))
                 ) : (
                   <div className="d-flex flex-column align-items-center ">
-                    <h6 className=" mb-1 ">
-                      At the moment there is no data available
-                    </h6>
+                    <h6 className=" mb-1 ">{t("data.no-forecast")}</h6>
                     <img src={noDataImg} alt="no data available" height={200} />
                   </div>
                 )}
@@ -341,9 +339,7 @@ function Forecast() {
                   })
                 ) : (
                   <div className="d-flex flex-column align-items-center ">
-                    <h6 className=" mb-1 ">
-                      At the moment there is no data available
-                    </h6>
+                    <h6 className=" mb-1 ">{t("data.no-forecast")}</h6>
                     <img src={noDataImg} alt="no data available" height={200} />
                   </div>
                 )}

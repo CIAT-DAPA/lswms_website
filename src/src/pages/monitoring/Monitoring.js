@@ -451,6 +451,7 @@ function Visualization() {
                   label
                   size
                   isMonitoringBtn
+                  language={i18n.language}
                 />
               </div>
             </div>

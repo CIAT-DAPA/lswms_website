@@ -14,6 +14,7 @@ function SubscriptionButton({
   setToastSuccess,
   size,
   isMonitoringBtn,
+  language,
 }) {
   const [t] = useTranslation("global");
   const [subscription, setSubscription] = useState();
@@ -89,14 +90,23 @@ function SubscriptionButton({
           size={size ? size : ""}
           className={`me-2 btn ${size ? "rounded-3" : "rounded-4"} ${
             isMonitoringBtn ? "btn-monitoring" : ""
-          }`}
+          }
+          ${language == "or" ? "btn-or" : ""}`}
           id="dropdown-basic"
         >
           <IconMailPlus
             size={isMonitoringBtn ? 24 : 20}
             className={label ? "me-2" : ""}
           />{" "}
-          {label ? t("subscriptionButton.subscribe") : ""}
+          {label ? (
+            language == "or" ? (
+              <p className="p-or">{t("subscriptionButton.subscribe")}</p>
+            ) : (
+              t("subscriptionButton.subscribe")
+            )
+          ) : (
+            ""
+          )}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>

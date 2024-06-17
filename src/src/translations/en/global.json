@@ -104,8 +104,8 @@
     "monitored": "Monitored data",
     "monitored-d": "Explore a variety of charts covering depth of field, depth scale, precipitation and evapotranspiration. Customise your experience by filtering these graphs according to your preferred year.",
     "year": "Year",
-    "depth_daily_average":"Modeled daily historical average depth",
-    "scaled_depth_daily_average":"Modeled daily historical average scaled depth",
+    "depth_daily_average": "Modeled daily historical average depth",
+    "scaled_depth_daily_average": "Modeled daily historical average scaled depth",
     "depth": "Modeled Depth",
     "depth-description": "These graphs show the depth and daily historical average for the depth of waterpoint",
     "depth-year": "in the year",
@@ -131,7 +131,7 @@
     "upper-label": "Above",
     "seasonal": "Seasonal forecast",
     "seasonal-d": "The climate prediction is given in percentage of probability with respect to the normal range of precipitation of an area and a specific quarter. Below, you can find the most probable category for the selected waterpoint and the forecast quarter.",
-    "notFound-title": "No aclimate ID was provided.",
+    "notFound-title": "No AClimate ID was provided.",
     "notFound-d": "Try to get the data from the waterpoints display.",
     "climate": "Climate Forecast",
     "climatology": "Modeled Daily historical average",
@@ -141,7 +141,8 @@
     "max-year": "Max-year",
     "between": "Between",
     "source": "Source",
-    "download": "Download Selected Data"
+    "download": "Download Selected Data",
+    "no-forecast": "At the moment there is no data available"
   },
   "notFound": {
     "title": "Oops! Looks like you've ventured into uncharted territory.",
@@ -171,10 +172,15 @@
     "subscribe": "Subscribe",
     "unsubscribe": "Unsubscribe"
   },
+  "subscriptionToast": {
+    "subscribed": "Success! You're now subscribed to the waterpoint.",
+    "unsubscribed": "Woohoo, you've unsubscribe from the waterpoint!"
+  },
   "forage": {
     "show-woredas": "Show woredas",
     "show": "Show watershed",
-    "loading": "Getting the forage data..."
+    "loading": "Getting the forage data...",
+    "biomass": "Biomass"
   },
   "privacy": {
     "title": "Privacy",
@@ -201,12 +207,16 @@
     "description-2-1": "We take care of keeping you up to date and making sure you are informed of any relevant updates. You have the flexibility to choose between two types of subscriptions:",
     "description-2-2": "where you will receive notifications on a regular weekly basis, or",
     "description-2-3": "to notify you immediately of any significant changes in the status of Waterpoint.",
-    "edit-2": "Edit Subscribe"
+    "edit-2": "Edit Subscription",
+    "no-subscription": "At the moment you dont have subscriptions",
+    "no-subscription-sub-1": "try going to the",
+    "no-subscription-sub-2": "waterpoint display",
+    "no-subscription-sub-3": "and subscribing to a waterpoint"
   },
   "advisories": {
     "title": "Advisories",
-    "status":"Waterpoint Status",
-    "status-d":"The states of the water point are as follows:",
+    "status": "Waterpoint Status",
+    "status-d": "The states of the water point are as follows:",
     "description-1": "Advisories are informative messages designed to be sent to users once the SMS service is operational. Their fundamental purpose is to keep users updated on any changes or developments in the water status. By providing detailed information about each water point, advisories enable users to make informed decisions in real-time. From precautionary alerts to indications of seasonal scarcity, these messages offer a clear view of the water landscape, empowering users to adapt and respond appropriately.",
     "description-2": "Implementing advisories within the SMS service represents a significant step towards transparency and effective communication in water management. By receiving these notices directly on their devices, users can stay informed about any changes in water status, regardless of their location or access to other sources of information. This rapid and direct communication promotes greater awareness of local water resources and encourages more active participation in their conservation and responsible use.",
     "description-3": "Ultimately, the introduction of advisories not only informs users but also empowers their ability to make informed, strategic decisions regarding water. By fully understanding the situation of each water point and the implications of its status, users can implement proactive measures to better manage their consumption and conserve this vital resource. In summary, advisories represent an essential tool for promoting sustainability and efficiency in water management, ensuring safe and equitable access for future generations.",
@@ -215,14 +225,13 @@
     "alert": "Alert",
     "near-dry": "Near Dry",
     "seasonal-dry": "Seasonal Dry",
-    "messages-d":"Advisory for each condition of the water point",
-    "message":"Advisory Message",
-    "good-message":"pond is in Good condition. Manage the water consumption for other purposes",
-    "watch-message":"pond is in Watch condition. Reduce pond water consumption for other purposes and follow pond manager instructions",
-    "alert-message":"pond is in Alert condition and advised to use the pond water for drinking and weak animals only",
-    "near-dry-message":"pond is in Near-Dry condition and advised to use the pond water for drinking",  
-    "seasonal-dry-message":"pond is in Dry condition. please text “ponds” to get nearby available ponds",
+    "messages-d": "Advisory for each condition of the water point",
+    "message": "Advisory Message",
+    "good-message": "pond is in Good condition. Manage the water consumption for other purposes",
+    "watch-message": "pond is in Watch condition. Reduce pond water consumption for other purposes and follow pond manager instructions",
+    "alert-message": "pond is in Alert condition and advised to use the pond water for drinking and weak animals only",
+    "near-dry-message": "pond is in Near-Dry condition and advised to use the pond water for drinking",
+    "seasonal-dry-message": "pond is in Dry condition. please text “ponds” to get nearby available ponds",
     "condition": "Waterpoint Condition"
-
   }
 }

@@ -276,8 +276,8 @@ function Waterprofile() {
               >
                 <Toast.Body>
                   {!toastSuccess
-                    ? `Woohoo, you've unsubscribe from the waterpoint!`
-                    : `Success! You're now subscribed to the waterpoint.`}
+                    ? t("subscriptionToast.unsubscribed")
+                    : t("subscriptionToast.subscribed")}
                 </Toast.Body>
               </Toast>
             </ToastContainer>

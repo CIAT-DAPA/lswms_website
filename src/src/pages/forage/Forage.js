@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Forage.css";
 import {
   LayersControl,
@@ -7,9 +7,6 @@ import {
   WMSTileLayer,
   ZoomControl,
 } from "react-leaflet";
-import {
-  Modal, Spinner
-} from "react-bootstrap";
 import Configuration from "../../conf/Configuration";
 import TimelineController from "../../components/timelineController/TimelineController";
 import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
@@ -17,7 +14,6 @@ import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
 import { useTranslation } from "react-i18next";
 
 function Forage() {
-  const [loading, setLoading] = useState(true); // Moved useState inside the component
   const [t] = useTranslation("global");
   return (
     <>
@@ -44,8 +40,8 @@ function Forage() {
               transparent={true}
             />
           </LayersControl.Overlay>
-		  
-		  <LayersControl.Overlay name={t("forage.show")} checked>
+
+          <LayersControl.Overlay name={t("forage.show")} checked>
             <WMSTileLayer
               url={Configuration.get_url_geoserver()}
               layers={`waterpoints_et:Watershed_boundaries`}
@@ -53,7 +49,6 @@ function Forage() {
               transparent={true}
             />
           </LayersControl.Overlay>
-		  
         </LayersControl>
         <ZoomControl position="topright" />
         <TimelineController
@@ -63,7 +58,6 @@ function Forage() {
         <ClickWatershed />
         <BiomassLegend layer="waterpoints_et:biomass" />
       </MapContainer>
-      
     </>
   );
 }

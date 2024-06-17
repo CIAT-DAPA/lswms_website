@@ -3,3 +3,16 @@
   font-size: 14px !important;
   padding: 4px 8px;
 }
+
+.btn-or {
+  width: 190px;
+  white-space: normal;
+  overflow: visible;
+  display: flex !important;
+  align-items: center;
+  flex-direction: row;
+}
+
+.p-or {
+  width: 121px;
+}

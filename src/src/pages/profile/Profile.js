@@ -624,22 +624,7 @@ function Waterprofile() {
                   <IconDownload className="me-3" />
                   {t("profile.download")}
                 </Button>
-                <a
-                  href={`/dashboard/${wp.id}`}
-                  className="btn btn-primary me-3 rounded-4"
-                >
-                  <IconChartDonut className="me-3" />
-                  {t("monitoring.data")}
-                </a>
-
-                <Link
-                  type="button"
-                  className="btn btn-primary me-3 rounded-4"
-                  to={`/forecast/${wp.id}`}
-                >
-                  <IconCloudRain className="me-3" />
-                  {t("monitoring.forecast")}
-                </Link>
+                <NavigationGroupBtns wp={wp} data forecast label noTooltip />
                 <OverlayTrigger
                   trigger="click"
                   placement="right"

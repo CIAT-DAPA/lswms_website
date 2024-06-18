@@ -164,9 +164,6 @@ function Visualization() {
 
   const popupData = (wp) => {
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-    const depthValue = monitoredData
-      ? monitoredData.values.find((value) => value.type === "depth")
-      : null;
     const scaledDepthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "scaled_depth")
       : null;

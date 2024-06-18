@@ -32,6 +32,7 @@ import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
 import "./Forecast.css";
+import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 
 function Forecast() {
   const { userInfo } = useAuth();
@@ -223,23 +224,13 @@ function Forecast() {
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
                   <div className="d-flex">
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="dashboard-tooltip">
-                          {t("profile.data-popup")}
-                        </Tooltip>
-                      }
-                    >
-                      <a
-                        href={`/dashboard/${wp.id}`}
-                        className="btn btn-primary me-2 rounded-4"
-                        role="button"
-                        onClick={() => window.location.reload()}
-                      >
-                        <IconChartDonut />
-                      </a>
-                    </OverlayTrigger>
+                    <NavigationGroupBtns
+                      data
+                      profile
+                      wp={wp}
+                      wpId={wp.id}
+                      positionTooltip="bottom"
+                    />
 
                     <OverlayTrigger
                       placement="bottom"
@@ -347,13 +338,15 @@ function Forecast() {
             </Container>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center">
-                <a
-                  href={`/dashboard/${wp.id}`}
-                  className="btn btn-primary me-3 rounded-4"
-                >
-                  <IconChartDonut className="me-3" />
-                  {t("monitoring.data")}
-                </a>
+                <NavigationGroupBtns
+                  data
+                  profile
+                  wp={wp}
+                  wpId={wp.id}
+                  positionTooltip="bottom"
+                  label
+                  noTooltip
+                />
 
                 <OverlayTrigger
                   trigger="click"

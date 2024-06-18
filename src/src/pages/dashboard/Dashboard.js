@@ -31,6 +31,7 @@ import {
   IconCloudRain,
   IconDownload,
 } from "@tabler/icons-react";
+import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 function HistoricalData() {
   const { userInfo } = useAuth();
   const [show, setShow] = useState(false);
@@ -365,23 +366,13 @@ function HistoricalData() {
                       </Button>
                     </div>
                   </OverlayTrigger>
-                  <OverlayTrigger
-                    placement="bottom"
-                    overlay={
-                      <Tooltip id="dashboard-tooltip">
-                        {t("profile.forecast-popup")}
-                      </Tooltip>
-                    }
-                  >
-                    <Link
-                      type="botton"
-                      className="btn btn-primary me-2 rounded-4"
-                      to={`/forecast/${wp.id}`}
-                    >
-                      <IconCloudRain />
-                    </Link>
-                  </OverlayTrigger>
-
+                  <NavigationGroupBtns
+                    forecast
+                    profile
+                    wp={wp}
+                    wpId={wp.id}
+                    positionTooltip="bottom"
+                  />
                   <OverlayTrigger
                     placement="bottom"
                     overlay={
@@ -706,14 +697,15 @@ function HistoricalData() {
                   {t("data.download")}
                 </Button>
                 <div className="d-flex align-items-center">
-                  <Link
-                    type="button"
-                    className="btn btn-primary me-2 rounded-4"
-                    to={`/forecast/${wp.id}`}
-                  >
-                    <IconCloudRain className="me-2" />
-                    {t("monitoring.forecast")}
-                  </Link>
+                <NavigationGroupBtns
+                    forecast
+                    profile
+                    wp={wp}
+                    wpId={wp.id}
+                    positionTooltip="bottom"
+                    label
+                    noTooltip
+                  />
 
                   <OverlayTrigger
                     trigger="click"

@@ -46,11 +46,11 @@ import {
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
-  IconInfoCircle,
   IconCloudRain,
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
+import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 
 function Waterprofile() {
   const greenIcon = new L.Icon({
@@ -303,40 +303,7 @@ function Waterprofile() {
                       <IconDownload />
                     </Button>
                   </OverlayTrigger>
-
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="dashboard-tooltip">
-                        {t("profile.data-popup")}
-                      </Tooltip>
-                    }
-                  >
-                    <a
-                      href={`/dashboard/${wp.id}`}
-                      className="btn btn-primary me-2 rounded-4"
-                    >
-                      <IconChartDonut />
-                    </a>
-                  </OverlayTrigger>
-
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="forecast-tooltip">
-                        {t("profile.forecast-popup")}
-                      </Tooltip>
-                    }
-                  >
-                    <Link
-                      type="button"
-                      className="btn btn-primary me-2 rounded-4"
-                      to={`/forecast/${wp.id}`}
-                    >
-                      <IconCloudRain />
-                    </Link>
-                  </OverlayTrigger>
-
+                  <NavigationGroupBtns wp={wp} data forecast />
                   <OverlayTrigger
                     placement="top"
                     overlay={

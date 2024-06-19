@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import noDataImg from "../../assets/img/noSubscription.png";
-import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
 import {
@@ -11,19 +10,9 @@ import {
   Modal,
   Row,
   Spinner,
-  Button,
-  OverlayTrigger,
-  Popover,
-  Tooltip,
   ToastContainer,
   Toast,
 } from "react-bootstrap";
-import {
-  IconShare,
-  IconBrandFacebook,
-  IconBrandX,
-  IconInfoCircleFilled,
-} from "@tabler/icons-react";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
@@ -113,38 +102,6 @@ function Forecast() {
     }
   }, [aclimateId]);
 
-  const popoverShare = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
-      <Popover.Body>
-        <Button
-          className="me-2 btn-facebook"
-          onClick={() => {
-            const url = window.location.href;
-            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
-              url
-            )}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandFacebook />
-        </Button>
-        <Button
-          className="btn-x"
-          onClick={() => {
-            const url = window.location.href;
-            const text = "Check this waterpoint profile!";
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(
-              url
-            )}&text=${encodeURI(text)}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandX />
-        </Button>
-      </Popover.Body>
-    </Popover>
-  );
   return (
     <div>
       {idWp ? (
@@ -219,52 +176,18 @@ function Forecast() {
                     <h1 className="pt-2 mb-0">{wp.name}</h1>
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
-                  <div className="d-flex">
+                  <div className="d-flex align-items-center">
                     <NavigationGroupBtns
-                      data
-                      profile
+                      noDownload
+                      noForecast
+                      idWater={idWp}
+                      idUser={userInfo?.sub}
+                      setShowToastSubscribe={setShowToastSubscribe}
+                      setToastSuccess={setToastSuccess}
                       wp={wp}
                       wpId={wp.id}
                       positionTooltip="bottom"
                     />
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="share-tooltip">
-                          {t("profile.share")}
-                        </Tooltip>
-                      }
-                    >
-                      <div>
-                        <OverlayTrigger
-                          trigger="click"
-                          placement="bottom"
-                          rootClose={true}
-                          overlay={popoverShare}
-                        >
-                          <Button className="rounded-4 h-100 me-2">
-                            <IconShare />
-                          </Button>
-                        </OverlayTrigger>
-                      </div>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="subscription-tooltip">
-                          {t("profile.subscribe-popup")}
-                        </Tooltip>
-                      }
-                    >
-                      <div>
-                        <SubscriptionButton
-                          idWater={idWp}
-                          idUser={userInfo?.sub}
-                          setShowToastSubscribe={setShowToastSubscribe}
-                          setToastSuccess={setToastSuccess}
-                        />
-                      </div>
-                    </OverlayTrigger>
                   </div>
                 </Container>
               </Row>
@@ -333,43 +256,18 @@ function Forecast() {
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center">
                 <NavigationGroupBtns
-                  data
-                  profile
+                  noDownload
+                  noForecast
+                  idWater={idWp}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
                   wp={wp}
                   wpId={wp.id}
                   positionTooltip="bottom"
                   label
                   noTooltip
                 />
-
-                <OverlayTrigger
-                  trigger="click"
-                  placement="right"
-                  rootClose={true}
-                  overlay={popoverShare}
-                >
-                  <Button className="rounded-4 mb-2 mb-sm-0 me-2">
-                    <IconShare className="me-3" />
-                    {t("profile.share")}
-                  </Button>
-                </OverlayTrigger>
-                <SubscriptionButton
-                  idWater={idWp}
-                  idUser={userInfo?.sub}
-                  setShowToastSubscribe={setShowToastSubscribe}
-                  setToastSuccess={setToastSuccess}
-                  label
-                />
-                <OverlayTrigger
-                  placement="top"
-                  overlay={
-                    <Tooltip id={`tooltip-top`}>
-                      {t("monitoring.subscription-info")}
-                    </Tooltip>
-                  }
-                >
-                  <IconInfoCircleFilled />
-                </OverlayTrigger>
               </div>
             </Container>
           </>

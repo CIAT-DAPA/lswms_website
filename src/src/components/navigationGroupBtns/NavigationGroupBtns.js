@@ -171,7 +171,7 @@ function NavigationGroupBtns({
         (noTooltip ? (
           hasContentsWp && !monitoredData[i18n.language] ? (
             <Button
-              className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between py-2 me-2 ${
+              className={`btn btn-primary text-white rounded-3 d-flex align-items-center justify-content-between  me-2 ${
                 hasContentsWp ? "" : "disabled "
               }`}
               onClick={() => setShowWarning(true)}
@@ -182,7 +182,7 @@ function NavigationGroupBtns({
           ) : (
             <Link
               type="button"
-              className={`btn btn-primary  text-white rounded-4 fw-medium d-flex align-items-center justify-content-between py-2 me-2 ${
+              className={`btn btn-primary  text-white rounded-4 d-flex align-items-center justify-content-between  me-2 ${
                 hasContentsWp ? "" : "disabled "
               }`}
               to={`/profile/${wpId}`}

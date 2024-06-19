@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import noDataImg from "../../assets/img/noSubscription.png";
-import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
 
 import {
@@ -11,19 +10,9 @@ import {
   Modal,
   Row,
   Spinner,
-  Button,
-  OverlayTrigger,
-  Popover,
-  Tooltip,
   ToastContainer,
   Toast,
 } from "react-bootstrap";
-import {
-  IconShare,
-  IconBrandFacebook,
-  IconBrandX,
-  IconInfoCircleFilled,
-} from "@tabler/icons-react";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
@@ -113,38 +102,6 @@ function Forecast() {
     }
   }, [aclimateId]);
 
-  const popoverShare = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
-      <Popover.Body>
-        <Button
-          className="me-2 btn-facebook"
-          onClick={() => {
-            const url = window.location.href;
-            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
-              url
-            )}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandFacebook />
-        </Button>
-        <Button
-          className="btn-x"
-          onClick={() => {
-            const url = window.location.href;
-            const text = "Check this waterpoint profile!";
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(
-              url
-            )}&text=${encodeURI(text)}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandX />
-        </Button>
-      </Popover.Body>
-    </Popover>
-  );
   return (
     <div>
       {idWp ? (

@@ -2,15 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
-  Button,
   Col,
   Container,
   Modal,
   Row,
   Spinner,
-  OverlayTrigger,
-  Popover,
-  Tooltip,
   Toast,
   ToastContainer,
 } from "react-bootstrap";
@@ -21,15 +17,7 @@ import { useTranslation } from "react-i18next";
 import Papa from "papaparse";
 import SliderYear from "../../components/sliderYear/SliderYear";
 import { useAuth } from "../../hooks/useAuth";
-import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 
-import {
-  IconShare,
-  IconBrandFacebook,
-  IconBrandX,
-  IconInfoCircleFilled,
-  IconDownload,
-} from "@tabler/icons-react";
 import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 function HistoricalData() {
   const { userInfo } = useAuth();
@@ -226,38 +214,6 @@ function HistoricalData() {
     tempLink.setAttribute("download", `${wp.name}.csv`);
     tempLink.click();
   };
-  const popoverShare = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
-      <Popover.Body>
-        <Button
-          className="me-2 btn-facebook"
-          onClick={() => {
-            const url = window.location.href;
-            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
-              url
-            )}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandFacebook />
-        </Button>
-        <Button
-          className="btn-x"
-          onClick={() => {
-            const url = window.location.href;
-            const text = "Check this waterpoint profile!";
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(
-              url
-            )}&text=${encodeURI(text)}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandX />
-        </Button>
-      </Popover.Body>
-    </Popover>
-  );
   function groupAndSum(data, groupSize) {
     let result = [];
     for (let i = 0; i < data.length; i += groupSize) {
@@ -347,7 +303,7 @@ function HistoricalData() {
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
                 </Col>
-                <Col xs={6} className="d-flex justify-content-end">
+                <Col xs={6} className="d-flex justify-content-end align-items-center">
                   <NavigationGroupBtns
                     labelDownload="data.download"
                     noData

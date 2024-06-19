@@ -10,12 +10,10 @@ import {
   Col,
   Container,
   Modal,
-  OverlayTrigger,
   Row,
   Spinner,
   Toast,
   ToastContainer,
-  Tooltip,
 } from "react-bootstrap";
 import "./Profile.css";
 import {
@@ -37,7 +35,6 @@ import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
 
-import { IconInfoCircleFilled } from "@tabler/icons-react";
 import { useAuth } from "../../hooks/useAuth";
 import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 

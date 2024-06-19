@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import {
   Button,
@@ -28,7 +28,6 @@ import {
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
-  IconCloudRain,
   IconDownload,
 } from "@tabler/icons-react";
 import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
@@ -47,7 +46,6 @@ function HistoricalData() {
   const [scaledDepthData, setScaledDepthData] = useState([]);
   const [climaScaledDepthData, setClimaScaledDepthData] = useState([]);
   const [rain, setRain] = useState([]);
-  const [climaRain, setClimaRain] = useState([]);
   const [evap, setEvap] = useState([]);
   const [value, setValue] = useState(null);
   const [dataFilterByYearsToDownload, setDataFilterByYearsToDownload] =
@@ -146,7 +144,6 @@ function HistoricalData() {
       });
       setClimaDepthData(result[0]);
       setClimaScaledDepthData(result[1]);
-      setClimaRain(result[2]);
     }
   }, [value]);
 
@@ -351,6 +348,13 @@ function HistoricalData() {
                   </div>
                 </Col>
                 <Col xs={6} className="d-flex justify-content-end">
+                  <NavigationGroupBtns
+                    forecast
+                    profile
+                    wp={wp}
+                    wpId={wp.id}
+                    positionTooltip="bottom"
+                  />
                   <OverlayTrigger
                     placement="bottom"
                     overlay={
@@ -360,19 +364,12 @@ function HistoricalData() {
                     <div>
                       <Button
                         onClick={downloadAllData}
-                        className="rounded-4 mx-2"
+                        className="rounded-4 me-2 h-100"
                       >
                         <IconDownload />
                       </Button>
                     </div>
                   </OverlayTrigger>
-                  <NavigationGroupBtns
-                    forecast
-                    profile
-                    wp={wp}
-                    wpId={wp.id}
-                    positionTooltip="bottom"
-                  />
                   <OverlayTrigger
                     placement="bottom"
                     overlay={
@@ -386,7 +383,7 @@ function HistoricalData() {
                         rootClose={true}
                         overlay={popoverShare}
                       >
-                        <Button className="rounded-4">
+                        <Button className="rounded-4 h-100">
                           <IconShare />
                         </Button>
                       </OverlayTrigger>
@@ -689,6 +686,15 @@ function HistoricalData() {
             </Container>
             <Container className="mb-2 mt-4">
               <div className="d-flex align-items-center">
+                <NavigationGroupBtns
+                  forecast
+                  profile
+                  wp={wp}
+                  wpId={wp.id}
+                  positionTooltip="bottom"
+                  label
+                  noTooltip
+                />
                 <Button
                   className="me-2 rounded-4"
                   onClick={() => downloadAllData()}
@@ -696,46 +702,34 @@ function HistoricalData() {
                   <IconDownload className="me-2" />
                   {t("data.download")}
                 </Button>
-                <div className="d-flex align-items-center">
-                <NavigationGroupBtns
-                    forecast
-                    profile
-                    wp={wp}
-                    wpId={wp.id}
-                    positionTooltip="bottom"
-                    label
-                    noTooltip
-                  />
-
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="right"
-                    rootClose={true}
-                    overlay={popoverShare}
-                  >
-                    <Button className="rounded-4 mb-2 mb-sm-0 me-2">
-                      <IconShare className="me-2" />
-                      {t("profile.share")}
-                    </Button>
-                  </OverlayTrigger>
-                  <SubscriptionButton
-                    idWater={idWp}
-                    idUser={userInfo?.sub}
-                    setShowToastSubscribe={setShowToastSubscribe}
-                    setToastSuccess={setToastSuccess}
-                    label
-                  />
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-top`}>
-                        {t("monitoring.subscription-info")}
-                      </Tooltip>
-                    }
-                  >
-                    <IconInfoCircleFilled />
-                  </OverlayTrigger>
-                </div>
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  rootClose={true}
+                  overlay={popoverShare}
+                >
+                  <Button className="rounded-4 mb-2 mb-sm-0 me-2">
+                    <IconShare className="me-2" />
+                    {t("profile.share")}
+                  </Button>
+                </OverlayTrigger>
+                <SubscriptionButton
+                  idWater={idWp}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                />
+                <OverlayTrigger
+                  placement="top"
+                  overlay={
+                    <Tooltip id={`tooltip-top`}>
+                      {t("monitoring.subscription-info")}
+                    </Tooltip>
+                  }
+                >
+                  <IconInfoCircleFilled />
+                </OverlayTrigger>
               </div>
             </Container>
           </>

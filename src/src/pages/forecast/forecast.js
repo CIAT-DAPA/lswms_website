@@ -219,52 +219,18 @@ function Forecast() {
                     <h1 className="pt-2 mb-0">{wp.name}</h1>
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
-                  <div className="d-flex">
+                  <div className="d-flex align-items-center">
                     <NavigationGroupBtns
-                      data
-                      profile
+                      noDownload
+                      noForecast
+                      idWater={idWp}
+                      idUser={userInfo?.sub}
+                      setShowToastSubscribe={setShowToastSubscribe}
+                      setToastSuccess={setToastSuccess}
                       wp={wp}
                       wpId={wp.id}
                       positionTooltip="bottom"
                     />
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="share-tooltip">
-                          {t("profile.share")}
-                        </Tooltip>
-                      }
-                    >
-                      <div>
-                        <OverlayTrigger
-                          trigger="click"
-                          placement="bottom"
-                          rootClose={true}
-                          overlay={popoverShare}
-                        >
-                          <Button className="rounded-4 h-100 me-2">
-                            <IconShare />
-                          </Button>
-                        </OverlayTrigger>
-                      </div>
-                    </OverlayTrigger>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="subscription-tooltip">
-                          {t("profile.subscribe-popup")}
-                        </Tooltip>
-                      }
-                    >
-                      <div>
-                        <SubscriptionButton
-                          idWater={idWp}
-                          idUser={userInfo?.sub}
-                          setShowToastSubscribe={setShowToastSubscribe}
-                          setToastSuccess={setToastSuccess}
-                        />
-                      </div>
-                    </OverlayTrigger>
                   </div>
                 </Container>
               </Row>
@@ -333,43 +299,18 @@ function Forecast() {
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center">
                 <NavigationGroupBtns
-                  data
-                  profile
+                  noDownload
+                  noForecast
+                  idWater={idWp}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
                   wp={wp}
                   wpId={wp.id}
                   positionTooltip="bottom"
                   label
                   noTooltip
                 />
-
-                <OverlayTrigger
-                  trigger="click"
-                  placement="right"
-                  rootClose={true}
-                  overlay={popoverShare}
-                >
-                  <Button className="rounded-4 mb-2 mb-sm-0 me-2">
-                    <IconShare className="me-3" />
-                    {t("profile.share")}
-                  </Button>
-                </OverlayTrigger>
-                <SubscriptionButton
-                  idWater={idWp}
-                  idUser={userInfo?.sub}
-                  setShowToastSubscribe={setShowToastSubscribe}
-                  setToastSuccess={setToastSuccess}
-                  label
-                />
-                <OverlayTrigger
-                  placement="top"
-                  overlay={
-                    <Tooltip id={`tooltip-top`}>
-                      {t("monitoring.subscription-info")}
-                    </Tooltip>
-                  }
-                >
-                  <IconInfoCircleFilled />
-                </OverlayTrigger>
               </div>
             </Container>
           </>

@@ -6,13 +6,11 @@ import L from "leaflet";
 import Simplelegend from "../../components/simpleLegend/Simplelegend";
 
 import {
-  Button,
   Carousel,
   Col,
   Container,
   Modal,
   OverlayTrigger,
-  Popover,
   Row,
   Spinner,
   Toast,
@@ -39,14 +37,7 @@ import ItemSimpleList from "../../components/itemSimpleList/ItemSimpleList";
 import ItemComplexList from "../../components/itemComplexList/ItemComplexList";
 import Configuration from "../../conf/Configuration";
 
-import {
-  IconDownload,
-  IconShare,
-  IconBrandFacebook,
-  IconBrandX,
-  IconInfoCircleFilled,
-} from "@tabler/icons-react";
-import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
+import { IconInfoCircleFilled } from "@tabler/icons-react";
 import { useAuth } from "../../hooks/useAuth";
 import NavigationGroupBtns from "../../components/navigationGroupBtns/NavigationGroupBtns";
 
@@ -179,39 +170,6 @@ function Waterprofile() {
       return <></>;
     }
   };
-  const popoverShare = (
-    <Popover id="popover-basic">
-      <Popover.Header as="h3">{t("profile.share")}</Popover.Header>
-      <Popover.Body>
-        <Button
-          className="me-2 btn-facebook"
-          onClick={() => {
-            const url = window.location.href;
-            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(
-              url
-            )}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandFacebook />
-        </Button>
-        <Button
-          className="btn-x"
-          onClick={() => {
-            const url = window.location.href;
-            const text = "Check this waterpoint profile!";
-            const shareUrl = `https://twitter.com/share?url=${encodeURI(
-              url
-            )}&text=${encodeURI(text)}`;
-            window.open(shareUrl, "_blank");
-          }}
-        >
-          <IconBrandX />
-        </Button>
-      </Popover.Body>
-    </Popover>
-  );
-
   return (
     <>
       {idWater ? (
@@ -283,62 +241,19 @@ function Waterprofile() {
             <div id="profile">
               <div className="profile-bg">
                 <div
-                  className="position-absolute z-3 d-flex "
+                  className="position-absolute z-3 d-flex align-items-center"
                   style={{ top: "43%", right: "3vw" }}
                 >
-                  <NavigationGroupBtns wp={wp} data forecast />
-
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="download-tooltip">
-                        {t("profile.download")}
-                      </Tooltip>
-                    }
-                  >
-                    <Button
-                      className="rounded-4 me-2"
-                      onClick={downloadProfileAsPdf}
-                    >
-                      <IconDownload />
-                    </Button>
-                  </OverlayTrigger>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>
-                    }
-                  >
-                    <div>
-                      <OverlayTrigger
-                        trigger="click"
-                        placement="bottom"
-                        rootClose={true}
-                        overlay={popoverShare}
-                      >
-                        <Button className="rounded-4 me-2">
-                          <IconShare />
-                        </Button>
-                      </OverlayTrigger>
-                    </div>
-                  </OverlayTrigger>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="subscription-tooltip">
-                        {t("profile.subscribe-popup")}
-                      </Tooltip>
-                    }
-                  >
-                    <div>
-                      <SubscriptionButton
-                        idWater={idWater}
-                        idUser={userInfo?.sub}
-                        setShowToastSubscribe={setShowToastSubscribe}
-                        setToastSuccess={setToastSuccess}
-                      />
-                    </div>
-                  </OverlayTrigger>
+                  <NavigationGroupBtns
+                    wp={wp}
+                    noProfile
+                    downloadAction={downloadProfileAsPdf}
+                    infoWhite
+                    idWater={idWater}
+                    idUser={userInfo?.sub}
+                    setShowToastSubscribe={setShowToastSubscribe}
+                    setToastSuccess={setToastSuccess}
+                  />
                 </div>
                 <Carousel
                   fade
@@ -615,42 +530,21 @@ function Waterprofile() {
             </div>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center mb-2 mt-4">
-                <NavigationGroupBtns wp={wp} data forecast label noTooltip />
-                <Button
-                  className="me-3 rounded-4 mb-2 mb-sm-0"
-                  onClick={downloadProfileAsPdf}
-                >
-                  <IconDownload className="me-3" />
-                  {t("profile.download")}
-                </Button>
-                <OverlayTrigger
-                  trigger="click"
-                  placement="right"
-                  rootClose={true}
-                  overlay={popoverShare}
-                >
-                  <Button className="rounded-4 mb-2 mb-sm-0 me-3">
-                    <IconShare className="me-3" />
-                    {t("profile.share")}
-                  </Button>
-                </OverlayTrigger>
-                <SubscriptionButton
+                <NavigationGroupBtns
+                  wp={wp}
+                  data
+                  forecast
+                  download
+                  downloadAction={downloadProfileAsPdf}
+                  share
+                  subscription
+                  label
+                  noTooltip
                   idWater={idWater}
                   idUser={userInfo?.sub}
                   setShowToastSubscribe={setShowToastSubscribe}
                   setToastSuccess={setToastSuccess}
-                  label
                 />
-                <OverlayTrigger
-                  placement="top"
-                  overlay={
-                    <Tooltip id={`tooltip-top`}>
-                      {t("monitoring.subscription-info")}
-                    </Tooltip>
-                  }
-                >
-                  <IconInfoCircleFilled />
-                </OverlayTrigger>
               </div>
             </Container>
           </>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import bgImg from "../../assets/img/profilebg.jpg";
 import L from "leaflet";
@@ -41,12 +41,10 @@ import Configuration from "../../conf/Configuration";
 
 import {
   IconDownload,
-  IconChartDonut,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
-  IconCloudRain,
 } from "@tabler/icons-react";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
@@ -288,6 +286,8 @@ function Waterprofile() {
                   className="position-absolute z-3 d-flex "
                   style={{ top: "43%", right: "3vw" }}
                 >
+                  <NavigationGroupBtns wp={wp} data forecast />
+
                   <OverlayTrigger
                     placement="top"
                     overlay={
@@ -303,7 +303,25 @@ function Waterprofile() {
                       <IconDownload />
                     </Button>
                   </OverlayTrigger>
-                  <NavigationGroupBtns wp={wp} data forecast />
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>
+                    }
+                  >
+                    <div>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="bottom"
+                        rootClose={true}
+                        overlay={popoverShare}
+                      >
+                        <Button className="rounded-4 me-2">
+                          <IconShare />
+                        </Button>
+                      </OverlayTrigger>
+                    </div>
+                  </OverlayTrigger>
                   <OverlayTrigger
                     placement="top"
                     overlay={
@@ -319,26 +337,6 @@ function Waterprofile() {
                         setShowToastSubscribe={setShowToastSubscribe}
                         setToastSuccess={setToastSuccess}
                       />
-                    </div>
-                  </OverlayTrigger>
-
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="share-tooltip">{t("profile.share")}</Tooltip>
-                    }
-                  >
-                    <div>
-                      <OverlayTrigger
-                        trigger="click"
-                        placement="bottom"
-                        rootClose={true}
-                        overlay={popoverShare}
-                      >
-                        <Button className="rounded-4">
-                          <IconShare />
-                        </Button>
-                      </OverlayTrigger>
                     </div>
                   </OverlayTrigger>
                 </div>
@@ -617,6 +615,7 @@ function Waterprofile() {
             </div>
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center mb-2 mt-4">
+                <NavigationGroupBtns wp={wp} data forecast label noTooltip />
                 <Button
                   className="me-3 rounded-4 mb-2 mb-sm-0"
                   onClick={downloadProfileAsPdf}
@@ -624,7 +623,6 @@ function Waterprofile() {
                   <IconDownload className="me-3" />
                   {t("profile.download")}
                 </Button>
-                <NavigationGroupBtns wp={wp} data forecast label noTooltip />
                 <OverlayTrigger
                   trigger="click"
                   placement="right"

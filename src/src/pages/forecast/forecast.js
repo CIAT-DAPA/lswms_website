@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img404 from "../../assets/img/404.png";
 import noDataImg from "../../assets/img/noSubscription.png";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
@@ -19,14 +19,10 @@ import {
   Toast,
 } from "react-bootstrap";
 import {
-  IconDownload,
-  IconChartDonut,
   IconShare,
   IconBrandFacebook,
   IconBrandX,
   IconInfoCircleFilled,
-  IconInfoCircle,
-  IconCloudRain,
 } from "@tabler/icons-react";
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
@@ -231,25 +227,6 @@ function Forecast() {
                       wpId={wp.id}
                       positionTooltip="bottom"
                     />
-
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="subscription-tooltip">
-                          {t("profile.subscribe-popup")}
-                        </Tooltip>
-                      }
-                    >
-                      <div>
-                        <SubscriptionButton
-                          idWater={idWp}
-                          idUser={userInfo?.sub}
-                          setShowToastSubscribe={setShowToastSubscribe}
-                          setToastSuccess={setToastSuccess}
-                        />
-                      </div>
-                    </OverlayTrigger>
-
                     <OverlayTrigger
                       placement="bottom"
                       overlay={
@@ -265,10 +242,27 @@ function Forecast() {
                           rootClose={true}
                           overlay={popoverShare}
                         >
-                          <Button className="rounded-4">
+                          <Button className="rounded-4 h-100 me-2">
                             <IconShare />
                           </Button>
                         </OverlayTrigger>
+                      </div>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="subscription-tooltip">
+                          {t("profile.subscribe-popup")}
+                        </Tooltip>
+                      }
+                    >
+                      <div>
+                        <SubscriptionButton
+                          idWater={idWp}
+                          idUser={userInfo?.sub}
+                          setShowToastSubscribe={setShowToastSubscribe}
+                          setToastSuccess={setToastSuccess}
+                        />
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -354,7 +348,7 @@ function Forecast() {
                   rootClose={true}
                   overlay={popoverShare}
                 >
-                  <Button className="rounded-4 mb-2 mb-sm-0 me-3">
+                  <Button className="rounded-4 mb-2 mb-sm-0 me-2">
                     <IconShare className="me-3" />
                     {t("profile.share")}
                   </Button>

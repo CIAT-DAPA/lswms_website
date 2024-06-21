@@ -298,7 +298,9 @@ function Userprofile() {
                           <></>
                         )}
                         <h5 className="fw-medium text-capitalize ">
-                          {boletin.boletin}
+                          {boletin.boletin == "weekly"
+                            ? t("subscriptionButton.weekly")
+                            : t("subscriptionButton.alert")}
                         </h5>
                       </div>
 

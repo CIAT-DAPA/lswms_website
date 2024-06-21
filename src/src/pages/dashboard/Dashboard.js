@@ -353,7 +353,7 @@ function HistoricalData() {
                         {t("data.depth-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart
@@ -405,7 +405,7 @@ function HistoricalData() {
                           {t("data.scaled-description")}{" "}
                           <span className="fw-bold ">{wp.name}</span>,{" "}
                           {t("data.depth-year")} {t("data.between")}{" "}
-                          <span className="fw-bold ">{value.min}</span> and{" "}
+                          <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
                           <span className="fw-bold ">{value.max}</span>.
                         </p>
                         <ReactApexChart
@@ -450,7 +450,7 @@ function HistoricalData() {
                         {t("data.rain-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart
@@ -530,7 +530,7 @@ function HistoricalData() {
                         {t("data.evap-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> and{" "}
+                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart

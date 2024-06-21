@@ -143,7 +143,10 @@
     "between": "Between",
     "source": "Source",
     "download": "Download Selected Data",
-    "no-forecast": "At the moment there is no data available"
+    "no-forecast": "At the moment there is no data available",
+    "slider-start": "Start:",
+    "slider-end": "End:",
+    "and": "and"
   },
   "notFound": {
     "title": "Oops! Looks like you've ventured into uncharted territory.",
@@ -155,7 +158,7 @@
     "description-2": "EIAR made tremendous efforts to build the national capacity of doing agricultural research, produce, and introduce improved technologies focusing on fostering agricultural growth and development in the country. As a result, over the last four decades, the release of improved technologies in crop, livestock, soils and water, forestry and agricultural mechanization have increased dramatically. To date, the contribution of improved agricultural technologies generated and introduced by EIAR has become fundamental in the national economy.",
     "description-3": "EIAR is doing its level best to introduce and generate agricultural technologies while also contributing to meet the national demands of transforming Ethiopian agriculture.",
     "vision": "Vision",
-    "vision-d": "EIAR inspires to see improved livelihood of all Ethiopians engaged in agriculture, agro-pastoralism, and pastoralism through market competitive agricultural technologies",
+    "vision-d": "EIAR aspires to see improved livelihood of all Ethiopians engaged in agriculture, agro-pastoralism, and pastoralism through market competitive agricultural technologies",
     "mission": "Mission",
     "mission-d": "EIAR has a mission to conduct research that will provide market competitive agricultural technologies that will contribute to increased agricultural productivity and nutrition quality, sustainable food security, economic development, and conservation of the integrity of natural resources and the environment.",
     "core-values": "Core Values",

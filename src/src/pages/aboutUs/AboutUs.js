@@ -22,6 +22,7 @@ function AboutUs() {
       <p>{t("aboutUs.description-1")}</p>
       <p>{t("aboutUs.description-2")}</p>
       <p>{t("aboutUs.description-3")}</p>
+      <p>{t("aboutUs.description-4")}</p>
       <h2 className="mt-3">{t("aboutUs.vision")}</h2>
       <p>{t("aboutUs.vision-d")}</p>
       <h2 className="mt-3">{t("aboutUs.mission")}</h2>

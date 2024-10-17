@@ -321,21 +321,13 @@ function Waterprofile() {
                       <Marker
                         position={[wp.lat, wp.lon]}
                         icon={
-                          wp.latest_monitored_scaled_depth >
-                          wp.climatology_scaled_depth
-                            ? greenIcon
-                            : wp.latest_monitored_scaled_depth /
-                                wp.climatology_scaled_depth >
-                              0.5
-                            ? yellowIcon
-                            : wp.latest_monitored_scaled_depth /
-                                wp.climatology_scaled_depth >
-                              0.03
+                          wp.depth < 0.2
+                            ? redIcon
+                            : wp.depth > 0.2 && wp.depth <0.3 
                             ? brownIcon
-                            : wp.latest_monitored_scaled_depth === 0 &&
-                              wp.climatology_scaled_depth === 0
-                            ? grayIcon
-                            : redIcon
+                            : wp.depth > 0.3 && wp.depth < 0.7
+                            ? yellowIcon
+                            : greenIcon
                         }
                         key={wp.id}
                       ></Marker>

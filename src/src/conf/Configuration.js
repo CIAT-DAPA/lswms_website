@@ -1,4 +1,4 @@
-const WP_API_BASE = "http://127.0.0.1:5000/api/v1";
+const WP_API_BASE = "https://webapi.waterpointsmonitoring.net/api/v1";
 const ACLIMATE_API = "https://webapi.aclimate.org/api";
 const GEOSERVER_URL = "http://localhost:8080/geoserver/wp/wms";
 const GRAPHHOPPER_URL = "https://graphhopper.com/api/1";
@@ -7,7 +7,7 @@ const GEOSERVER_PRODUCTION_URL =
   "https://geo.aclimate.org/geoserver/waterpoints_et/wms";
 const GEOSERVER_ADM_LEVEL_PRODUCTION_URL = "https://geo.aclimate.org/geoserver/administrative/wms"; 
 const KEYCLOAK_URL = "http://localhost:5004";
-const KEYCLOAK_URL_PRODUCTION = process.env.REACT_APP_KEYCLOAK_URL_PRODUCTION;
+const KEYCLOAK_URL_PRODUCTION = "https://users.waterpointsmonitoring.net/auth";
 const KEYCLOAK_REALM = "waterpoints-monitoring";
 const KEYCLOAK_CLIENT = "frontWp";
 

@@ -28,10 +28,6 @@ function Simplelegend() {
         <img src={redImg} alt="" className="me-1" />
         <p className="m-0">{t("monitoring.near")}</p>
       </div>
-      <div className="d-flex align-items-center mb-1">
-        <img src={grayImg} alt="" className="me-1" />
-        <p className="m-0">{t("monitoring.seasonally")}</p>
-      </div>
     </div>
   );
 }

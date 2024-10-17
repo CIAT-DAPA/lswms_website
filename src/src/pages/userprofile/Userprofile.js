@@ -314,24 +314,14 @@ function Userprofile() {
                               <div className="d-flex align-items-stretch ">
                                 <div
                                   className={`td-name text-center fw-medium px-4 me-2 ${
-                                    waterpoint.last_monitored_scaled_depth >
-                                    waterpoint.climatology_scaled_depth
-                                      ? "td-green"
-                                      : waterpoint.last_monitored_scaled_depth /
-                                          waterpoint.climatology_scaled_depth >
-                                        0.5
-                                      ? "td-yellow"
-                                      : waterpoint.last_monitored_scaled_depth /
-                                          waterpoint.climatology_scaled_depth >
-                                        0.03
+                                    waterpoint.last_monitored_deph < 0.2
+                                      ? "td-red"
+                                      : waterpoint.last_monitored_deph > 0.2 && waterpoint.last_monitored_deph < 0.3
                                       ? "td-brown"
-                                      : waterpoint.last_monitored_scaled_depth ===
-                                          0 &&
-                                        waterpoint.climatology_scaled_depth ===
-                                          0
-                                      ? "td-gray"
-                                      : "td-red"
-                                  }`}
+                                      : waterpoint.last_monitored_deph > 0.3 && waterpoint.last_monitored_deph < 0.7
+                                      ? "td-yellow"
+                                      : "td-green"
+                                  }`}                                  
                                 >
                                   {waterpoint.waterpoint_name}
                                 </div>

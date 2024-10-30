@@ -167,6 +167,7 @@ function Waterprofile() {
       return <></>;
     }
   };
+  console.log(wp)
   return (
     <>
       {idWater ? (
@@ -321,9 +322,11 @@ function Waterprofile() {
                       <Marker
                         position={[wp.lat, wp.lon]}
                         icon={
-                          wp.depth < 0.2
+                          wp.depth ==0 && wp.climatology_depth ==0
+                            ? grayIcon
+                            : wp.depth >= 0 && wp.depth <0.2
                             ? redIcon
-                            : wp.depth > 0.2 && wp.depth <0.3 
+                            : wp.depth > 0.2 && wp.depth < 0.3
                             ? brownIcon
                             : wp.depth > 0.3 && wp.depth < 0.7
                             ? yellowIcon

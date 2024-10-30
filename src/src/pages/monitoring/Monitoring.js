@@ -59,6 +59,10 @@ function Visualization() {
     iconUrl: require(`../../assets/img/redMarker.png`),
     iconSize: [32, 32],
   });
+  const blackIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/blackMarker.png`),
+    iconSize: [50, 50],
+  });
   const grayIcon = new L.Icon({
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
@@ -123,9 +127,14 @@ function Visualization() {
     const depth = val.values.find(
       (val) => val.type === "depth"
     ).value;
+    const climatology_depth = val.values.find(
+      (val) => val.type === "climatology_depth"
+    ).value;
     
     let color;
-    if (depth <0.2) {
+    if (depth ==0 && climatology_depth == 0) {
+      color = "gray";
+    } else if (depth >= 0 && depth	< 0.2) {
       color = "red";
     } else if (depth > 0.2 && depth < 0.3) {
       color = "brown";
@@ -155,15 +164,13 @@ function Visualization() {
   }, [filter, waterpoints]);
   const popupData = (wp) => {
     if (wp.name === "Kitala") {
-      if (!filter.gray) {
-        return null;
-      }
+      
   
       return (
-        <Marker position={[wp.lat, wp.lon]} icon={grayIcon} key={wp.id}>
+        <Marker position={[wp.lat, wp.lon]} icon={blackIcon} key={wp.id}>
         <Popup closeButton={false} className="popup" maxWidth={200}>
           <div className="text-center">
-            <WpLabel waterpoint={wp} /> {/* El label que mencionas */}
+            <WpLabel waterpoint={wp} /> 
             <h6 className="fw-medium mb-0 text-gray">
               Apologies,
             </h6>
@@ -179,7 +186,10 @@ function Visualization() {
     const depthValue = monitoredData
       ? monitoredData.values.find((value) => value.type === "depth")
       : null;
-  
+    const climatology_depthValue = monitoredData
+      ? monitoredData.values.find((value) => value.type === "climatology_depth")
+      : null;
+    
     const hasContentsWp =
       monitoredData.am || monitoredData.or || monitoredData.en;
   
@@ -187,11 +197,13 @@ function Visualization() {
       ? null
       : !filter.green && depthValue.value >= 0.7
       ? null
-      : !filter.yellow && depthValue.value >= 0.3 && depthValue.value < 0.7
+      : !filter.yellow && depthValue.value > 0.3 && depthValue.value < 0.7
       ? null
-      : !filter.brown && depthValue.value >= 0.2 && depthValue.value < 0.3
+      : !filter.brown && depthValue.value > 0.2 && depthValue.value < 0.3
       ? null
-      : !filter.red && depthValue.value < 0.2
+      : !filter.red && depthValue.value < 0.2 && depthValue.value >= 0
+      ? null
+      : !filter.gray && depthValue.value === 0 && climatology_depthValue.value === 0
       ? null
       : (
         <>
@@ -236,11 +248,13 @@ function Visualization() {
           <Marker
             position={[wp.lat, wp.lon]}
             icon={
-              depthValue.value < 0.2
+              depthValue.value == 0 && climatology_depthValue.value == 0
+                ? grayIcon
+                : depthValue.value >= 0 && depthValue.value < 0.2
                 ? redIcon
-                : depthValue.value >= 0.2 && depthValue.value < 0.3
+                : depthValue.value > 0.2 && depthValue.value < 0.3
                 ? brownIcon
-                : depthValue.value >= 0.3 && depthValue.value < 0.7
+                : depthValue.value > 0.3 && depthValue.value < 0.7
                 ? yellowIcon
                 : greenIcon
             }
@@ -317,20 +331,24 @@ function Visualization() {
                     <td>
                       <div
                         className={`td-name text-center fw-medium ${
-                          depthValue.value < 0.2
+                          depthValue.value == 0 && climatology_depthValue.value == 0
+                            ? "td-gray"
+                            : depthValue.value >= 0 && depthValue.value < 0.2
                             ? "td-red"
-                            : depthValue.value >= 0.2 && depthValue.value < 0.3
+                            : depthValue.value > 0.2 && depthValue.value < 0.3
                             ? "td-brown"
-                            : depthValue.value >= 0.3 && depthValue.value < 0.7
+                            : depthValue.value > 0.3 && depthValue.value < 0.7
                             ? "td-yellow"
                             : "td-green"
                         }`}
                       >
-                        {depthValue.value < 0.2
+                        {depthValue.value == 0 && climatology_depthValue.value == 0
+                          ? t("monitoring.seasonally")
+                          : depthValue.value >= 0 && depthValue.value < 0.2
                           ? t("monitoring.near")
-                          : depthValue.value >= 0.2 && depthValue.value < 0.3
+                          : depthValue.value > 0.2 && depthValue.value < 0.3
                           ? t("monitoring.alert")
-                          : depthValue.value >= 0.3 && depthValue.value < 0.7
+                          : depthValue.value > 0.3 && depthValue.value < 0.7
                           ? t("monitoring.watch")
                           : t("monitoring.good")}
                       </div>
@@ -463,6 +481,7 @@ function Visualization() {
         }
       });
   };
+  console.log(wpstolabel)
 
   return (
     <>
@@ -540,7 +559,6 @@ function Visualization() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {waterpoints && <WpLabel waterpoints={wpstolabel} />}
-
         {route && (
           <Polyline
             color="#0016ff"

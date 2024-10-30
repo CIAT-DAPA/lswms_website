@@ -59,6 +59,10 @@ function Visualization() {
     iconUrl: require(`../../assets/img/redMarker.png`),
     iconSize: [32, 32],
   });
+  const blackIcon = new L.Icon({
+    iconUrl: require(`../../assets/img/blackMarker.png`),
+    iconSize: [50, 50],
+  });
   const grayIcon = new L.Icon({
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
@@ -160,12 +164,10 @@ function Visualization() {
   }, [filter, waterpoints]);
   const popupData = (wp) => {
     if (wp.name === "Kitala") {
-      if (!filter.gray) {
-        return null;
-      }
+      
   
       return (
-        <Marker position={[wp.lat, wp.lon]} icon={grayIcon} key={wp.id}>
+        <Marker position={[wp.lat, wp.lon]} icon={blackIcon} key={wp.id}>
         <Popup closeButton={false} className="popup" maxWidth={200}>
           <div className="text-center">
             <WpLabel waterpoint={wp} /> 

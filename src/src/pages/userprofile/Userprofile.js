@@ -148,7 +148,6 @@ function Userprofile() {
       [event.target.name]: event.target.checked,
     });
   };
-
   return (
     <>
       <ToastContainer
@@ -314,7 +313,9 @@ function Userprofile() {
                               <div className="d-flex align-items-stretch ">
                                 <div
                                   className={`td-name text-center fw-medium px-4 me-2 ${
-                                    waterpoint.last_monitored_deph < 0.2
+                                    waterpoint.last_monitored_deph == 0 && waterpoint.climatology_depth == 0
+                                      ? "td-gray"
+                                      : waterpoint.last_monitored_deph >= 0 && waterpoint.last_monitored_deph < 0.2
                                       ? "td-red"
                                       : waterpoint.last_monitored_deph > 0.2 && waterpoint.last_monitored_deph < 0.3
                                       ? "td-brown"

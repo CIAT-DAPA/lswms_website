@@ -1,0 +1,39 @@
+.woreda-info {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px; 
+    border: 1px solid #dee2e6; 
+  }
+  
+  .woreda-title,
+  .biomass-info,
+  .date-info {
+    font-size: 1.1em; 
+    margin: 10px 0;
+  }
+  
+  .woreda-title strong,
+  .biomass-info strong,
+  .date-info strong {
+    font-weight: bold; 
+    color: #007bff;
+  }
+  
+  .tab-header {
+    font-weight: bold !important;
+  }
+  
+  .nav-tabs .nav-link {
+    font-size: 1.1em;
+    color: black !important;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: #007bff !important;
+    background-color: #e9ecef !important;
+  }
+  
+  .margin-top {
+    margin-top: 20px;
+  }
+  

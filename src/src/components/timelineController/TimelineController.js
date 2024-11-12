@@ -7,12 +7,14 @@ import axios from "axios";
 import { Modal, Spinner } from "react-bootstrap"; 
 import { useTranslation } from "react-i18next";
 
-function TimelineController({ dimensionName, layer }) {
+function TimelineController({ dimensionName, layer, onTimeChange }) {
 const [t] = useTranslation("global");
 
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
   const [loaded, setLoaded] = useState(true);
+  const wmsLayerRef = useRef(null);
+  
 
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function (date) {
@@ -62,10 +64,13 @@ const [t] = useTranslation("global");
       });
       map.timeDimension = timeDimension;
 
+      if (!wmsLayerRef.current) {
+
       const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
         timeDimensionName: dimensionName,
       });
       tdWmsLayer.addTo(map);
+      wmsLayerRef.current = tdWmsLayer
       tdWmsLayer.on("timeload", function() {
         setLoaded(false);
       });
@@ -83,7 +88,18 @@ const [t] = useTranslation("global");
         });
         map.addControl(timeDimensionControl);
         timeDimensionControlRef.current = timeDimensionControl;
+
+        const initialFormattedTime = new Date(timeDimension.getCurrentTime()).toISOString().split("T")[0];
+        onTimeChange(initialFormattedTime);
+
+        map.timeDimension.on("timeload", function (event) {
+          const currentTime = timeDimension.getCurrentTime();
+          const formattedTime = new Date(currentTime).toISOString().split("T")[0];
+          onTimeChange(formattedTime);
+          
+        });
       }
+    }  
 
       let targetLayer;
       map.eachLayer((layer) => {
@@ -97,7 +113,7 @@ const [t] = useTranslation("global");
         }
       });
     });
-  }, [map]);
+  }, [map,layer, dimensionName, onTimeChange]);
 
   return (
     <>

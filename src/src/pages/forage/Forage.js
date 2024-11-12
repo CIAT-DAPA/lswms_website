@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Forage.css";
 import {
   LayersControl,
@@ -11,10 +11,73 @@ import Configuration from "../../conf/Configuration";
 import TimelineController from "../../components/timelineController/TimelineController";
 import ClickWatershed from "../../components/clickWatershed/ClickWatershed";
 import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
+import ClickWoreda from "../../components/clickWoreda/ClickWoreda";
+import ForageModal from "../../components/forageModal/ForageModal";
+import axios from "axios";
+import { Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+
 
 function Forage() {
   const [t] = useTranslation("global");
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [woredaInfo, setWoredaInfo] = useState({});
+  const [biomassData, setBiomassData] = useState([]);
+  const [forecastData, setForecastData] = useState([]);
+  const [selectedTimestamp, setSelectedTimestamp] = useState(null);
+
+  const handleTimelineChange = (newTimestamp) => {
+    setSelectedTimestamp(newTimestamp);
+  };
+
+  const handleWoredaClick = async (woredaName,extId) => {
+    if (!selectedTimestamp) {
+      console.warn("No timestamp selected");
+      return;
+    }
+
+    setLoading(true);
+
+
+    try {
+      const meanResponse = await axios.get(
+        `${Configuration.get_url_api_base()}/biomass_mean`, 
+        { params: { extId, timestamp: selectedTimestamp } }
+      );
+      
+      const biomassResponse = await axios.get(
+        `${Configuration.get_url_api_base()}/biomass_trend`, 
+        { params: { extId } }
+      );
+      
+      const forecastResponse = await axios.get(
+        `${Configuration.get_url_api_base()}/biomass_forecast`, 
+        { params: { extId } }
+      );
+
+      setWoredaInfo({
+        name: woredaName,
+        meanBiomass: meanResponse.data.meanBiomass,
+        timestamp: selectedTimestamp,
+      });
+
+      setBiomassData(biomassResponse.data);
+      setForecastData(forecastResponse.data);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+   
+  };
+
+
   return (
     <>
       <MapContainer
@@ -54,10 +117,29 @@ function Forage() {
         <TimelineController
           dimensionName="time"
           layer="waterpoints_et:biomass"
+          onTimeChange={handleTimelineChange} 
         />
+        <ClickWoreda onWoredaClick={handleWoredaClick} />
         <ClickWatershed />
         <BiomassLegend layer="waterpoints_et:biomass" />
+       
       </MapContainer>
+
+      <Modal show={loading} backdrop="static" keyboard={false} centered size="sm">
+        <Modal.Body className="d-flex align-items-center">
+          <Spinner animation="border" role="status" className="me-2" />
+          {t("forage.loading-woreda")}
+        </Modal.Body>
+      </Modal>
+
+      <ForageModal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        woredaInfo={woredaInfo}
+        biomassData={biomassData}
+        forecastData={forecastData}
+      />
+
     </>
   );
 }

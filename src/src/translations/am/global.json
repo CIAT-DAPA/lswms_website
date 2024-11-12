@@ -185,6 +185,7 @@
     "show-woredas": "ወረዳዎችን አሳይ",
     "show": "የውሃ ተፋሰስ አሳይ",
     "loading": "የግጦሽ መረጃ",
+    "loading-woreda": "Fetching Woreda details...",
     "biomass": "ባዮማስ"
   },
   "privacy": {

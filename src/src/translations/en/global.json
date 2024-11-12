@@ -185,6 +185,7 @@
     "show-woredas": "Show woredas",
     "show": "Show watershed",
     "loading": "Getting the forage data...",
+    "loading-woreda": "Fetching Woreda details...",
     "biomass": "Biomass"
   },
   "privacy": {

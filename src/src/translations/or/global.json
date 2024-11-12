@@ -185,6 +185,7 @@
     "show-woredas": "Aanaalee Agarsiisi",
     "show": "Lafa dhangala'a bishaanii Agarsiisi ",
     "loading": "Odeeffannoo Marraa Argachuuf",
+    "loading-woreda": "Fetching Woreda details...",
     "biomass": "Qabiyyee marraa"
   },
   "privacy": {

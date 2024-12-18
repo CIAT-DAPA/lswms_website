@@ -21,27 +21,21 @@ function AboutUs() {
       <h1 className="pt-3">{t("aboutUs.title")}</h1>
       <p>{t("aboutUs.description-1")}</p>
       <p>{t("aboutUs.description-2")}</p>
-      <p>{t("aboutUs.description-3")}</p>
-      <p>{t("aboutUs.description-4")}</p>
-      <h2 className="mt-3">{t("aboutUs.vision")}</h2>
-      <p>{t("aboutUs.vision-d")}</p>
-      <h2 className="mt-3">{t("aboutUs.mission")}</h2>
-      <p>{t("aboutUs.mission-d")}</p>
-      <h2 className="mt-3">{t("aboutUs.core-values")}</h2>
+      <h2 className="mt-3">{t("aboutUs.about-project")}</h2>
+      <p>{t("aboutUs.about-project-d")}</p>
+      <h2 className="mt-3">{t("aboutUs.products")}</h2>
+      <p>{t("aboutUs.products-d")}</p>
       <ul>
-        <li>
-          {" "}
-          {t("aboutUs.core-values-d")}
-          <ul>
-            <li>{t("aboutUs.core-values-1")}</li>
-            <li>{t("aboutUs.core-values-2")}</li>
-            <li>{t("aboutUs.core-values-3")}</li>
-            <li>{t("aboutUs.core-values-4")}</li>
-            <li>{t("aboutUs.core-values-5")}</li>
-            <li>{t("aboutUs.core-values-6")}</li>
-          </ul>
-        </li>
+        <li>{t("aboutUs.products-1")}</li>
+        <li>{t("aboutUs.products-2")}</li>
+        <li>{t("aboutUs.products-3")}</li>
+        <li>{t("aboutUs.products-4")}</li>
+        <li>{t("aboutUs.products-5")}</li>
+        <li>{t("aboutUs.products-6")}</li>
       </ul>
+      <p>{t("aboutUs.products-d-2")}</p>
+      <h2 className="mt-3">{t("aboutUs.key")}</h2>
+      <p>{t("aboutUs.key-d")}</p>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { useTranslation } from "react-i18next";
@@ -26,72 +25,80 @@ function ForecastItem({ year, month, week, probabilities, name }) {
     options: {
       chart: {
         height: 200,
-        type: 'bar',
+        type: "bar",
         offsetY: 16,
         toolbar: {
-            show: false,
+          show: false,
         },
-    },
-    plotOptions: {
+      },
+      plotOptions: {
         bar: {
-            distributed: true, // this line is mandatory
-            horizontal: false,
-            barHeight: '75%',
-            columnWidth: '55%',
-          endingShape: 'rounded',
+          distributed: true, // this line is mandatory
+          horizontal: false,
+          barHeight: "75%",
+          columnWidth: "55%",
+          endingShape: "rounded",
         },
-    },
-    colors: [ "#e3bab2","#b3e4b3", "#97cdd8"],
+      },
+      colors: ["#e3bab2", "#b3e4b3", "#97cdd8"],
 
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         show: true,
         width: 2,
-        colors: ['transparent']
+        colors: ["transparent"],
       },
       xaxis: {
-        categories: [t("data.lower-label"), t("data.normal"), t("data.upper-label")],
+        categories: [
+          t("data.lower-label"),
+          t("data.normal"),
+          t("data.upper-label"),
+        ],
       },
       yaxis: {
         max: 100,
         title: {
-          text: t("data.precipitation") + ' (%)',
-           
-        }
+          text: t("data.precipitation") + " (%)",
+        },
       },
       fill: {
-        opacity: 1
+        opacity: 1,
       },
       tooltip: {
         y: {
           formatter: function (val) {
             return val + "%";
-          }
-        }
-      }
+          },
+        },
+      },
     },
   };
-console.log(data)
+
   const getMonthName = (monthNumber) => {
-    const date = new Date();
-    date.setMonth(monthNumber - 1);
+    const months = [
+      t("data.month1"),
+      t("data.month2"),
+      t("data.month3"),
+      t("data.month4"),
+      t("data.month5"),
+      t("data.month6"),
+      t("data.month7"),
+      t("data.month8"),
+      t("data.month9"),
+      t("data.month10"),
+      t("data.month11"),
+      t("data.month12"),
+    ];
 
     if (week) {
-      return date.toLocaleString("en-US", { month: "long" });
+      return months[monthNumber - 1];
     } else {
-      const previousMonthDate = new Date(date);
-      previousMonthDate.setMonth(date.getMonth() - 1);
-
-      const nextMonthDate = new Date(date);
-      nextMonthDate.setMonth(date.getMonth() + 1);
-
-      return [
-        previousMonthDate.toLocaleString("en-US", { month: "long" }),
-        date.toLocaleString("en-US", { month: "long" }),
-        nextMonthDate.toLocaleString("en-US", { month: "long" }),
-      ].join(" - ");
+      const previousMonth = months[(monthNumber + 10) % 12];
+      const currentMonth = months[monthNumber - 1];
+      const nextMonth = months[monthNumber % 12];
+      return `${previousMonth} - ${currentMonth} - ${nextMonth}`;
     }
   };
 
@@ -113,8 +120,17 @@ console.log(data)
       <h6 className="text-center">{year}</h6>
       <h5 className="text-center">{getMonthName(month)}</h5>
       <h6 className="text-center">{t("data.precipitation")} (%)</h6>
-      {week && <h5 className="text-center">{t("data.week")} {week}</h5>}
-      <ReactApexChart options={data.options} series={data.series} type="bar" height={350} />
+      {week && (
+        <h5 className="text-center">
+          {t("data.week")} {week}
+        </h5>
+      )}
+      <ReactApexChart
+        options={data.options}
+        series={data.series}
+        type="bar"
+        height={350}
+      />
       <p className="text-center">
         {week
           ? t("data.forecast-sub-1a") + ` ${week} ` + t("data.forecast-sub-1b")

@@ -1,5 +1,6 @@
 {
   "menu": {
+    "name": "የውሃ ቦታዎች እና የግጦሽ መሬቶች ክትትል",
     "advisories": "መረጃዎች",
     "monitoring": "ክትትል",
     "forage": "መኖ",
@@ -146,7 +147,19 @@
     "no-forecast": "በአሁኑ ጊዜ ምንም መረጃ የለም",
     "slider-start": "ጀምር፡",
     "slider-end": "መጨረሻ፡",
-    "and": "እና"
+    "and": "እና",
+    "month1": "ጥር",
+    "month2": "የካቲት",
+    "month3": "መጋቢት",
+    "month4": "ሚያዚያ",
+    "month5": "ግንቦት",
+    "month6": "ሰኔ",
+    "month7": "ሀምሌ",
+    "month8": "ነሐሴ",
+    "month9": "መስከረም",
+    "month10": "ጥቅምት",
+    "month11": "ህዳር",
+    "month12": "ታህሳስ"
   },
   "notFound": {
     "title": "ውይ! ያልታወቀ ክልል ውስጥ የገባህ ይመስላል።",

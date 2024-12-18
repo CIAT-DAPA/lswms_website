@@ -1,5 +1,6 @@
 {
   "menu": {
+    "name": "Hordoffii Madda-Bishaanii Marraa",
     "advisories": "Gorsoota",
     "monitoring": "Hordoffii",
     "forage": "Nyaata horii",
@@ -146,7 +147,19 @@
     "no-forecast": "Yeroo ammaa tana ragaan tokkolleen hin jiru",
     "slider-start": "Eegala:",
     "slider-end": "Xumura:",
-    "and": "fi"
+    "and": "fi",
+    "month1": "Ammajii",
+    "month2": "Gurrandhala",
+    "month3": "Bitootessa",
+    "month4": "Caamasa",
+    "month5": "Bufa",
+    "month6": "Waxabajjii",
+    "month7": "Oborra Guddaa",
+    "month8": "Oborraa Diqqaa",
+    "month9": "Birraa",
+    "month10": "Cikawa",
+    "month11": "Sadaasa",
+    "month12": "Abraasa"
   },
   "notFound": {
     "title": "Oops! Naannoo hin beekamne keessa waan deemte fakkaata.",

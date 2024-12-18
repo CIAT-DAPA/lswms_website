@@ -11,10 +11,10 @@ import {
   Legend,
 } from "chart.js";
 
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
-import './ForageLineChart.css';
-
+import "./ForageLineChart.css";
+import { useTranslation } from "react-i18next";
 
 ChartJS.register(
   CategoryScale,
@@ -27,13 +27,14 @@ ChartJS.register(
 );
 
 const ForageLineChart = ({ data, title }) => {
-  const chartRef = useRef(null); 
+  const [t] = useTranslation("global");
+  const chartRef = useRef(null);
   const chartData = {
-    labels: data.map(item => item.date),
+    labels: data.map((item) => item.date),
     datasets: [
       {
-        label: "Mean Biomass",
-        data: data.map(item => item.mean),
+        label: t("forage.biomass-mean"),
+        data: data.map((item) => item.mean),
         fill: false,
         backgroundColor: "rgba(75,192,192,0.2)",
         borderColor: "rgba(75,192,192,1)",
@@ -59,16 +60,16 @@ const ForageLineChart = ({ data, title }) => {
       x: {
         title: {
           display: true,
-          text: 'Date'
-        }
+          text: "Date",
+        },
       },
       y: {
         title: {
           display: true,
-          text: 'Biomass (t/ha)'
-        }
-      }
-    }
+          text: "Biomass (t/ha)",
+        },
+      },
+    },
   };
 
   const exportChartAsJPEG = async () => {
@@ -80,23 +81,28 @@ const ForageLineChart = ({ data, title }) => {
   };
 
   const exportDataAsCSV = () => {
-    const csvData = data.map(item => `${item.date},${item.mean}`).join("\n");
-    const blob = new Blob([`Date,Biomass (t/ha)\n${csvData}`], { type: 'text/csv;charset=utf-8;' });
+    const csvData = data.map((item) => `${item.date},${item.mean}`).join("\n");
+    const blob = new Blob([`Date,Biomass (t/ha)\n${csvData}`], {
+      type: "text/csv;charset=utf-8;",
+    });
     saveAs(blob, `${title}.csv`);
   };
 
- return (
+  return (
     <>
       <div ref={chartRef}>
         <Line data={chartData} options={options} />
       </div>
       <div className="export-buttons">
-        <button className="export-button" onClick={exportChartAsJPEG}>Export as JPEG</button>
-        <button className="export-button" onClick={exportDataAsCSV}>Export Data as CSV</button>
+        <button className="export-button" onClick={exportChartAsJPEG}>
+          {t("forage.export-jpeg")}
+        </button>
+        <button className="export-button" onClick={exportDataAsCSV}>
+          {t("forage.export-csv")}
+        </button>
       </div>
     </>
   );
 };
-
 
 export default ForageLineChart;

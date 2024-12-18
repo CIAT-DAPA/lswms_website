@@ -2,7 +2,7 @@
   "menu": {
     "advisories": "Advisories",
     "monitoring": "Monitoring",
-    "forage": "Forage",
+    "forage": "Pasture",
     "about-us": "About Us",
     "log-in": "Log in",
     "log-out": "Log out"
@@ -184,9 +184,25 @@
   "forage": {
     "show-woredas": "Show woredas",
     "show": "Show watershed",
-    "loading": "Getting the forage data...",
+    "loading": "Getting the pasture data...",
     "loading-woreda": "Fetching Woreda details...",
-    "biomass": "Biomass"
+    "biomass": "Biomass",
+    "label-ext-high": "Extremely High",
+    "label-very-high": "Very High",
+    "label-high": "High",
+    "label-medium": "Medium",
+    "label-low": "Low",
+    "label-very-low": "Very Low",
+    "label-no-data": "No data",
+    "woreda-detail": "Woreda Detail",
+    "woreda-info": "Woreda Info",
+    "biomass-trend": "Biomass Trend",
+    "biomass-forecast": "Biomass Forecast",
+    "woreda": "Woreda",
+    "select-date": "Select date range",
+    "biomass-mean": "Mean Biomass",
+    "export-jpeg": "Export as JPEG",
+    "export-csv": "Export Data as CSV"
   },
   "privacy": {
     "title": "Privacy",

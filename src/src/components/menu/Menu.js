@@ -54,7 +54,7 @@ function Menu() {
             height="35"
             className="d-inline-block align-top"
           />{" "}
-          Waterpoints Monitoring
+          {t("menu.name")}
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

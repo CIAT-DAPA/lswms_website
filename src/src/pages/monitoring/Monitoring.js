@@ -592,7 +592,7 @@ function Visualization() {
       <Legend setFilter={setFilter} filter={filter} />
       <Button
         id={route ? `btn-download-map-up` : `btn-download-map`}
-        className="btn-light rounded-4 exclude"
+        className="rounded-4 exclude"
         onClick={() => downloadMapAsJpg()}
       >
         <IconDownload size={20} />

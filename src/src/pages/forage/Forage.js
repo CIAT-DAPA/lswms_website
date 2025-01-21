@@ -144,7 +144,7 @@ function Forage() {
         <BiomassLegend layer="waterpoints_et:biomass" />
         <Button
           id="btn-download-map"
-          className="btn-light rounded-4 exclude"
+          className="rounded-4 exclude"
           onClick={() => downloadMapAsJpg()}
         >
           <IconDownload size={20} />

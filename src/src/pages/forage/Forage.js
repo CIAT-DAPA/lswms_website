@@ -14,9 +14,10 @@ import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
 import ClickWoreda from "../../components/clickWoreda/ClickWoreda";
 import ForageModal from "../../components/forageModal/ForageModal";
 import axios from "axios";
-import { Modal, Spinner } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-
+import { IconDownload } from "@tabler/icons-react";
+import html2canvas from "html2canvas";
 
 function Forage() {
   const [t] = useTranslation("global");
@@ -31,7 +32,28 @@ function Forage() {
     setSelectedTimestamp(newTimestamp);
   };
 
-  const handleWoredaClick = async (woredaName,extId) => {
+  const downloadMapAsJpg = async () => {
+    try {
+      const html = document.querySelector("#map");
+      const canvas = await html2canvas(html, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 2,
+        ignoreElements: (element) => {
+          return element.classList?.contains("exclude");
+        },
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const link = document.createElement("a");
+      link.href = imgData;
+      link.download = "map_pasture.jpg";
+      link.click();
+    } catch (error) {
+      console.error("Error al descargar el mapa como JPG:", error);
+    }
+  };
+
+  const handleWoredaClick = async (woredaName, extId) => {
     if (!selectedTimestamp) {
       console.warn("No timestamp selected");
       return;
@@ -39,20 +61,19 @@ function Forage() {
 
     setLoading(true);
 
-
     try {
       const meanResponse = await axios.get(
-        `${Configuration.get_url_api_base()}/biomass_mean`, 
+        `${Configuration.get_url_api_base()}/biomass_mean`,
         { params: { extId, timestamp: selectedTimestamp } }
       );
-      
+
       const biomassResponse = await axios.get(
-        `${Configuration.get_url_api_base()}/biomass_trend`, 
+        `${Configuration.get_url_api_base()}/biomass_trend`,
         { params: { extId } }
       );
-      
+
       const forecastResponse = await axios.get(
-        `${Configuration.get_url_api_base()}/biomass_forecast`, 
+        `${Configuration.get_url_api_base()}/biomass_forecast`,
         { params: { extId } }
       );
 
@@ -74,13 +95,12 @@ function Forage() {
 
   const handleCloseModal = () => {
     setShowModal(false);
-   
   };
-
 
   return (
     <>
       <MapContainer
+        id="map"
         center={[9.149175, 40.498867]}
         zoom={6}
         style={{
@@ -117,15 +137,27 @@ function Forage() {
         <TimelineController
           dimensionName="time"
           layer="waterpoints_et:biomass"
-          onTimeChange={handleTimelineChange} 
+          onTimeChange={handleTimelineChange}
         />
         <ClickWoreda onWoredaClick={handleWoredaClick} />
         <ClickWatershed />
         <BiomassLegend layer="waterpoints_et:biomass" />
-       
+        <Button
+          id="btn-download-map"
+          className="btn-light rounded-4 exclude"
+          onClick={() => downloadMapAsJpg()}
+        >
+          <IconDownload size={20} />
+        </Button>
       </MapContainer>
 
-      <Modal show={loading} backdrop="static" keyboard={false} centered size="sm">
+      <Modal
+        show={loading}
+        backdrop="static"
+        keyboard={false}
+        centered
+        size="sm"
+      >
         <Modal.Body className="d-flex align-items-center">
           <Spinner animation="border" role="status" className="me-2" />
           {t("forage.loading-woreda")}
@@ -139,7 +171,6 @@ function Forage() {
         biomassData={biomassData}
         forecastData={forecastData}
       />
-
     </>
   );
 }

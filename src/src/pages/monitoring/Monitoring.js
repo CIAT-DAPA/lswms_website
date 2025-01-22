@@ -184,14 +184,14 @@ function Visualization() {
   };
 
   const popupData = (wp) => {
-    if (wp.name === "Kitala") {
+    if (wp.name === "Ketala") {
       return (
         <Marker position={[wp.lat, wp.lon]} icon={blackIcon} key={wp.id}>
           <Popup closeButton={false} className="popup" maxWidth={200}>
             <div className="text-center">
               <WpLabel waterpoint={wp} />
               <h6 className="fw-medium mb-0 text-gray">Apologies,</h6>
-              <p className="text-gray">
+              <p className="text-gray mt-0">
                 There is currently no data available for your selected location.
               </p>
             </div>

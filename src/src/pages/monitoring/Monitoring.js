@@ -262,7 +262,9 @@ function Visualization() {
         <Marker
           position={[wp.lat, wp.lon]}
           icon={
-            depthValue.value == 0 && climatology_depthValue.value == 0
+            wp.name === "Muya" || wp.name === "Bakke"
+              ? brownIcon
+              : depthValue.value == 0 && climatology_depthValue.value == 0
               ? grayIcon
               : depthValue.value >= 0 && depthValue.value < 0.2
               ? redIcon
@@ -345,8 +347,10 @@ function Visualization() {
                   <td>
                     <div
                       className={`td-name text-center fw-medium ${
-                        depthValue.value == 0 &&
-                        climatology_depthValue.value == 0
+                        wp.name === "Muya" || wp.name === "Bakke"
+                          ? "td-brown"
+                          : depthValue.value == 0 &&
+                            climatology_depthValue.value == 0
                           ? "td-gray"
                           : depthValue.value >= 0 && depthValue.value < 0.2
                           ? "td-red"
@@ -357,8 +361,10 @@ function Visualization() {
                           : "td-green"
                       }`}
                     >
-                      {depthValue.value == 0 &&
-                      climatology_depthValue.value == 0
+                      {wp.name === "Muya" || wp.name === "Bakke"
+                        ? "Alert"
+                        : depthValue.value == 0 &&
+                          climatology_depthValue.value == 0
                         ? t("monitoring.seasonally")
                         : depthValue.value >= 0 && depthValue.value < 0.2
                         ? t("monitoring.near")

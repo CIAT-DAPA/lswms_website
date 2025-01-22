@@ -43,6 +43,11 @@ class Services {
     return axios.get(url);
   }
 
+  get_data_by_date(date) {
+    const url = `${Configuration.get_url_api_base()}/lastmonitoredbydate/${date}`;
+    return axios.get(url);
+  }
+
   get_data_monitored(id) {
     const url = `${Configuration.get_url_api_base()}/monitored/${id}`;
     return axios

@@ -20,6 +20,7 @@ import {
   Dropdown,
   ToastContainer,
   Toast,
+  Form,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
@@ -91,7 +92,10 @@ function Visualization() {
   const [toastSuccess, setToastSuccess] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const { userInfo } = useAuth();
-  const [wpstolabel, SetWpstolabel] = useState();
+  const [wpstolabel, setWpstolabel] = useState();
+  const [date, setDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const handleClose = () => setShowWarning(false);
 
@@ -107,7 +111,7 @@ function Visualization() {
   }, []);
 
   useEffect(() => {
-    if (waterpoints.length > 0) {
+    if (waterpoints.length > 0 && firstLoad) {
       const idsWp = waterpoints.map((item) => item.id);
       const requests = idsWp.map((id) => Services.get_last_data(id));
 
@@ -115,6 +119,9 @@ function Visualization() {
         .then((responses) => {
           const monitoredData = responses.map((response) => response.data[0]);
           setMonitored(monitoredData);
+          setDate(monitoredData[0].date.split("T")[0]);
+          setEndDate(monitoredData[0].date.split("T")[0]);
+          setFirstLoad(false);
         })
         .catch((error) => {
           console.error(error);
@@ -124,6 +131,22 @@ function Visualization() {
         });
     }
   }, [waterpoints.length]);
+
+  useEffect(() => {
+    if (!firstLoad) {
+      setLoading(true);
+      Services.get_data_by_date(date)
+        .then((response) => {
+          setMonitored(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [date]);
 
   monitored.forEach((val) => {
     const depth = val.values.find((val) => val.type === "depth").value;
@@ -159,7 +182,7 @@ function Visualization() {
         waterpoint.show = false;
       }
     });
-    SetWpstolabel(waterpoints.filter((wp) => wp.show));
+    setWpstolabel(waterpoints.filter((wp) => wp.show));
   }, [filter, waterpoints]);
 
   const downloadMapAsJpg = async () => {
@@ -181,6 +204,11 @@ function Visualization() {
     } catch (error) {
       console.error("Error al descargar el mapa como JPG:", error);
     }
+  };
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setDate(newDate);
   };
 
   const popupData = (wp) => {
@@ -594,6 +622,15 @@ function Visualization() {
         waterpoints={waterpoints}
         onWpClick={handleWpClick}
         type="waterpoints"
+      />
+      <Form.Control
+        className="position-absolute date-picker rounded-4"
+        type="date"
+        aria-label="Monitored Date"
+        value={date}
+        onChange={handleDateChange}
+        min="2001-01-01"
+        max={endDate}
       />
       <Legend setFilter={setFilter} filter={filter} />
       <Button

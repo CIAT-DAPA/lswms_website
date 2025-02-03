@@ -6,6 +6,7 @@ on:
     tags:
     - 'v*'
  
+ 
 permissions:
   contents: read
  
@@ -16,6 +17,11 @@ env:
   REACT_APP_KEYCLOAK_URL_PRODUCTION: ${{secrets.REACT_APP_KEYCLOAK_URL_PRODUCTION}}
  
 jobs:
+ 
+ 
+ 
+# ------- START FRONT PROCCESS -------- #
+ 
   InstallPackage:
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +38,11 @@ jobs:
           echo "REACT_APP_KEYCLOAK_URL_PRODUCTION=${{env.REACT_APP_KEYCLOAK_URL_PRODUCTION}}" >> .env
           npm install
          
+ 
+# ------- END FRONT PROCCESS -------- #
+ 
+# ------- START MERGE PROCCESS -------- #
+ 
   MergeMainFront:
     needs: [InstallPackage]
     name: Merge Pre deploy with Main
@@ -39,6 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
+ 
       - name: Merge pre_deploy -> main
         uses: devmasx/merge-branch@master
         with:
@@ -47,20 +59,25 @@ jobs:
           target_branch: main
           github_token: ${{ github.token }}
  
+# ------- END MERGE PROCCESS -------- #
+ 
+# ------- START RELEASE PROCCESS -------- #
+ 
   PostRelease:
     needs: MergeMainFront
     name: Create Release
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
-      - uses: actions/setup-node@v3
-        with:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'
+    - uses: actions/setup-node@v3
+      with:
           node-version: 18
-      - name: Install packages
-        run: |
+    # Front Zip
+    - name: Install packages
+      run: |
           cd ./src
           echo "REACT_APP_PRODUCTION_API_URL=${{env.REACT_APP_PRODUCTION_API_URL}}" > .env
           echo "REACT_APP_DEBUG=${{env.REACT_APP_DEBUG}}" >> .env
@@ -68,44 +85,52 @@ jobs:
           echo "REACT_APP_KEYCLOAK_URL_PRODUCTION=${{env.REACT_APP_KEYCLOAK_URL_PRODUCTION}}" >> .env
           npm install
           npm run build
-      - name: Zip artifact front for deployment
-        run: |
+ 
+    - name: Zip artifact front for deployment
+      run: |
           cd ./src/build
           ls
           zip releaseFront.zip ./* -r
-      - name: Upload Front artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: Frontend
-          path: releaseFront.zip
-      - name: Generate Tagname for release
-        id: taggerDryRun
-        uses: anothrNick/github-tag-action@1.61.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DRY_RUN: true
-          DEFAULT_BUMP: patch
-          RELEASE_BRANCHES : stage,main
-          BRANCH_HISTORY: last
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag_name: ${{ steps.taggerDryRun.outputs.new_tag }}
-          release_name: Release ${{ steps.taggerDryRun.outputs.new_tag }}
-          body: ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset Front
-        id: upload-front-release-asset
-        uses: actions/upload-release-asset@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./src/build/releaseFront.zip
-          asset_name: releaseFront.zip
-          asset_content_type: application/zip
+    # Upload Artifacts
+    - name: Upload Front artifact for deployment job
+      uses: actions/upload-artifact@v4
+      with:
+        name: Frontend
+        path: releaseFront.zip
+    # Generate Tagname
+    - name: Generate Tagname for release
+      id: taggerDryRun
+      uses: anothrNick/github-tag-action@1.61.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DRY_RUN: true
+        DEFAULT_BUMP: patch
+        RELEASE_BRANCHES : stage,main
+        BRANCH_HISTORY: last
+    # Create release
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        tag_name: ${{ steps.taggerDryRun.outputs.new_tag }}
+        release_name: Release ${{ steps.taggerDryRun.outputs.new_tag }}
+        #body_path: ./body.md
+        body: ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+    # Upload Assets to release
+    - name: Upload Release Asset Front
+      id: upload-front-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./src/build/releaseFront.zip
+        asset_name: releaseFront.zip
+        asset_content_type: application/zip
+ 
+# ------- END RELEASE PROCCESS -------- #

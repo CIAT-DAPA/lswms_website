@@ -101,7 +101,7 @@ jobs:
           prerelease: false
       - name: Upload Release Asset Front
         id: upload-front-release-asset
-        uses: actions/upload-release-asset@v2
+        uses: actions/upload-release-asset@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

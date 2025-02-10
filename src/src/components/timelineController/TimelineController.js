@@ -4,17 +4,16 @@ import L from "leaflet";
 import "leaflet-timedimension";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
-import { Modal, Spinner } from "react-bootstrap"; 
+import { Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 function TimelineController({ dimensionName, layer, onTimeChange }) {
-const [t] = useTranslation("global");
+  const [t] = useTranslation("global");
 
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
   const [loaded, setLoaded] = useState(true);
   const wmsLayerRef = useRef(null);
-  
 
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function (date) {
@@ -65,61 +64,62 @@ const [t] = useTranslation("global");
       map.timeDimension = timeDimension;
 
       if (!wmsLayerRef.current) {
-
-      const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
-        timeDimensionName: dimensionName,
-      });
-      tdWmsLayer.addTo(map);
-      wmsLayerRef.current = tdWmsLayer
-      tdWmsLayer.on("timeload", function() {
-        setLoaded(false);
-      });
-
-      if (!timeDimensionControlRef.current) {
-        const timeDimensionControl = new L.Control.TimeDimensionCustom({
-          timeDimension: timeDimension,
-          position: "bottomleft",
-          autoPlay: false,
-          speedSlider: false,
-          playerOptions: {
-            buffer: 1,
-            minBufferReady: -1,
-          },
+        const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+          timeDimensionName: dimensionName,
         });
-        map.addControl(timeDimensionControl);
-        timeDimensionControlRef.current = timeDimensionControl;
-
-        const initialFormattedTime = new Date(timeDimension.getCurrentTime()).toISOString().split("T")[0];
-        onTimeChange(initialFormattedTime);
-
-        map.timeDimension.on("timeload", function (event) {
-          const currentTime = timeDimension.getCurrentTime();
-          const formattedTime = new Date(currentTime).toISOString().split("T")[0];
-          onTimeChange(formattedTime);
-          
+        tdWmsLayer.addTo(map);
+        wmsLayerRef.current = tdWmsLayer;
+        tdWmsLayer.on("timeload", function () {
+          setLoaded(false);
         });
+
+        if (!timeDimensionControlRef.current) {
+          const timeDimensionControl = new L.Control.TimeDimensionCustom({
+            timeDimension: timeDimension,
+            position: "bottomleft",
+            autoPlay: false,
+            speedSlider: false,
+            playerOptions: {
+              buffer: 1,
+              minBufferReady: -1,
+            },
+          });
+          map.addControl(timeDimensionControl);
+          timeDimensionControlRef.current = timeDimensionControl;
+
+          const initialFormattedTime = new Date(timeDimension.getCurrentTime())
+            .toISOString()
+            .split("T")[0];
+          onTimeChange(initialFormattedTime);
+
+          map.timeDimension.on("timeload", function (event) {
+            const currentTime = timeDimension.getCurrentTime();
+            const formattedTime = new Date(currentTime)
+              .toISOString()
+              .split("T")[0];
+            onTimeChange(formattedTime);
+          });
+        }
       }
-    }  
 
       let targetLayer;
       map.eachLayer((layer) => {
-        if (layer.options.layers === 'waterpoints_et:Watershed_boundaries') {
+        if (layer.options.layers === "waterpoints_et:Watershed_boundaries") {
           targetLayer = layer;
           targetLayer.setZIndex(1000);
         }
-        if (layer.options.layers === 'administrative:et_adm3_wp') {
+        if (layer.options.layers === "administrative:et_adm3_wp") {
           targetLayer = layer;
           targetLayer.setZIndex(1000);
         }
       });
     });
-  }, [map,layer, dimensionName, onTimeChange]);
+  }, [map, layer, dimensionName, onTimeChange]);
 
   return (
     <>
-      
       <Modal
-        show={loaded} 
+        show={loaded}
         backdrop="static"
         keyboard={false}
         centered

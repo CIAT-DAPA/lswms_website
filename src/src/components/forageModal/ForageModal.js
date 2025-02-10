@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Nav, Tab } from "react-bootstrap";
+import { Col, Modal, Nav, Row, Tab } from "react-bootstrap";
 import ForageLineChart from "../forageLineChart/ForageLineChart";
 import "./ForageModal.css";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useTranslation } from "react-i18next";
+import WoredaMap from "../woredaMap/WoredaMap";
 
 const ForageModal = ({
   showModal,
@@ -24,21 +25,49 @@ const ForageModal = ({
 
   const getStatusInfo = (meanBiomass) => {
     if (meanBiomass > 4)
-      return { color: "#267300", label: t("forage.label-ext-high") };
+      return {
+        color: "#267300",
+        textColor: "#FFF",
+        label: t("forage.label-ext-high"),
+      };
     if (meanBiomass > 3)
-      return { color: "#70A800", label: t("forage.label-very-high") };
+      return {
+        color: "#70A800",
+        textColor: "#FFF",
+        label: t("forage.label-very-high"),
+      };
     if (meanBiomass > 2)
-      return { color: "#98E600", label: t("forage.label-high") };
+      return {
+        color: "#98E600",
+        textColor: "#000",
+        label: t("forage.label-high"),
+      };
     if (meanBiomass > 1)
-      return { color: "#E9FFBE", label: t("forage.label-medium") };
+      return {
+        color: "#E9FFBE",
+        textColor: "#000",
+        label: t("forage.label-medium"),
+      };
     if (meanBiomass > 0.5)
-      return { color: "#FFD37F", label: t("forage.label-low") };
+      return {
+        color: "#FFD37F",
+        textColor: "#000",
+        label: t("forage.label-low"),
+      };
     if (meanBiomass > 0)
-      return { color: "#A87000", label: t("forage.label-very-low") };
-    return { color: "#FFFFFF", label: t("forage.label-no-data") };
+      return {
+        color: "#A87000",
+        textColor: "#FFF",
+        label: t("forage.label-very-low"),
+      };
+    return {
+      color: "#FFFFFF",
+      textColor: "#000",
+      label: t("forage.label-no-data"),
+    };
   };
 
-  const { color, label } = getStatusInfo(woredaInfo.meanBiomass);
+  const { color, textColor, label } = getStatusInfo(woredaInfo.meanBiomass);
 
   const filteredBiomassData = biomassData.slice(dateRange[0], dateRange[1] + 1);
 
@@ -77,40 +106,45 @@ const ForageModal = ({
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="woreda-info">
-              <div className="margin-top">
-                <p>
-                  <strong>{t("forage.woreda")}:</strong> {woredaInfo.name}
-                </p>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <p
-                    style={{
-                      margin: 0,
-                      paddingRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {t("forage.biomass")} (t/ha): {woredaInfo.meanBiomass}
+              <Row className="mt-3">
+                <Col>
+                  <p>
+                    <strong>{t("forage.woreda")}:</strong> {woredaInfo.name}
                   </p>
-                  <button
-                    style={{
-                      backgroundColor: color,
-                      color: "#fff",
-                      border: "none",
-                      padding: "5px 15px",
-                      borderRadius: "5px",
-                      fontWeight: "bold",
-                      height: "100%",
-                    }}
-                  >
-                    {label}
-                  </button>
-                </div>
-                <p></p>
-                <p>
-                  <strong>{t("monitoring.date")}:</strong>{" "}
-                  {woredaInfo.timestamp}
-                </p>
-              </div>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        paddingRight: "10px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {t("forage.biomass")} (t/ha): {woredaInfo.meanBiomass}
+                    </p>
+                    <button
+                      style={{
+                        backgroundColor: color,
+                        color: textColor,
+                        border: "none",
+                        padding: "5px 15px",
+                        borderRadius: "5px",
+                        fontWeight: "600",
+                        height: "100%",
+                      }}
+                    >
+                      {label}
+                    </button>
+                  </div>
+                  <p></p>
+                  <p>
+                    <strong>{t("monitoring.date")}:</strong>{" "}
+                    {woredaInfo.timestamp}
+                  </p>
+                </Col>
+                <Col>
+                  <WoredaMap woreda={woredaInfo} />
+                </Col>
+              </Row>
             </Tab.Pane>
             <Tab.Pane eventKey="biomass-trend">
               <div className="margin-top">

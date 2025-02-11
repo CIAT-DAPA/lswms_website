@@ -268,5 +268,15 @@
     "near-dry-message": "Haroon fooqqachuuf dhiyaattee jirti kanaafuu bishaan haroo tanaa dhugaatii namaa qofaaf itti fayyadami.",
     "seasonal-dry-message": "Haroon fooqqattee jirti. Kanaafuu haroo dhibii dhaattuu jirtuu tan bishaan qabdu odeeffanno/daa'imtuu argachuuf '' Ponds  jedhii 'SMS'n ergi.",
     "condition": "Haala qabiyyee bishaanii"
+  },
+  "rain":{
+    "rain": "Tilmaama Jiidha Lafaa Moodeelaan",
+    "escenario":"",
+    "select":"",
+    "date": "Guyyaa",
+    "select-date": "Hanga guyyaa",
+    "seasonal": "Raaga waqtii",
+    "subseasonal": "Raaga haala qilleensaa yeroo gabaabaa (waqtii gadii)"
+
   }
 }

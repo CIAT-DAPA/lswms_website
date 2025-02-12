@@ -64,7 +64,7 @@ function Visualization() {
   });
   const blackIcon = new L.Icon({
     iconUrl: require(`../../assets/img/blackMarker.png`),
-    iconSize: [50, 50],
+    iconSize: [32, 32],
   });
   const grayIcon = new L.Icon({
     iconUrl: require(`../../assets/img/grayMarker.png`),
@@ -85,6 +85,7 @@ function Visualization() {
     brown: true,
     red: true,
     gray: true,
+    black: true,
   });
   const [showWarning, setShowWarning] = useState(false);
   const [profile, setProfile] = useState();
@@ -617,21 +618,24 @@ function Visualization() {
           <div key={i}>{loading ? <></> : popupData(wp)}</div>
         ))}
       </MapContainer>
-      <SearchBar
-        bigSize={true}
-        waterpoints={waterpoints}
-        onWpClick={handleWpClick}
-        type="waterpoints"
-      />
-      <Form.Control
-        className="position-absolute date-picker rounded-4"
-        type="date"
-        aria-label="Monitored Date"
-        value={date}
-        onChange={handleDateChange}
-        min="2001-01-01"
-        max={endDate}
-      />
+      <div className="position-absolute top-left-bar d-flex gap-2 flex-column flex-md-row">
+        <SearchBar
+          bigSize={true}
+          waterpoints={waterpoints}
+          onWpClick={handleWpClick}
+          type="waterpoints"
+        />
+        <Form.Control
+          className="date-picker rounded-4"
+          type="date"
+          aria-label="Monitored Date"
+          value={date}
+          onChange={handleDateChange}
+          min="2001-01-01"
+          max={endDate}
+        />
+      </div>
+
       <Legend setFilter={setFilter} filter={filter} />
       <Button
         id={route ? `btn-download-map-up` : `btn-download-map`}

@@ -40,6 +40,7 @@
     "alert": "ማንቂያ",
     "near": "ሊደረቅ ያለ",
     "seasonally": "በወቅቱ -የደረቅ",
+    "no-available": "ምንም አይገኝም ውሂብ",
     "waterpoint": "ኩሬ",
     "overview": "አጠቃላይ እይታ",
     "date": "ቀን",
@@ -269,7 +270,7 @@
     "seasonal-dry-message": "ሐይቁ በደረቅ ሁኔታ ላይ ነው. በአቅራቢያ የሚገኙ ኩሬዎችን ለማግኘት እባክዎ “ኩሬዎች” ብለው ይጻፉ",
     "condition": "መፍቻ"
   },
-  "rain":{
+  "rain": {
     "rain": "የሞዴል ዝናብ ትንበያ",
     "escenario": "ስክንድ",
     "select": "ስለሚለዋወጥ የውሃ መረጃ ምረጥ",

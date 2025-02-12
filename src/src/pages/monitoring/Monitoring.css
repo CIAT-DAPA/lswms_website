@@ -72,8 +72,11 @@ table {
 }
 
 .date-picker {
-  top: 125px;
+  width: 150px !important;
+}
+
+.top-left-bar {
+  top: 70px;
   left: 20px;
   z-index: 1000;
-  width: 150px !important;
 }

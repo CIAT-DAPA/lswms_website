@@ -40,6 +40,7 @@
     "alert": "Alert",
     "near": "Near-dry",
     "seasonally": "Seasonally-dry",
+    "no-available": "No available data",
     "waterpoint": "Waterpoint",
     "overview": "Overview",
     "date": "Date",
@@ -269,15 +270,13 @@
     "seasonal-dry-message": "pond is in Dry condition. please text “ponds” to get nearby available ponds",
     "condition": "Waterpoint Condition"
   },
-  "rain":{
-    "rain":"Rain",
-    "escenario":"Scenario",
-    "select":"Select a scenario",
+  "rain": {
+    "rain": "Rain",
+    "escenario": "Scenario",
+    "select": "Select a scenario",
     "date": "Date",
     "select-date": "Select date",
     "subseasonal": "Sub-seasonal",
     "seasonal": "Seasonal"
-
-
   }
 }

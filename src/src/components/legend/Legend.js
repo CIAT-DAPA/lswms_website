@@ -58,7 +58,15 @@ function Legend({ setFilter, filter }) {
         <img src={grayImg} alt="" className="me-1" />
         <p className="m-0">{t("monitoring.seasonally")}</p>
       </div>
-    
+      <div
+        className={`d-flex align-items-center mb-1 ${
+          filter.black ? "" : "text-decoration-line-through opacity-75"
+        }`}
+        onClick={() => setFilter({ ...filter, black: !filter.black })}
+      >
+        <img src={blackIcon} alt="" className="me-1" />
+        <p className="m-0">{t("monitoring.no-available")}</p>
+      </div>
     </div>
   );
 }

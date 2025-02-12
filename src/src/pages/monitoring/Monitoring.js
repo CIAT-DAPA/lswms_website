@@ -43,38 +43,67 @@ import SubscriptionButton from "../../components/subscriptionButton/Subscription
 import { useAuth } from "../../hooks/useAuth";
 import html2canvas from "html2canvas";
 
-function Visualization() {
-  const [t, i18n] = useTranslation("global");
-  //Options for leaflet map
-  const greenIcon = new L.Icon({
+// Mapa de iconos
+const colorIconMap = {
+  green: new L.Icon({
     iconUrl: require(`../../assets/img/greenMarker.png`),
     iconSize: [32, 32],
-  });
-  const yellowIcon = new L.Icon({
+  }),
+  yellow: new L.Icon({
     iconUrl: require(`../../assets/img/yellowMarker.png`),
     iconSize: [32, 32],
-  });
-  const brownIcon = new L.Icon({
+  }),
+  brown: new L.Icon({
     iconUrl: require(`../../assets/img/brownMarker.png`),
     iconSize: [32, 32],
-  });
-  const redIcon = new L.Icon({
+  }),
+  red: new L.Icon({
     iconUrl: require(`../../assets/img/redMarker.png`),
     iconSize: [32, 32],
-  });
-  const blackIcon = new L.Icon({
+  }),
+  black: new L.Icon({
     iconUrl: require(`../../assets/img/blackMarker.png`),
     iconSize: [32, 32],
-  });
-  const grayIcon = new L.Icon({
+  }),
+  gray: new L.Icon({
     iconUrl: require(`../../assets/img/grayMarker.png`),
     iconSize: [32, 32],
-  });
+  }),
+};
+
+const getWaterpointColor = (depth, climatologyDepth, name) => {
+  // Convertir a números flotantes
+  depth = parseFloat(depth);
+  climatologyDepth = parseFloat(climatologyDepth);
+
+  if (name === "Muya" || name === "Bakke") return "brown";
+  if (name === "Ketala") return "black";
+  if (depth === 0 && climatologyDepth === 0) return "gray";
+  if (depth >= 0 && depth < 0.2) return "red";
+  if (depth >= 0.2 && depth < 0.3) return "brown";
+  if (depth >= 0.3 && depth < 0.7) return "yellow";
+  if (depth >= 0.7) return "green";
+  return "gray"; // Default para casos no contemplados
+};
+const getStatusText = (color, t) => {
+  const statusMap = {
+    gray: t("monitoring.seasonally"),
+    red: t("monitoring.near"),
+    brown: t("monitoring.alert"),
+    yellow: t("monitoring.watch"),
+    green: t("monitoring.good"),
+    black: t("monitoring.no-available"),
+  };
+  return statusMap[color] || "";
+};
+
+function Visualization() {
+  const [t, i18n] = useTranslation("global");
   const mapRef = useRef(null);
-  const [waterpoints, setWaterpoints] = useState([]);
+  const [originalWaterpoints, setOriginalWaterpoints] = useState([]);
+  const [filteredWaterpoints, setFilteredWaterpoints] = useState([]);
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [showSearchPlace, setShowSearchPlace] = useState("");
@@ -93,7 +122,7 @@ function Visualization() {
   const [toastSuccess, setToastSuccess] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const { userInfo } = useAuth();
-  const [wpstolabel, setWpstolabel] = useState();
+  const [wpstolabel, setWpstolabel] = useState([]);
   const [date, setDate] = useState();
   const [endDate, setEndDate] = useState();
   const [firstLoad, setFirstLoad] = useState(true);
@@ -101,37 +130,54 @@ function Visualization() {
   const handleClose = () => setShowWarning(false);
 
   useEffect(() => {
-    //Call to API to get waterpoints
     Services.get_all_waterpoints()
       .then((response) => {
-        setWaterpoints(response);
+        const initialWaterpoints = response.map((wp) => ({
+          ...wp,
+          color: "gray",
+          show: true,
+        }));
+        setOriginalWaterpoints(initialWaterpoints);
+        setFilteredWaterpoints(initialWaterpoints);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
-    if (waterpoints.length > 0 && firstLoad) {
-      const idsWp = waterpoints.map((item) => item.id);
+    if (originalWaterpoints.length > 0 && firstLoad) {
+      const idsWp = originalWaterpoints.map((item) => item.id);
       const requests = idsWp.map((id) => Services.get_last_data(id));
 
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => response.data[0]);
+          const updatedWaterpoints = originalWaterpoints.map((wp) => {
+            const monitored = monitoredData.find(
+              (m) => m.waterpointId === wp.id
+            );
+            const depthValue =
+              monitored?.values.find((v) => v.type === "depth")?.value || 0;
+            const climatologyValue =
+              monitored?.values.find((v) => v.type === "climatology_depth")
+                ?.value || 0;
+
+            return {
+              ...wp,
+              color: getWaterpointColor(depthValue, climatologyValue, wp.name),
+            };
+          });
+
+          setOriginalWaterpoints(updatedWaterpoints);
+          setFilteredWaterpoints(updatedWaterpoints);
           setMonitored(monitoredData);
-          setDate(monitoredData[0].date.split("T")[0]);
-          setEndDate(monitoredData[0].date.split("T")[0]);
+          setDate(monitoredData[0]?.date.split("T")[0]);
+          setEndDate(monitoredData[0]?.date.split("T")[0]);
           setFirstLoad(false);
         })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch(console.error)
+        .finally(() => setLoading(false));
     }
-  }, [waterpoints.length]);
+  }, [originalWaterpoints.length, firstLoad]);
 
   useEffect(() => {
     if (!firstLoad) {
@@ -139,52 +185,46 @@ function Visualization() {
       Services.get_data_by_date(date)
         .then((response) => {
           setMonitored(response.data);
+          const updatedWaterpoints = originalWaterpoints.map((wp) => {
+            const monitored = response.data.find(
+              (m) => m.waterpointId === wp.id
+            );
+            const depthValue =
+              monitored?.values.find((v) => v.type === "depth")?.value || 0;
+            const climatologyValue =
+              monitored?.values.find((v) => v.type === "climatology_depth")
+                ?.value || 0;
+
+            return {
+              ...wp,
+              color: getWaterpointColor(depthValue, climatologyValue, wp.name),
+            };
+          });
+
+          setOriginalWaterpoints(updatedWaterpoints);
+          setFilteredWaterpoints(updatedWaterpoints);
         })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch(console.error)
+        .finally(() => setLoading(false));
     }
   }, [date]);
 
-  monitored.forEach((val) => {
-    const depth = val.values.find((val) => val.type === "depth").value;
-    const climatology_depth = val.values.find(
-      (val) => val.type === "climatology_depth"
-    ).value;
-
-    let color;
-    if (depth == 0 && climatology_depth == 0) {
-      color = "gray";
-    } else if (depth >= 0 && depth < 0.2) {
-      color = "red";
-    } else if (depth > 0.2 && depth < 0.3) {
-      color = "brown";
-    } else if (depth > 0.3 && depth < 0.7) {
-      color = "yellow";
-    } else {
-      color = "green";
-    }
-    const waterpointId = val.waterpointId;
-    const first = waterpoints.find((item) => item.id === waterpointId);
-    if (first) {
-      first.color = color;
-    }
-  });
-  waterpoints.forEach((waterpoint) => {
-    waterpoint.show = true;
-  });
-
   useEffect(() => {
-    waterpoints.forEach((waterpoint) => {
-      if (filter[waterpoint.color] === false) {
-        waterpoint.show = false;
+    const filtered = originalWaterpoints.filter((wp) => {
+      // Caso especial para Muya y Bakke
+      if (wp.name === "Muya" || wp.name === "Bakke") {
+        return filter.brown;
       }
+      // Caso especial para Ketala
+      if (wp.name === "Ketala") {
+        return filter.black;
+      }
+      return filter[wp.color];
     });
-    setWpstolabel(waterpoints.filter((wp) => wp.show));
-  }, [filter, waterpoints]);
+
+    setFilteredWaterpoints(filtered);
+    setWpstolabel(filtered);
+  }, [filter, originalWaterpoints]);
 
   const downloadMapAsJpg = async () => {
     try {
@@ -212,10 +252,46 @@ function Visualization() {
     setDate(newDate);
   };
 
+  const handleWpClick = (wp) => {
+    const map = mapRef.current;
+    map.flyTo([wp.lat, wp.lon], 12);
+  };
+
+  const handlePlaceClick = (inicio_lat, inicio_lon) => {
+    Services.get_route(
+      inicio_lat,
+      inicio_lon,
+      waterpointRoute.lat,
+      waterpointRoute.lon,
+      profile
+    )
+      .then((response) => {
+        response.paths[0].points.coordinates =
+          response.paths[0].points.coordinates.map((coordinates) => [
+            coordinates[1],
+            coordinates[0],
+          ]);
+        setRoute(response.paths[0]);
+        setShowSearchPlace(false);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          setAlert(true);
+          setAlertText(t("monitoring.alert-route"));
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   const popupData = (wp) => {
     if (wp.name === "Ketala") {
       return (
-        <Marker position={[wp.lat, wp.lon]} icon={blackIcon} key={wp.id}>
+        <Marker
+          position={[wp.lat, wp.lon]}
+          icon={colorIconMap["black"]}
+          key={wp.id}
+        >
           <Popup closeButton={false} className="popup" maxWidth={200}>
             <div className="text-center">
               <WpLabel waterpoint={wp} />
@@ -229,26 +305,17 @@ function Visualization() {
       );
     }
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-    const depthValue = monitoredData
-      ? monitoredData.values.find((value) => value.type === "depth")
-      : null;
-    const climatology_depthValue = monitoredData
-      ? monitoredData.values.find((value) => value.type === "climatology_depth")
-      : null;
+    const depthValue = monitoredData?.values.find(
+      (value) => value.type === "depth"
+    );
+    const climatology_depthValue = monitoredData?.values.find(
+      (value) => value.type === "climatology_depth"
+    );
 
     const hasContentsWp =
-      monitoredData.am || monitoredData.or || monitoredData.en;
+      monitoredData?.am || monitoredData?.or || monitoredData?.en;
 
-    return depthValue === null ? null : !filter.green &&
-      depthValue.value >= 0.7 ? null : !filter.yellow &&
-      depthValue.value > 0.3 &&
-      depthValue.value < 0.7 ? null : !filter.brown &&
-      depthValue.value > 0.2 &&
-      depthValue.value < 0.3 ? null : !filter.red &&
-      depthValue.value < 0.2 &&
-      depthValue.value >= 0 ? null : !filter.gray &&
-      depthValue.value === 0 &&
-      climatology_depthValue.value === 0 ? null : (
+    return (
       <>
         {hasContentsWp && (
           <Modal show={showWarning} onHide={handleClose} centered>
@@ -290,19 +357,7 @@ function Visualization() {
 
         <Marker
           position={[wp.lat, wp.lon]}
-          icon={
-            wp.name === "Muya" || wp.name === "Bakke"
-              ? brownIcon
-              : depthValue.value == 0 && climatology_depthValue.value == 0
-              ? grayIcon
-              : depthValue.value >= 0 && depthValue.value < 0.2
-              ? redIcon
-              : depthValue.value > 0.2 && depthValue.value < 0.3
-              ? brownIcon
-              : depthValue.value > 0.3 && depthValue.value < 0.7
-              ? yellowIcon
-              : greenIcon
-          }
+          icon={colorIconMap[wp.color]}
           key={wp.id}
         >
           <Popup closeButton={false} className="popup">
@@ -375,33 +430,9 @@ function Visualization() {
                   <td>{t("monitoring.condition")}:</td>
                   <td>
                     <div
-                      className={`td-name text-center fw-medium ${
-                        wp.name === "Muya" || wp.name === "Bakke"
-                          ? "td-brown"
-                          : depthValue.value == 0 &&
-                            climatology_depthValue.value == 0
-                          ? "td-gray"
-                          : depthValue.value >= 0 && depthValue.value < 0.2
-                          ? "td-red"
-                          : depthValue.value > 0.2 && depthValue.value < 0.3
-                          ? "td-brown"
-                          : depthValue.value > 0.3 && depthValue.value < 0.7
-                          ? "td-yellow"
-                          : "td-green"
-                      }`}
+                      className={`td-name text-center fw-medium td-${wp.color}`}
                     >
-                      {wp.name === "Muya" || wp.name === "Bakke"
-                        ? "Alert"
-                        : depthValue.value == 0 &&
-                          climatology_depthValue.value == 0
-                        ? t("monitoring.seasonally")
-                        : depthValue.value >= 0 && depthValue.value < 0.2
-                        ? t("monitoring.near")
-                        : depthValue.value > 0.2 && depthValue.value < 0.3
-                        ? t("monitoring.alert")
-                        : depthValue.value > 0.3 && depthValue.value < 0.7
-                        ? t("monitoring.watch")
-                        : t("monitoring.good")}
+                      {getStatusText(wp.color, t)}
                     </div>
                   </td>
                 </tr>
@@ -499,38 +530,6 @@ function Visualization() {
     );
   };
 
-  const handleWpClick = (wp) => {
-    const map = mapRef.current;
-    map.flyTo([wp.lat, wp.lon], 12);
-  };
-
-  const handlePlaceClick = (inicio_lat, inicio_lon) => {
-    Services.get_route(
-      inicio_lat,
-      inicio_lon,
-      waterpointRoute.lat,
-      waterpointRoute.lon,
-      profile
-    )
-      .then((response) => {
-        response.paths[0].points.coordinates =
-          response.paths[0].points.coordinates.map((coordinates) => [
-            coordinates[1],
-            coordinates[0],
-          ]);
-        setRoute(response.paths[0]);
-        setShowSearchPlace(false);
-      })
-      .catch((error) => {
-        if (error instanceof Error) {
-          setAlert(true);
-          setAlertText(t("monitoring.alert-route"));
-        } else {
-          console.log(error);
-        }
-      });
-  };
-
   return (
     <div id="map">
       <ToastContainer
@@ -571,7 +570,7 @@ function Visualization() {
         <Modal.Body className="d-flex flex-column">
           <p>{t("monitoring.modal-search")}</p>
           <SearchBar
-            waterpoints={waterpoints}
+            waterpoints={originalWaterpoints}
             type="places"
             onWpClick={handlePlaceClick}
           />
@@ -593,10 +592,7 @@ function Visualization() {
       <MapContainer
         center={[9.149175, 40.498867]}
         zoom={6}
-        style={{
-          height: "100vh",
-          width: "100%",
-        }}
+        style={{ height: "100vh", width: "100%" }}
         className="map-monitoring"
         zoomControl={false}
         ref={mapRef}
@@ -606,7 +602,7 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {waterpoints && <WpLabel waterpoints={wpstolabel} />}
+        <WpLabel waterpoints={wpstolabel} />
         {route && (
           <Polyline
             color="#0016ff"
@@ -614,14 +610,14 @@ function Visualization() {
             weight={5}
           />
         )}
-        {waterpoints.map((wp, i) => (
-          <div key={i}>{loading ? <></> : popupData(wp)}</div>
+        {filteredWaterpoints.map((wp, i) => (
+          <div key={i}>{loading ? null : popupData(wp)}</div>
         ))}
       </MapContainer>
       <div className="position-absolute top-left-bar d-flex gap-2 flex-column flex-md-row">
         <SearchBar
           bigSize={true}
-          waterpoints={waterpoints}
+          waterpoints={originalWaterpoints}
           onWpClick={handleWpClick}
           type="waterpoints"
         />

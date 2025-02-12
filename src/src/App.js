@@ -14,7 +14,7 @@ import Privacy from "./pages/privacy/Privacy";
 import Userprofile from "./pages/userprofile/Userprofile";
 import Forecast from "./pages/forecast/forecast";
 import Advisories from "./pages/advisories/advisories";
-
+import Rain from "./pages/rain/rain";
 function App() {
   return (
     <AuthProvider>
@@ -31,6 +31,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/forecast/:idWp" element={<Forecast />} />
           <Route path="/advisories" element={<Advisories />} />
+          <Route path="/rain" element={<Rain />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

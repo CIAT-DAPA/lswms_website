@@ -16,14 +16,6 @@
   }
 }
 
-/* Mantener las reglas de estilo existentes */
-.bar-hints {
-  position: absolute;
-  top: 70px;
-  z-index: 1000;
-  left: 20px;
-}
-
 .search-bar {
   border-bottom: 1px solid #dadce0;
   box-shadow: 0 0 2px rgb(0 0 0/20%), 0 -1px 0 rgb(0 0 0/2%);
@@ -44,14 +36,14 @@
   border: none;
 }
 
-.text-input:focus{
-  box-shadow: none !important; 
+.text-input:focus {
+  box-shadow: none !important;
 }
 
-.hint-div{
+.hint-div {
   cursor: pointer;
 }
 
-.hint-div:hover{
+.hint-div:hover {
   background-color: rgb(235, 235, 235);
 }

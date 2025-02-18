@@ -106,17 +106,21 @@ function HistoricalData() {
       setEvap(filterData(wpData, "evp"));
 
       const result = typeNames.map((type) => {
-        return climatology?.climatology
-          ?.flatMap((monthData) => {
-            return monthData.flatMap((dayData) => {
+        // Asegurar que climatology.climatology sea un array
+        const climatologyData = climatology?.climatology ?? [];
+
+        return climatologyData
+          .flatMap((monthData) => {
+            // Asegurar que monthData sea un array
+            const monthArray = Array.isArray(monthData) ? monthData : [];
+            return monthArray.flatMap((dayData) => {
               const month = dayData.month.toString().padStart(2, "0");
               const day = dayData.day.toString().padStart(2, "0");
-              // Generate an array of years from value.min to value.max
               const years = Array.from(
                 { length: value.max - value.min + 1 },
                 (_, i) => value.min + i
               );
-              // Map over each year in the range
+
               return years.map((year) => {
                 const date = new Date(`${year}-${month}-${day}T05:00:00.000Z`);
                 const formattedDate = date.toLocaleDateString("en-CA");
@@ -130,6 +134,7 @@ function HistoricalData() {
           })
           .sort((a, b) => new Date(a.x) - new Date(b.x));
       });
+
       setClimaDepthData(result[0]);
       setClimaScaledDepthData(result[1]);
     }
@@ -303,7 +308,10 @@ function HistoricalData() {
                     <p className="mb-0">{`${wp.adm1}, ${wp.adm2}, ${wp.adm3}, ${wp.watershed_name}`}</p>
                   </div>
                 </Col>
-                <Col xs={6} className="d-flex justify-content-end align-items-center">
+                <Col
+                  xs={6}
+                  className="d-flex justify-content-end align-items-center"
+                >
                   <NavigationGroupBtns
                     labelDownload="data.download"
                     noData
@@ -353,7 +361,8 @@ function HistoricalData() {
                         {t("data.depth-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
+                        <span className="fw-bold ">{value.min}</span>{" "}
+                        {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart
@@ -405,7 +414,8 @@ function HistoricalData() {
                           {t("data.scaled-description")}{" "}
                           <span className="fw-bold ">{wp.name}</span>,{" "}
                           {t("data.depth-year")} {t("data.between")}{" "}
-                          <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
+                          <span className="fw-bold ">{value.min}</span>{" "}
+                          {t("data.and")}{" "}
                           <span className="fw-bold ">{value.max}</span>.
                         </p>
                         <ReactApexChart
@@ -450,7 +460,8 @@ function HistoricalData() {
                         {t("data.rain-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
+                        <span className="fw-bold ">{value.min}</span>{" "}
+                        {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart
@@ -530,7 +541,8 @@ function HistoricalData() {
                         {t("data.evap-description")}{" "}
                         <span className="fw-bold ">{wp.name}</span>,{" "}
                         {t("data.depth-year")} {t("data.between")}{" "}
-                        <span className="fw-bold ">{value.min}</span> {t("data.and")}{" "}
+                        <span className="fw-bold ">{value.min}</span>{" "}
+                        {t("data.and")}{" "}
                         <span className="fw-bold ">{value.max}</span>.
                       </p>
                       <ReactApexChart

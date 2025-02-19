@@ -205,7 +205,7 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
       .catch((error) => {
         console.error("❌ Error en fetchLayersData:", error);
       });
-  }, [map, layer, dimensionName, onTimeChange, selectedOption]);
+  }, [map, layer, dimensionName, selectedOption]);
 
   console.log(selectedOption);
   return (

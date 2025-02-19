@@ -49,25 +49,7 @@ const Form = ({
                             </select>
                         </div>
 
-                        {selectedScenario && (
-                            <div className="mb-3">
-                                <label className="form-label fw-bold">{t("rain.date")}</label>
-                                <select
-                                    className="form-select"
-                                    value={selectedDate}
-                                    onChange={(e) => setSelectedDate(e.target.value)}
-                                >
-                                    <option value="">{t("rain.select-date")}</option>
-                                    {filteredData
-                                        .find((item) => item.Name === selectedScenario)
-                                        ?.Fechas.map((fecha, index) => (
-                                            <option key={index} value={fecha}>
-                                                {fecha}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-                        )}
+                        
                     </>
                 )}
             </div>

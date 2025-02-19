@@ -277,6 +277,7 @@
     "date": "Date",
     "select-date": "Select date",
     "subseasonal": "Sub-seasonal",
-    "seasonal": "Seasonal"
+    "seasonal": "Seasonal",
+    "loading": "Getting the rain data..."
   }
 }

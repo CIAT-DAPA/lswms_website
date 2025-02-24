@@ -21,6 +21,7 @@
     "keycloak-js": "^23.0.4",
     "leaflet": "^1.9.4",
     "leaflet-timedimension": "^1.1.1",
+    "leaflet.timeline": "^1.6.0",
     "moment": "^2.29.4",
     "papaparse": "^5.4.1",
     "rc-slider": "^11.0.0",

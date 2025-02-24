@@ -13,6 +13,7 @@ import {
 import Form from "../../components/form/form";
 import axios from "axios";
 import { fetchLayersData } from "../../utils/utils";
+import TimelineControllerRain from "../../components/timelinerain/timelinerain";
 
 function Rain() {
     const [t, i18n] = useTranslation("global");
@@ -23,7 +24,11 @@ function Rain() {
     const [legendUrl, setLegendUrl] = useState("");
     const [popupInfo, setPopupInfo] = useState(null);
     const mapRef = useRef(null);
+    const [selectedTimestamp, setSelectedTimestamp] = useState(null);
 
+    const handleTimelineChange = (newTimestamp) => {
+        setSelectedTimestamp(newTimestamp);
+    };
     useEffect(() => {
         const fetchData = async () => {
             const result = await fetchLayersData();
@@ -53,23 +58,22 @@ function Rain() {
     }, [selectedOption]);
 
     useEffect(() => {
-        if (selectedScenario && selectedDate) {
+        if (selectedScenario ) {
             const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?request=GetLegendGraphic&format=image/png&layer=aclimate_et:${selectedScenario}`;
             setLegendUrl(url);
         } else {
             setLegendUrl("");
         }
-    }, [selectedScenario, selectedDate]);
+    }, [selectedScenario]);
     useEffect(() => {
         setPopupInfo(null);
-    }, [selectedScenario, selectedDate]);
+    }, [selectedScenario]);
     const handleMapClick = async (e) => {
         const { lat, lng } = e.latlng;
 
-        if (selectedScenario && selectedDate) {
+        if (selectedScenario ) {
             const bbox = `${lng - 0.1},${lat - 0.1},${lng + 0.1},${lat + 0.1}`;
-            const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${selectedDate}`;
-
+            const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${selectedTimestamp}`;
             try {
                 const response = await axios.get(url);
                 const featureInfo = response.data;
@@ -142,7 +146,7 @@ function Rain() {
 
 
 
-            {selectedOption && selectedScenario && selectedDate && (
+            {/* {selectedOption && selectedScenario && selectedDate && (
                 <WMSTileLayer
                     zIndex={1000}
                     key={`${selectedOption}-${selectedScenario}-${selectedDate}`}
@@ -155,16 +159,24 @@ function Rain() {
                     version="1.1.1"
                 />
 
-            )}
+            )} */}
             <WMSTileLayer
-                zIndex={2000}
+                zIndex={3001}
                 url="https://geo.aclimate.org/geoserver/administrative/wms"
                 layers={`adminstrative:et_adm1`}
                 format="image/png"
                 transparent={true}
                 styles="Ethiopia_admin_style_waterpoints"
             />
-
+            {selectedOption && (
+                <TimelineControllerRain
+                dimensionName="time"
+                layer={selectedScenario}
+                onTimeChange={handleTimelineChange}
+                selectedOption={selectedOption}
+                selectedScenario={selectedScenario}
+            />
+            )}
             <Form
                 filteredData={filteredData}
                 selectedScenario={selectedScenario}
@@ -191,17 +203,7 @@ function Rain() {
                     <img src={legendUrl} alt="Leyenda" style={{ maxWidth: "200px" }} />
                 </div>
             )}
-            {popupInfo && (
-                <Popup
-                    position={[popupInfo.lat, popupInfo.lng]}
-                    onClose={() => setPopupInfo(null)}
-                    style={{ maxWidth: "50px", textAlign: "center" }}
-                >
-                    <div style={{ fontSize: "14px", padding: "5px" }}>
-                        <strong>Value:</strong> {popupInfo.value}
-                    </div>
-                </Popup>
-            )}
+          
         </MapContainer>
     );
 }

@@ -1,20 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useMap } from "react-leaflet";
+import { useMap, Popup, Marker } from "react-leaflet";
+import "../../pages/rain/rain.css";
 import L from "leaflet";
 import "leaflet-timedimension";
 import axios from "axios";
 import { Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-
-function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOption }) {
+function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOption, selectedScenario }) {
   const [t] = useTranslation("global");
-  const [localOption, setLocalOption] = useState(selectedOption);
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
   const [loaded, setLoaded] = useState(true);
   const wmsLayerRef = useRef(null);
-  const [currentDate, setCurrentDate] = useState(""); // Estado para la fecha actual
+  const [currentDate, setCurrentDate] = useState("");
+const [popupInfo, setPopupInfo] = useState(null);
+// Estado para la fecha actual
   console.log("🚀 option en el hijo antes del useEffect:", selectedOption);
+  console.log("🚀 escenario en el hijo antes del useEffect:", selectedScenario)  ;
 
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function (date) {
@@ -97,10 +99,6 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
 
 
   useEffect(() => {
-    console.log("🔄 useEffect ejecutado con cambios en:");
-    console.log("   🔹 layer:", layer);
-    console.log("   🔹 dimensionName:", dimensionName);
-    console.log("   🔹 option:", selectedOption);
 
     if (!map) {
       console.warn("❌ No se ha cargado el mapa aún.");
@@ -109,17 +107,14 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
 
     fetchLayersData()
       .then((dates) => {
-        console.log("📥 Datos recibidos en fetchLayersData:", dates);
 
         // Remover la capa anterior si existe
         if (wmsLayerRef.current) {
-          console.log("🗑️ Eliminando capa WMS anterior...");
           map.removeLayer(wmsLayerRef.current);
           wmsLayerRef.current = null;
         }
 
         const selectedLayer = `aclimate_et:${layer.toLowerCase()}`;
-        console.log("🗺️ Creando nueva capa WMS con:", selectedLayer);
 
         const wmsLayer = L.tileLayer.wms(
           "https://geo.aclimate.org/geoserver/aclimate_et/wms",
@@ -134,20 +129,16 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
 
         // Buscar las fechas correspondientes a la nueva capa
         const timeData = dates.find((item) => item.Name === layer.toLowerCase())?.Fechas;
-        console.log("📆 Fechas obtenidas:", timeData);
 
         // Eliminar TimeDimension existente y sus eventos
         if (map.timeDimension) {
-          console.log("♻️ Eliminando TimeDimension existente...");
           map.timeDimension.off("timeload"); // Eliminar eventos previos
           delete map.timeDimension;
         }
 
-        console.log("🆕 Creando nuevo TimeDimension...");
         const timeDimension = new L.TimeDimension({ times: timeData });
         map.timeDimension = timeDimension;
 
-        console.log("✅ Asignado TimeDimension al mapa.");
 
         const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
           timeDimensionName: dimensionName,
@@ -160,16 +151,13 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
           setLoaded(false);
         });
 
-        console.log("📌 Nueva capa WMS añadida al mapa.");
 
         // Remover el control de tiempo anterior si existe
         if (timeDimensionControlRef.current) {
-          console.log("🗑️ Eliminando control de tiempo anterior...");
           map.removeControl(timeDimensionControlRef.current);
           timeDimensionControlRef.current = null;
         }
 
-        console.log("🆕 Creando nuevo control de tiempo...");
         const timeDimensionControl = new L.Control.TimeDimensionCustom({
           timeDimension: map.timeDimension,
           position: "bottomleft",
@@ -183,14 +171,12 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
 
         map.addControl(timeDimensionControl);
         timeDimensionControlRef.current = timeDimensionControl;
-        console.log("✅ Control de tiempo agregado.");
 
         // Obtener y actualizar la fecha inicial
         const initialFormattedTime = new Date(map.timeDimension.getCurrentTime())
           .toISOString()
           .split("T")[0];
 
-        console.log("📅 Fecha inicial:", initialFormattedTime);
         onTimeChange(initialFormattedTime);
 
         // Evento para actualizar la fecha cuando cambia en el timeline
@@ -198,7 +184,6 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
           const currentTime = map.timeDimension.getCurrentTime();
           const formattedTime = new Date(currentTime).toISOString().split("T")[0];
 
-          console.log("📆 Fecha cambiada:", formattedTime);
           onTimeChange(formattedTime);
         });
       })
@@ -207,7 +192,39 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
       });
   }, [map, layer, dimensionName, selectedOption]);
 
-  console.log(selectedOption);
+  useEffect(() => {
+    if (!map) return;
+
+    const handleMapClick = async (e) => {
+        const { lat, lng } = e.latlng;
+        const bbox = `${lng - 0.1},${lat - 0.1},${lng + 0.1},${lat + 0.1}`;
+        const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${map.timeDimension.getCurrentTime()}`;
+
+        try {
+            const response = await axios.get(url);
+            const featureInfo = response.data;
+            const rawValue = featureInfo.features?.[0]?.properties?.GRAY_INDEX;
+            const value = rawValue === undefined || rawValue === -3.3999999521443642e38 ? "No data" : parseFloat(rawValue).toFixed(1);
+
+            if (value !== "No data") {
+              L.popup({
+                  className: "custom-popup", 
+              })
+                  .setLatLng([lat, lng])
+                  .setContent(`<b>Value: ${value} mm</b>`)
+                  .openOn(map);
+          }
+        } catch (error) {
+            console.error("Error fetching feature info:", error);
+        }
+    };
+
+    map.on("click", handleMapClick);
+    return () => {
+        map.off("click", handleMapClick);
+    };
+}, [map, selectedScenario, selectedOption]);
+
   return (
     <>
       <div className="date-display">
@@ -215,6 +232,7 @@ function TimelineControllerRain({ dimensionName, layer, onTimeChange,selectedOpt
           {t("forage.current_date")}: {currentDate || "Cargando..."}
         </p>
       </div>
+      
       <Modal show={loaded} backdrop="static" keyboard={false} centered size="sm">
         <Modal.Body className="d-flex align-items-center">
           <Spinner animation="border" role="status" className="me-2" />

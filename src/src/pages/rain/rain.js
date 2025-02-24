@@ -74,7 +74,6 @@ function Rain() {
         if (selectedScenario ) {
             const bbox = `${lng - 0.1},${lat - 0.1},${lng + 0.1},${lat + 0.1}`;
             const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${selectedTimestamp}`;
-
             try {
                 const response = await axios.get(url);
                 const featureInfo = response.data;
@@ -99,7 +98,6 @@ function Rain() {
         useMapEvent("click", handleMapClick);
         return null;
     };
-    console.log("selectedOption", selectedOption);
 
     return (
         <MapContainer
@@ -176,6 +174,7 @@ function Rain() {
                 layer={selectedScenario}
                 onTimeChange={handleTimelineChange}
                 selectedOption={selectedOption}
+                selectedScenario={selectedScenario}
             />
             )}
             <Form
@@ -204,19 +203,7 @@ function Rain() {
                     <img src={legendUrl} alt="Leyenda" style={{ maxWidth: "200px" }} />
                 </div>
             )}
-            {popupInfo && (
-                
-                <Popup
-                    position={[popupInfo.lat, popupInfo.lng]}
-                    onClose={() => setPopupInfo(null)}
-                    style={{ Width: "20px", textAlign: "center" }}
-                    className="custom-popup"
-                >
-                    <div style={{ fontSize: "14px", padding: "5px" }}>
-                        <strong>Value:</strong> {popupInfo.value} mm
-                    </div>
-                </Popup>
-            )}
+          
         </MapContainer>
     );
 }

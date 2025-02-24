@@ -13,7 +13,7 @@ const Form = ({
     return (
         <div
             className="card shadow-sm position-absolute"
-            style={{ width: "350px", marginTop: "100px", marginLeft: "20px", zIndex: 1000 }}
+            style={{ width: "350px", marginTop: "30px", marginLeft: "20px", zIndex: 1000 }}
         >
             <div className="card-body">
                 {filteredData && (

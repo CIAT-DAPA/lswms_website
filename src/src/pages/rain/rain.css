@@ -1,4 +1,3 @@
-/* .leaflet-popup-content-wrapper{
-    width: 150px;
+.custom-popup .leaflet-popup-content-wrapper {
+    width: 170px !important;
 }
-Fuerza que los radio buttons sean siempre visibles */

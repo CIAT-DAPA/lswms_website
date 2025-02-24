@@ -49,6 +49,8 @@ function TimelineController({ dimensionName, layer, onTimeChange }) {
     return dates;
   }
 
+  
+
   useEffect(() => {
     getDatesFromGeoserver().then((dates) => {
       const wmsLayer = L.tileLayer.wms(Configuration.get_url_geoserver(), {

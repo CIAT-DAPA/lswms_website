@@ -31,7 +31,6 @@ function Forage() {
   const handleTimelineChange = (newTimestamp) => {
     setSelectedTimestamp(newTimestamp);
   };
-
   const downloadMapAsJpg = async () => {
     try {
       const html = document.querySelector("#map");

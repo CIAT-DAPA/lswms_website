@@ -72,9 +72,9 @@ function Menu() {
             <Link className="nav-link text-black" to="/advisories">
               {t("menu.advisories")}
             </Link>
-            {/* <Link className="nav-link text-black" to="/rain">
+            <Link className="nav-link text-black" to="/rain">
               {t("rain.rain")}
-            </Link> */}
+            </Link> 
             <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}
             </Link>

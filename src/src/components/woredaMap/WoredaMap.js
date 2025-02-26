@@ -136,7 +136,7 @@ function WoredaMap({ woreda }) {
       id="map-modal"
       center={center}
       zoom={6}
-      style={{ height: "200px", width: "100%" }}
+      style={{ height: "225px", width: "100%" }}
       zoomControl={false}
     >
       {/* Creamos el pane para el raster */}

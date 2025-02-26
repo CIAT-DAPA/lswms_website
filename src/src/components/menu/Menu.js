@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import logo from "../../assets/img/logo.png";
 import { useAuth } from "../../hooks/useAuth";
-import { IconLogin, IconLogout } from "@tabler/icons-react";
+import { IconLogin, IconLogout, IconUser } from "@tabler/icons-react";
 
 function Menu() {
   const [t, i18n] = useTranslation("global");
@@ -39,7 +39,7 @@ function Menu() {
   return (
     <Navbar
       collapseOnSelect
-      expand="lg"
+      expand="xl"
       style={{
         opacity: `${opacity}`,
       }}
@@ -74,14 +74,14 @@ function Menu() {
             </Link>
             <Link className="nav-link text-black" to="/rain">
               {t("rain.rain")}
-            </Link> 
+            </Link>
             <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}
             </Link>
-            
+
             <Dropdown
               as={ButtonGroup}
-              className="d-block mb-2 ms-0 me-5 mt-1 mt-lg-0 mb-lg-0 ms-lg-2"
+              className="d-block mb-2 ms-0 me-4 mt-1 mt-lg-0 mb-lg-0 ms-lg-2"
             >
               <Button
                 variant="outline-secondary "
@@ -110,30 +110,39 @@ function Menu() {
             </Dropdown>
             {userInfo ? (
               <>
-                <Link className="nav-link py-0 " to="/userprofile">
-                  <div
-                    className="bg-black border border-5 rounded-circle d-flex flex-column justify-content-center align-items-center"
-                    style={{ height: "45px", width: "45px" }}
+                <Dropdown align="end">
+                  <Dropdown.Toggle
+                    as="div"
+                    className="nav-link py-0 dropdown-toggle-profile"
+                    style={{ cursor: "pointer" }}
                   >
-                    <span className="fw-bold text-white">
-                      {userInfo.name
-                        .split(" ")
-                        .slice(0, 2)
-                        .map(function (word) {
-                          return word.charAt(0);
-                        })
-                        .join("")}
-                    </span>
-                  </div>
-                </Link>
-                <Button
-                  onClick={logout}
-                  variant="outline-danger"
-                  className=""
-                >
-                  <IconLogout className="me-2" />
-                  {t("menu.log-out")}
-                </Button>
+                    <div
+                      className="bg-black border border-5 rounded-circle d-flex flex-column justify-content-center align-items-center"
+                      style={{ height: "45px", width: "45px" }}
+                    >
+                      <span className="fw-bold text-white">
+                        {userInfo.name
+                          .split(" ")
+                          .slice(0, 2)
+                          .map((word) => word.charAt(0))
+                          .join("")}
+                      </span>
+                    </div>
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/userprofile">
+                      <IconUser className="me-2" />
+                      {t("menu.profile")}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={logout}>
+                      <Button variant="outline-danger" className="">
+                        <IconLogout className="me-2" />
+                        {t("menu.log-out")}
+                      </Button>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </>
             ) : (
               <Button onClick={login} variant="outline-primary">

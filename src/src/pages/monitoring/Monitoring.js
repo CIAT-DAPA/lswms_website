@@ -622,7 +622,7 @@ function Visualization() {
           type="waterpoints"
         />
         <Form.Control
-          className="date-picker rounded-4 h-100"
+          className="date-picker rounded-4"
           type="date"
           aria-label="Monitored Date"
           value={date}

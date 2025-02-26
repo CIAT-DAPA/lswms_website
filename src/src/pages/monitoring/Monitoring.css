@@ -73,6 +73,7 @@ table {
 
 .date-picker {
   width: 150px !important;
+  cursor: pointer;
 }
 
 .top-left-bar {

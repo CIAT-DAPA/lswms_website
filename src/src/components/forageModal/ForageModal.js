@@ -6,6 +6,7 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useTranslation } from "react-i18next";
 import WoredaMap from "../woredaMap/WoredaMap";
+import biomassImg from "../../assets/img/biomass1.png";
 
 const ForageModal = ({
   showModal,
@@ -108,7 +109,7 @@ const ForageModal = ({
             <Tab.Pane eventKey="woreda-info">
               <Row className="mt-3">
                 <Col>
-                  <p>
+                  <p className="mb-0">
                     <strong>{t("forage.woreda")}:</strong> {woredaInfo.name}
                   </p>
                   <div style={{ display: "flex", alignItems: "center" }}>
@@ -135,11 +136,11 @@ const ForageModal = ({
                       {label}
                     </button>
                   </div>
-                  <p></p>
                   <p>
                     <strong>{t("monitoring.date")}:</strong>{" "}
                     {woredaInfo.timestamp}
                   </p>
+                  <img className="w-100" src={biomassImg} alt="Woreda Image" />
                 </Col>
                 <Col>
                   <WoredaMap woreda={woredaInfo} />

@@ -5,7 +5,7 @@ import "./rain.css";
 import {
     MapContainer,
     TileLayer,
-    LayersControl,
+
     WMSTileLayer,
     Popup,
     useMapEvent
@@ -13,22 +13,19 @@ import {
 import Form from "../../components/form/form";
 import axios from "axios";
 import { fetchLayersData } from "../../utils/utils";
-import TimelineControllerRain from "../../components/timelinerain/timelinerain";
 
 function Rain() {
-    const [t, i18n] = useTranslation("global");
     const [data, setData] = useState(null);
-    const [selectedOption, setSelectedOption] = useState("Subseasonal");
+    const [selectedOption, setSelectedOption] = useState(null);
     const [selectedScenario, setSelectedScenario] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [legendUrl, setLegendUrl] = useState("");
     const [popupInfo, setPopupInfo] = useState(null);
     const mapRef = useRef(null);
-    const [selectedTimestamp, setSelectedTimestamp] = useState(null);
+    const [dates, setDates] = useState([]);
 
-    const handleTimelineChange = (newTimestamp) => {
-        setSelectedTimestamp(newTimestamp);
-    };
+
+
     useEffect(() => {
         const fetchData = async () => {
             const result = await fetchLayersData();
@@ -58,7 +55,7 @@ function Rain() {
     }, [selectedOption]);
 
     useEffect(() => {
-        if (selectedScenario ) {
+        if (selectedScenario) {
             const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?request=GetLegendGraphic&format=image/png&layer=aclimate_et:${selectedScenario}`;
             setLegendUrl(url);
         } else {
@@ -71,9 +68,9 @@ function Rain() {
     const handleMapClick = async (e) => {
         const { lat, lng } = e.latlng;
 
-        if (selectedScenario ) {
+        if (selectedScenario) {
             const bbox = `${lng - 0.1},${lat - 0.1},${lng + 0.1},${lat + 0.1}`;
-            const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${selectedTimestamp}`;
+            const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&FORMAT=image%2Fjpeg&TRANSPARENT=true&QUERY_LAYERS=aclimate_et:${selectedScenario}&STYLES&LAYERS=aclimate_et:${selectedScenario}&exceptions=application%2Fvnd.ogc.se_inimage&INFO_FORMAT=application/json&FEATURE_COUNT=50&X=50&Y=50&SRS=EPSG%3A4326&WIDTH=101&HEIGHT=101&BBOX=${bbox}&time=${selectedDate}`;
             try {
                 const response = await axios.get(url);
                 const featureInfo = response.data;
@@ -99,6 +96,11 @@ function Rain() {
         return null;
     };
 
+    useEffect(() => {
+        const foundItem = filteredData.find(item => item.Name === selectedScenario);
+        setDates(foundItem ? foundItem.Fechas : []);
+    }, [filteredData, selectedScenario]);
+    console.log(selectedScenario);
     return (
         <MapContainer
             id="map"
@@ -108,45 +110,21 @@ function Rain() {
             className="map-monitoring"
             zoomControl={false}
             whenCreated={(map) => (mapRef.current = map)}
+
+
         >
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
             <MapClickHandler />
 
-            <LayersControl
-                key={i18n.language} // Fuerza la actualización cuando cambia el idioma
-                position="topright"
-                collapsed={false}
-            >
-                <LayersControl.BaseLayer
-                    checked={selectedOption === "Subseasonal"}
-                    name={t("rain.subseasonal")}
-                >
-                    <TileLayer
-                        attribution="Subseasonal Data"
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        eventHandlers={{
-                            add: () => setSelectedOption("Subseasonal"),
-                        }}
-                    />
-                </LayersControl.BaseLayer>
-
-                <LayersControl.BaseLayer
-                    checked={selectedOption === "Seasonal"}
-                    name={t("rain.seasonal")}
-                >
-                    <TileLayer
-                        attribution="Seasonal Data"
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        eventHandlers={{
-                            add: () => setSelectedOption("Seasonal"),
-                        }}
-                    />
-                </LayersControl.BaseLayer>
-            </LayersControl>
 
 
 
 
-            {/* {selectedOption && selectedScenario && selectedDate && (
+
+            {selectedOption && selectedScenario && selectedDate && (
                 <WMSTileLayer
                     zIndex={1000}
                     key={`${selectedOption}-${selectedScenario}-${selectedDate}`}
@@ -159,7 +137,7 @@ function Rain() {
                     version="1.1.1"
                 />
 
-            )} */}
+            )}
             <WMSTileLayer
                 zIndex={3001}
                 url="https://geo.aclimate.org/geoserver/administrative/wms"
@@ -168,42 +146,57 @@ function Rain() {
                 transparent={true}
                 styles="Ethiopia_admin_style_waterpoints"
             />
-            {selectedOption && (
-                <TimelineControllerRain
-                dimensionName="time"
-                layer={selectedScenario}
-                onTimeChange={handleTimelineChange}
-                selectedOption={selectedOption}
-                selectedScenario={selectedScenario}
-            />
+
+            {popupInfo && (
+                <Popup className="custom-popup" zIndex={5000} position={[popupInfo.lat, popupInfo.lng]}>
+                    <div>
+                        <p>
+                            <strong>value: </strong> {popupInfo.value} mm
+                        </p>
+                    </div>
+                </Popup>
             )}
+
             <Form
+                dates={dates}
                 filteredData={filteredData}
                 selectedScenario={selectedScenario}
                 setSelectedScenario={setSelectedScenario}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
                 selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
             />
 
 
-            {legendUrl && (
-                <div
-                    className="position-absolute"
-                    style={{
-                        bottom: "20px",
-                        right: "20px",
-                        background: "white",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-                        zIndex: 1000
-                    }}
-                >
-                    <img src={legendUrl} alt="Leyenda" style={{ maxWidth: "200px" }} />
-                </div>
-            )}
-          
+{legendUrl && selectedDate && (
+    <div
+        className="position-absolute"
+        style={{
+            bottom: "20px",
+            right: "20px",
+            background: "white",
+            padding: "10px",
+            borderRadius: "8px",
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+            zIndex: 1000
+        }}
+    >
+        <img
+            src={legendUrl}
+            alt="Leyenda"
+            style={{
+                maxWidth: "200px",
+                height: selectedScenario.startsWith("subseasonal_country_et_dominant") ? "80vh" : "auto", // Ajusta la altura al 80% de la pantalla solo si es "dominant"
+                objectFit: "contain", // Mantiene la imagen ajustada sin distorsión
+                width: "100%"
+            }}
+        />
+    </div>
+)}
+
+
+
         </MapContainer>
     );
 }

@@ -279,6 +279,8 @@
     "select-date": "የቀን ክልል",
     "seasonal": "ወቅታዊ ትንበያ",
     "subseasonal": "ንዑስ-ወቅታዊ ትንበያ",
-    "loading": "ስለውሃ መረጃ ለማግኘት"
+    "loading": "ስለውሃ መረጃ ለማግኘት",
+    "type": "ዓይነት",
+    "select-type": "የዓይነት ክልል"
   }
 }

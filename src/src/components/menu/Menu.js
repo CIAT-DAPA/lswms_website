@@ -67,13 +67,13 @@ function Menu() {
               {t("menu.monitoring")}
             </Link>
             <Link className="nav-link text-black" to="/forage">
-              {t("monitoring.forecast")}
+              {t("menu.forage")}
             </Link>
             <Link className="nav-link text-black" to="/advisories">
               {t("menu.advisories")}
             </Link>
             <Link className="nav-link text-black" to="/rain">
-              {t("rain.rain")}
+              {t("monitoring.forecast")}
             </Link>
             <Link className="nav-link text-black" to="/aboutus">
               {t("menu.about-us")}

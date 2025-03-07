@@ -14,10 +14,9 @@ import BiomassLegend from "../../components/biomassLegend/BiomassLegend";
 import ClickWoreda from "../../components/clickWoreda/ClickWoreda";
 import ForageModal from "../../components/forageModal/ForageModal";
 import axios from "axios";
-import { Button, Modal, Spinner } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { IconDownload } from "@tabler/icons-react";
-import html2canvas from "html2canvas";
+import BtnDownload from "../../components/btnDownload/BtnDownload";
 
 function Forage() {
   const [t] = useTranslation("global");
@@ -27,29 +26,13 @@ function Forage() {
   const [biomassData, setBiomassData] = useState([]);
   const [forecastData, setForecastData] = useState([]);
   const [selectedTimestamp, setSelectedTimestamp] = useState(null);
+  const [rasterFileUrl, setRasterFileUrl] = useState("");
 
   const handleTimelineChange = (newTimestamp) => {
     setSelectedTimestamp(newTimestamp);
-  };
-  const downloadMapAsJpg = async () => {
-    try {
-      const html = document.querySelector("#map");
-      const canvas = await html2canvas(html, {
-        useCORS: true,
-        allowTaint: true,
-        scale: 2,
-        ignoreElements: (element) => {
-          return element.classList?.contains("exclude");
-        },
-      });
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "map_pasture.jpg";
-      link.click();
-    } catch (error) {
-      console.error("Error al descargar el mapa como JPG:", error);
-    }
+    const bbox = "33.0,3.0,48.0,15.0"; // Ejemplo: límites para Etiopía
+    const url = `${Configuration.get_url_geoserver()}?service=WMS&request=GetMap&version=1.3.0&layers=waterpoints_et:biomass&styles=&format=image/tiff&transparent=true&time=${newTimestamp}&bbox=${bbox}&width=512&height=512`;
+    setRasterFileUrl(url);
   };
 
   const handleWoredaClick = async (woredaName, extId) => {
@@ -141,13 +124,13 @@ function Forage() {
         <ClickWoreda onWoredaClick={handleWoredaClick} />
         <ClickWatershed />
         <BiomassLegend layer="waterpoints_et:biomass" />
-        <Button
-          id="btn-download-map"
-          className="rounded-4 exclude"
-          onClick={() => downloadMapAsJpg()}
-        >
-          <IconDownload size={20} />
-        </Button>
+        <BtnDownload
+          raster
+          rasterFile={rasterFileUrl}
+          jpg
+          idElement={"#map"}
+          nameFile="pasture_map"
+        />
       </MapContainer>
 
       <Modal

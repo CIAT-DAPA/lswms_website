@@ -35,13 +35,12 @@ import {
   IconInfoCircleFilled,
   IconCloudRain,
   IconChartDonut,
-  IconDownload,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import WpLabel from "../../components/wpLabel/WpLabel";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
-import html2canvas from "html2canvas";
+import BtnDownload from "../../components/btnDownload/BtnDownload";
 
 // Mapa de iconos
 const colorIconMap = {
@@ -225,27 +224,6 @@ function Visualization() {
     setFilteredWaterpoints(filtered);
     setWpstolabel(filtered);
   }, [filter, originalWaterpoints]);
-
-  const downloadMapAsJpg = async () => {
-    try {
-      const html = document.querySelector("#map");
-      const canvas = await html2canvas(html, {
-        useCORS: true,
-        allowTaint: true,
-        scale: 2,
-        ignoreElements: (element) => {
-          return element.classList?.contains("exclude");
-        },
-      });
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "map_monitoring.jpg";
-      link.click();
-    } catch (error) {
-      console.error("Error al descargar el mapa como JPG:", error);
-    }
-  };
 
   const handleDateChange = (e) => {
     const newDate = e.target.value;
@@ -633,13 +611,12 @@ function Visualization() {
       </div>
 
       <Legend setFilter={setFilter} filter={filter} />
-      <Button
-        id={route ? `btn-download-map-up` : `btn-download-map`}
-        className="rounded-4 exclude"
-        onClick={() => downloadMapAsJpg()}
-      >
-        <IconDownload size={20} />
-      </Button>
+      <BtnDownload
+        jpg
+        idElement={"#map"}
+        route={route}
+        nameFile="monitoring_map"
+      />
       {route && <RouteInfo route={route} />}
     </div>
   );

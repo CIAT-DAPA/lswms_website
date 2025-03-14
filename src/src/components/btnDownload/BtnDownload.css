@@ -11,3 +11,11 @@
   z-index: 1000;
   right: 20px;
 }
+
+#btn-rain>.dropdown>#btn-download-map {
+  position: absolute;
+  bottom: 50px;
+  z-index: 1000;
+  right: 120px !important	;
+
+}

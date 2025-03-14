@@ -13,6 +13,7 @@ import {
 import Form from "../../components/form/form";
 import axios from "axios";
 import { fetchLayersData } from "../../utils/utils";
+import BtnDownload from "../../components/btnDownload/BtnDownload";
 
 function Rain() {
     const [data, setData] = useState(null);
@@ -23,6 +24,7 @@ function Rain() {
     const [popupInfo, setPopupInfo] = useState(null);
     const mapRef = useRef(null);
     const [dates, setDates] = useState([]);
+    const [rasterFileUrl, setRasterFileUrl] = useState("");
 
 
 
@@ -95,12 +97,31 @@ function Rain() {
         useMapEvent("click", handleMapClick);
         return null;
     };
+   
+  useEffect(() => {
+    
 
+    const baseUrl = "https://geo.aclimate.org/geoserver/aclimate_et/wms";
+    const params = new URLSearchParams({
+      service: "WMS",
+      version: "1.1.0",
+      request: "GetMap",
+      layers: `${selectedScenario}`,
+      bbox: "32.75,2.75,48.25,15.25",
+      width: "768",
+      height: "619",
+      srs: "EPSG:4326",
+      styles: "",
+      format: "image/geotiff", // Cambiar a formato raster adecuado
+      time:`${selectedDate}`
+    });
+
+    setRasterFileUrl(`${baseUrl}?${params.toString()}`);
+  }, [selectedScenario, selectedDate]); // Se ejecuta cuando layerName o time cambian
     useEffect(() => {
         const foundItem = filteredData.find(item => item.Name === selectedScenario);
         setDates(foundItem ? foundItem.Fechas : []);
     }, [filteredData, selectedScenario]);
-    console.log(selectedScenario);
     return (
         <MapContainer
             id="map"
@@ -196,7 +217,17 @@ function Rain() {
 )}
 
 
-
+        {selectedOption && selectedScenario && selectedDate && (
+           <div id="btn-rain">
+             <BtnDownload
+            raster
+            rasterFile={rasterFileUrl}
+            jpg
+            idElement={"#map"}
+            nameFile={selectedScenario + "_" + selectedDate}
+          />
+           </div>
+        )}
         </MapContainer>
     );
 }

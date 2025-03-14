@@ -78,7 +78,7 @@ function Forage() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
+console.log( rasterFileUrl)
   return (
     <>
       <MapContainer

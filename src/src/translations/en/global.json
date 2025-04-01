@@ -189,6 +189,7 @@
   "subscriptionButton": {
     "weekly": "Weekly",
     "alert": "Alert",
+    "forecast": "Crop",
     "subscribe": "Subscribe",
     "unsubscribe": "Unsubscribe"
   },

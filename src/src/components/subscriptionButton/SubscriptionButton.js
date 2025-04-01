@@ -17,146 +17,106 @@ function SubscriptionButton({
   language,
 }) {
   const [t] = useTranslation("global");
-  const [subscription, setSubscription] = useState();
+  const [subscription, setSubscription] = useState(null);
   const { login } = useAuth();
 
   useEffect(() => {
     fetchSubscription();
   }, [idWater, idUser]);
 
-  const fetchSubscription = () => {
-    Services.get_one_subscription_by_user(idUser, idWater)
-      .then((response) => {
-        if (response.length > 0) setSubscription(response);
-        else setSubscription();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const fetchSubscription = async () => {
+    try {
+      const response = await Services.get_one_subscription_by_user(
+        idUser,
+        idWater
+      );
+      setSubscription(response.length > 0 ? response : null);
+    } catch (error) {
+      console.error("Error fetching subscription:", error);
+    }
   };
 
-  const handleSubscription = (bolletin) => {
+  const handleSubscriptionAction = async (action, boletin) => {
     if (!idUser) {
       login();
       return;
     }
 
-    Services.post_subscription(idUser, idWater, bolletin)
-      .then((response) => {
-        fetchSubscription();
-        setShowToastSubscribe(true);
+    try {
+      if (action === "subscribe") {
+        await Services.post_subscription(idUser, idWater, boletin);
         setToastSuccess(true);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      } else if (action === "unsubscribe") {
+        const subItem = subscription?.find((item) => item.boletin === boletin);
+        if (subItem) {
+          await Services.patch_unsubscribe(idWater, subItem.id);
+          setToastSuccess(false);
+        }
+      }
+      await fetchSubscription();
+      setShowToastSubscribe(true);
+    } catch (error) {
+      console.error(`Error on ${action} for ${boletin}:`, error);
+    }
   };
 
-  const handleUnsubscribe = (bolletin) => {
-    if (bolletin === "weekly") {
-      Services.patch_unsubscribe(
-        idWater,
-        subscription.find((item) => item.boletin === "weekly").id
-      )
-        .then((response) => {
-          fetchSubscription();
-          setShowToastSubscribe(true);
-          setToastSuccess(false);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (bolletin === "alert") {
-      Services.patch_unsubscribe(
-        idWater,
-        subscription.find((item) => item.boletin === "alert").id
-      )
-        .then((response) => {
-          fetchSubscription();
-          setShowToastSubscribe(true);
-          setToastSuccess(false);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+  const renderDropdownItem = (boletinKey) => {
+    const isSubscribed = subscription?.some(
+      (sub) => sub.boletin === boletinKey
+    );
+    return (
+      <Dropdown.Item
+        className="d-flex align-items-center justify-content-between"
+        onClick={() =>
+          handleSubscriptionAction(
+            isSubscribed ? "unsubscribe" : "subscribe",
+            boletinKey
+          )
+        }
+      >
+        {t(`subscriptionButton.${boletinKey}`)}
+        <Button
+          variant={isSubscribed ? "danger" : "success"}
+          size="sm"
+          className="rounded-3"
+        >
+          {isSubscribed ? (
+            <IconMailOff size={20} />
+          ) : (
+            <IconMailPlus size={20} />
+          )}
+        </Button>
+      </Dropdown.Item>
+    );
   };
 
   return (
-    <>
-      <Dropdown>
-        <Dropdown.Toggle
-          size={size ? size : ""}
-          className={`me-2 btn ${size ? "rounded-3" : "rounded-4"} ${
-            isMonitoringBtn ? "btn-monitoring" : ""
-          }
-          ${language == "or" ? "btn-or" : ""}`}
-          id="dropdown-basic"
-        >
-          <IconMailPlus
-            size={isMonitoringBtn ? 24 : 20}
-            className={label ? "me-2" : ""}
-          />{" "}
-          {label ? (
-            language == "or" ? (
-              <p className="p-or">{t("subscriptionButton.subscribe")}</p>
-            ) : (
-              t("subscriptionButton.subscribe")
-            )
+    <Dropdown>
+      <Dropdown.Toggle
+        size={size || ""}
+        className={`me-2 btn ${size ? "rounded-3" : "rounded-4"} ${
+          isMonitoringBtn ? "btn-monitoring" : ""
+        } ${language === "or" ? "btn-or" : ""}`}
+        id="dropdown-basic"
+      >
+        <IconMailPlus
+          size={isMonitoringBtn ? 24 : 20}
+          className={label ? "me-2" : ""}
+        />
+        {label &&
+          (language === "or" ? (
+            <p className="p-or">{t("subscriptionButton.subscribe")}</p>
           ) : (
-            ""
-          )}
-        </Dropdown.Toggle>
+            t("subscriptionButton.subscribe")
+          ))}
+      </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          {subscription &&
-          subscription.some((sub) => sub.boletin === "weekly") ? (
-            <Dropdown.Item
-              className="d-flex align-items-center justify-content-between "
-              onClick={() => handleUnsubscribe("weekly")}
-            >
-              {t("subscriptionButton.weekly")}{" "}
-              <Button variant="danger" size="sm" className="rounded-3 ">
-                <IconMailOff size={20} />
-              </Button>
-            </Dropdown.Item>
-          ) : (
-            <Dropdown.Item
-              className="d-flex align-items-center justify-content-between "
-              onClick={() => handleSubscription("weekly")}
-            >
-              {t("subscriptionButton.weekly")}{" "}
-              <Button variant="success" size="sm" className="rounded-3 ">
-                <IconMailPlus size={20} />
-              </Button>
-            </Dropdown.Item>
-          )}
-          {subscription &&
-          subscription.some((sub) => sub.boletin === "alert") ? (
-            <Dropdown.Item
-              className="d-flex align-items-center justify-content-between "
-              onClick={() => handleUnsubscribe("alert")}
-            >
-              {t("subscriptionButton.alert")}{" "}
-              <Button variant="danger" size="sm" className="rounded-3 ">
-                <IconMailOff size={20} />
-              </Button>
-            </Dropdown.Item>
-          ) : (
-            <Dropdown.Item
-              className="d-flex align-items-center justify-content-between "
-              onClick={() => handleSubscription("alert")}
-            >
-              {t("subscriptionButton.alert")}
-              <Button variant="success" size="sm" className="rounded-3 ">
-                <IconMailPlus size={20} />
-              </Button>
-            </Dropdown.Item>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
-    </>
+      <Dropdown.Menu>
+        {renderDropdownItem("weekly")}
+        {renderDropdownItem("alert")}
+        {renderDropdownItem("forecast")}
+      </Dropdown.Menu>
+    </Dropdown>
   );
 }
 

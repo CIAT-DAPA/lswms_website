@@ -19,6 +19,7 @@ import {
   IconMailOff,
   IconCalendarWeek,
   IconBell,
+  IconPlant,
 } from "@tabler/icons-react";
 import Services from "../../services/apiService";
 import { useAuth } from "../../hooks/useAuth";
@@ -27,7 +28,7 @@ import { useTranslation } from "react-i18next";
 function Userprofile() {
   const [t] = useTranslation("global");
   const [subscription, setSubscription] = useState([]);
-  const [toastEdit, setToastEdit] = useState();
+  const [toastEdit, setToastEdit] = useState(null);
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [editingWaterpoint, setEditingWaterpoint] = useState(null);
@@ -40,65 +41,52 @@ function Userprofile() {
     }
   }, [userInfo]);
 
-  const fetchSubscriptionUser = () => {
+  const fetchSubscriptionUser = async () => {
     setLoading(true);
-    Services.get_all_subscription_by_user(userInfo.sub)
-      .then((response) => {
-        setSubscription(response);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
+    try {
+      const response = await Services.get_all_subscription_by_user(
+        userInfo.sub
+      );
+      setSubscription(response);
+    } catch (error) {
+      console.error("Error al obtener suscripciones:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const unsubscribeWp = (waterpoint, boletin) => {
-    let promises = [];
-
-    if (boletin.boletin === "alert") {
-      promises.push(Services.patch_unsubscribe(waterpoint.id, boletin.id));
+  const handleUnsubscribe = async (waterpoint, boletin) => {
+    try {
+      await Services.patch_unsubscribe(waterpoint.id, boletin.id);
+      setShowToastSubscribe(true);
+      setToastEdit(false);
+      fetchSubscriptionUser();
+    } catch (error) {
+      console.error("Error al cancelar la suscripción:", error);
     }
-
-    if (boletin.boletin === "weekly") {
-      promises.push(Services.patch_unsubscribe(waterpoint.id, boletin.id));
-    }
-
-    Promise.all(promises)
-      .then(() => {
-        setShowToastSubscribe(true);
-        setToastEdit(false);
-        fetchSubscriptionUser();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
-  const editWp = () => {
-    const shouldSubscribeToAlert =
-      editingWaterpoint.alert && !editingWaterpoint.subscriptionIdAlert;
-    const shouldSubscribeToWeekly =
-      editingWaterpoint.weekly && !editingWaterpoint.subscriptionIdWeekly;
-    const shouldUnsubscribeFromWeekly =
-      !editingWaterpoint.weekly && editingWaterpoint.subscriptionIdWeekly;
-    const shouldUnsubscribeFromAlert =
-      !editingWaterpoint.alert && editingWaterpoint.subscriptionIdAlert;
-
-    const subscribe = (id, type) =>
-      Services.post_subscription(userInfo.sub, id, type);
-    const unsubscribe = (id, subscriptionId) =>
-      Services.patch_unsubscribe(id, subscriptionId);
+  const editWp = async () => {
+    const subscribe = async (id, type) =>
+      await Services.post_subscription(userInfo.sub, id, type);
+    const unsubscribe = async (id, subscriptionId) =>
+      await Services.patch_unsubscribe(id, subscriptionId);
 
     let promises = [];
 
-    if (shouldSubscribeToAlert) {
+    if (editingWaterpoint.alert && !editingWaterpoint.subscriptionIdAlert) {
       promises.push(subscribe(editingWaterpoint.id, "alert"));
     }
-    if (shouldSubscribeToWeekly) {
+    if (editingWaterpoint.weekly && !editingWaterpoint.subscriptionIdWeekly) {
       promises.push(subscribe(editingWaterpoint.id, "weekly"));
     }
-    if (shouldUnsubscribeFromWeekly) {
+    if (
+      editingWaterpoint.forecast &&
+      !editingWaterpoint.subscriptionIdForecast
+    ) {
+      promises.push(subscribe(editingWaterpoint.id, "forecast"));
+    }
+    if (!editingWaterpoint.weekly && editingWaterpoint.subscriptionIdWeekly) {
       promises.push(
         unsubscribe(
           editingWaterpoint.id,
@@ -106,22 +94,32 @@ function Userprofile() {
         )
       );
     }
-    if (shouldUnsubscribeFromAlert) {
+    if (!editingWaterpoint.alert && editingWaterpoint.subscriptionIdAlert) {
       promises.push(
         unsubscribe(editingWaterpoint.id, editingWaterpoint.subscriptionIdAlert)
       );
     }
+    if (
+      !editingWaterpoint.forecast &&
+      editingWaterpoint.subscriptionIdForecast
+    ) {
+      promises.push(
+        unsubscribe(
+          editingWaterpoint.id,
+          editingWaterpoint.subscriptionIdForecast
+        )
+      );
+    }
 
-    Promise.all(promises)
-      .then(() => {
-        setShowToastSubscribe(true);
-        setToastEdit(true);
-        setModalVisibility(false);
-        fetchSubscriptionUser();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      await Promise.all(promises);
+      setShowToastSubscribe(true);
+      setToastEdit(true);
+      setModalVisibility(false);
+      fetchSubscriptionUser();
+    } catch (error) {
+      console.error("Error al editar la suscripción:", error);
+    }
   };
 
   const modalEdit = (waterpoint) => {
@@ -134,6 +132,9 @@ function Userprofile() {
           } else if (item.boletin === "weekly") {
             waterpoint.weekly = true;
             waterpoint.subscriptionIdWeekly = item.id;
+          } else if (item.boletin === "forecast") {
+            waterpoint.forecast = true;
+            waterpoint.subscriptionIdForecast = item.id;
           }
         }
       });
@@ -148,6 +149,60 @@ function Userprofile() {
       [event.target.name]: event.target.checked,
     });
   };
+
+  const renderWaterpointRow = (waterpoint, boletin, index) => {
+
+    return (
+      <Row
+        key={index}
+        className="justify-content-between align-items-baseline mb-4 mb-md-3 flex-wrap"
+      >
+        <Col className="col-10 col-md-5">
+          <div className="d-flex align-items-stretch">
+            <div
+              className={`td-name text-center fw-medium px-4 me-2 ${
+                waterpoint.last_monitored_deph === 0 &&
+                waterpoint.climatology_depth === 0
+                  ? "td-gray"
+                  : waterpoint.last_monitored_deph >= 0 &&
+                    waterpoint.last_monitored_deph < 0.2
+                  ? "td-red"
+                  : waterpoint.last_monitored_deph > 0.2 &&
+                    waterpoint.last_monitored_deph < 0.3
+                  ? "td-brown"
+                  : waterpoint.last_monitored_deph > 0.3 &&
+                    waterpoint.last_monitored_deph < 0.7
+                  ? "td-yellow"
+                  : "td-green"
+              }`}
+            >
+              {waterpoint.waterpoint_name}
+            </div>
+          </div>
+          <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
+        </Col>
+        <Col className="col-2">
+          {t("monitoring.depth")}: {waterpoint.last_monitored_deph.toFixed(3)}
+        </Col>
+        <Col className="d-flex col-12 col-md-5">
+          <Button
+            className="me-4 rounded-4 btn-warning text-black"
+            onClick={() => modalEdit(waterpoint)}
+          >
+            <IconEdit /> {t("user-profile.edit-2")}
+          </Button>
+          <Button
+            className="rounded-4 btn-danger"
+            onClick={() => handleUnsubscribe(waterpoint, boletin)}
+          >
+            <IconMailOff className="me-2" />{" "}
+            {t("subscriptionButton.unsubscribe")}
+          </Button>
+        </Col>
+      </Row>
+    );
+  };
+
   return (
     <>
       <ToastContainer
@@ -159,16 +214,17 @@ function Userprofile() {
           onClose={() => setShowToastSubscribe(false)}
           show={showToastSubscribe}
           delay={2000}
-          className={!toastEdit ? `bg-danger-subtle` : `bg-success-subtle`}
           autohide
+          className={toastEdit ? "bg-success-subtle" : "bg-danger-subtle"}
         >
           <Toast.Body>
-            {!toastEdit
-              ? t("subscriptionToast.unsubscribed")
-              : t("subscriptionToast.subscribed")}
+            {toastEdit
+              ? t("subscriptionToast.subscribed")
+              : t("subscriptionToast.unsubscribed")}
           </Toast.Body>
         </Toast>
       </ToastContainer>
+
       {editingWaterpoint && (
         <Modal
           show={modalVisibility}
@@ -184,20 +240,28 @@ function Userprofile() {
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Check
-                type={"checkbox"}
-                id={`checkbox-weekly`}
-                label={t("subscriptionButton.weekly")}
-                checked={editingWaterpoint.weekly}
-                name="weekly"
-                onChange={handleCheckboxChange}
-              />
-              <Form.Check
-                type={"checkbox"}
-                id={`checkbox-alert`}
+            <Form.Check
+                type="checkbox"
+                id="checkbox-alert"
                 label={t("subscriptionButton.alert")}
                 checked={editingWaterpoint.alert}
                 name="alert"
+                onChange={handleCheckboxChange}
+              />
+              <Form.Check
+                type="checkbox"
+                id="checkbox-forecast"
+                label={t("subscriptionButton.forecast")}
+                checked={editingWaterpoint.forecast}
+                name="forecast"
+                onChange={handleCheckboxChange}
+              />
+              <Form.Check
+                type="checkbox"
+                id="checkbox-weekly"
+                label={t("subscriptionButton.weekly")}
+                checked={editingWaterpoint.weekly}
+                name="weekly"
                 onChange={handleCheckboxChange}
               />
             </Form>
@@ -211,17 +275,22 @@ function Userprofile() {
             </Button>
             <Button
               variant="primary"
-              onClick={() => editWp()}
-              disabled={!editingWaterpoint.weekly && !editingWaterpoint.alert}
+              onClick={editWp}
+              disabled={
+                !editingWaterpoint.weekly &&
+                !editingWaterpoint.alert &&
+                !editingWaterpoint.forecast
+              }
             >
               {t("user-profile.save")}
             </Button>
           </Modal.Footer>
         </Modal>
       )}
+
       <div className="user-bg">
         <Container className="container-user">
-          <Row className="text-white align-items-center ">
+          <Row className="text-white align-items-center">
             <Col className="col-3 col-md-2 text-center">
               <div
                 className="bg-black border border-5 py-5 rounded-circle d-flex flex-column justify-content-center align-items-center"
@@ -232,9 +301,7 @@ function Userprofile() {
                     userInfo.name
                       .split(" ")
                       .slice(0, 2)
-                      .map(function (word) {
-                        return word.charAt(0);
-                      })
+                      .map((word) => word.charAt(0))
                       .join("")
                   ) : (
                     <Placeholder xs={2} />
@@ -251,7 +318,8 @@ function Userprofile() {
           </Row>
         </Container>
       </div>
-      <Container className="mt-5">
+
+      <Container className="mt-5 mb-4">
         <Row>
           {loading ? (
             <Modal
@@ -261,7 +329,7 @@ function Userprofile() {
               centered
               size="sm"
             >
-              <Modal.Body className="d-flex align-items-center ">
+              <Modal.Body className="d-flex align-items-center">
                 <Spinner animation="border" role="status" className="me-2" />
                 {t("user-profile.loading")}
               </Modal.Body>
@@ -275,9 +343,8 @@ function Userprofile() {
                     {t("user-profile.description-1")}
                   </p>
                   <p className="text-wrap-pretty">
-                    {t("user-profile.description-2-1")}
+                    {t("user-profile.description-2-1")}{" "}
                     <span className="fw-bold">
-                      {" "}
                       {t("subscriptionButton.weekly")}
                     </span>
                     , {t("user-profile.description-2-2")}{" "}
@@ -293,73 +360,26 @@ function Userprofile() {
                           <IconCalendarWeek className="me-2" />
                         ) : boletin.boletin === "alert" ? (
                           <IconBell className="me-2" />
-                        ) : (
-                          <></>
-                        )}
-                        <h5 className="fw-medium text-capitalize ">
-                          {boletin.boletin == "weekly"
+                        ) : boletin.boletin === "forecast" ? (
+                          <IconPlant className="me-2" />
+                        ) : null}
+                        <h5 className="fw-medium text-capitalize">
+                          {boletin.boletin === "weekly"
                             ? t("subscriptionButton.weekly")
-                            : t("subscriptionButton.alert")}
+                            : boletin.boletin === "alert"
+                            ? t("subscriptionButton.alert")
+                            : t("subscriptionButton.forecast")}
                         </h5>
                       </div>
-
-                      {boletin.waterpoints.map((waterpoint, index) => (
-                        <>
-                          <Row
-                            className="justify-content-between align-items-baseline mb-4 mb-md-3 flex-wrap "
-                            key={index}
-                          >
-                            <Col className="col-10 col-md-5">
-                              <div className="d-flex align-items-stretch ">
-                                <div
-                                  className={`td-name text-center fw-medium px-4 me-2 ${
-                                    waterpoint.last_monitored_deph == 0 && waterpoint.climatology_depth == 0
-                                      ? "td-gray"
-                                      : waterpoint.last_monitored_deph >= 0 && waterpoint.last_monitored_deph < 0.2
-                                      ? "td-red"
-                                      : waterpoint.last_monitored_deph > 0.2 && waterpoint.last_monitored_deph < 0.3
-                                      ? "td-brown"
-                                      : waterpoint.last_monitored_deph > 0.3 && waterpoint.last_monitored_deph < 0.7
-                                      ? "td-yellow"
-                                      : "td-green"
-                                  }`}                                  
-                                >
-                                  {waterpoint.waterpoint_name}
-                                </div>
-                              </div>
-                              <div>{`${waterpoint.adm1_name}, ${waterpoint.adm2_name}, ${waterpoint.adm3_name}`}</div>
-                            </Col>
-                            <Col className="col-2">
-                              {t("monitoring.depth")}:{" "}
-                              {waterpoint.last_monitored_deph.toFixed(3)}
-                            </Col>
-                            <Col className="d-flex col-12 col-md-5">
-                              <Button
-                                className="me-4 rounded-4 btn-warning text-black"
-                                onClick={() => modalEdit(waterpoint)}
-                              >
-                                <IconEdit />
-                                {t("user-profile.edit-2")}
-                              </Button>
-                              <Button
-                                className=" rounded-4 btn-danger "
-                                onClick={() =>
-                                  unsubscribeWp(waterpoint, boletin)
-                                }
-                              >
-                                <IconMailOff className="me-2" />
-                                {t("subscriptionButton.unsubscribe")}
-                              </Button>
-                            </Col>
-                          </Row>
-                        </>
-                      ))}
+                      {boletin.waterpoints.map((waterpoint, idx) =>
+                        renderWaterpointRow(waterpoint, boletin, idx)
+                      )}
                     </div>
                   ))}
                 </>
               ) : (
                 <>
-                  <h3 className="text-center mb-1 ">
+                  <h3 className="text-center mb-1">
                     {t("user-profile.no-subscription")}
                   </h3>
                   <p className="text-center">

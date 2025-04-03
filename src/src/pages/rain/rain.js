@@ -97,6 +97,7 @@ function Rain() {
         useMapEvent("click", handleMapClick);
         return null;
     };
+    console.log(selectedScenario)
    
   useEffect(() => {
     
@@ -204,15 +205,20 @@ function Rain() {
         }}
     >
         <img
-            src={legendUrl}
-            alt="Leyenda"
-            style={{
-                maxWidth: "200px",
-                height: selectedScenario.startsWith("subseasonal_country_et_dominant") ? "80vh" : "auto", // Ajusta la altura al 80% de la pantalla solo si es "dominant"
-                objectFit: "contain", // Mantiene la imagen ajustada sin distorsión
-                width: "100%"
-            }}
-        />
+  src={legendUrl}
+  alt="Leyenda"
+  style={{
+    maxWidth: "200px",
+    height:
+      selectedScenario.startsWith("subseasonal_country_et_dominant") ||
+      selectedScenario.startsWith("seasonal_country_et_dominant")
+        ? "80vh"
+        : "auto", // Se aplica 80vh solo para los escenarios "dominant"
+    objectFit: "contain", // Mantiene la imagen ajustada sin distorsión
+    width: "100%"
+  }}
+/>
+
     </div>
 )}
 

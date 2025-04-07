@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-
 import "./rain.css";
+import dominnantlegend from "../../assets/img/dominantlegend.png";
 import {
     MapContainer,
     TileLayer,
@@ -60,6 +60,7 @@ function Rain() {
         if (selectedScenario) {
             const url = `https://geo.aclimate.org/geoserver/aclimate_et/wms?request=GetLegendGraphic&format=image/png&layer=aclimate_et:${selectedScenario}`;
             setLegendUrl(url);
+            
         } else {
             setLegendUrl("");
         }
@@ -97,33 +98,34 @@ function Rain() {
         useMapEvent("click", handleMapClick);
         return null;
     };
-    console.log(selectedScenario)
-   
-  useEffect(() => {
-    
+    console.log(legendUrl)
 
-    const baseUrl = "https://geo.aclimate.org/geoserver/aclimate_et/wms";
-    const params = new URLSearchParams({
-      service: "WMS",
-      version: "1.1.0",
-      request: "GetMap",
-      layers: `${selectedScenario}`,
-      bbox: "32.75,2.75,48.25,15.25",
-      width: "768",
-      height: "619",
-      srs: "EPSG:4326",
-      styles: "",
-      format: "image/geotiff", // Cambiar a formato raster adecuado
-      time:`${selectedDate}`
-    });
+    useEffect(() => {
 
-    setRasterFileUrl(`${baseUrl}?${params.toString()}`);
-  }, [selectedScenario, selectedDate]); // Se ejecuta cuando layerName o time cambian
+
+        const baseUrl = "https://geo.aclimate.org/geoserver/aclimate_et/wms";
+        const params = new URLSearchParams({
+            service: "WMS",
+            version: "1.1.0",
+            request: "GetMap",
+            layers: `${selectedScenario}`,
+            bbox: "32.75,2.75,48.25,15.25",
+            width: "768",
+            height: "619",
+            srs: "EPSG:4326",
+            styles: "",
+            format: "image/geotiff", // Cambiar a formato raster adecuado
+            time: `${selectedDate}`
+        });
+
+        setRasterFileUrl(`${baseUrl}?${params.toString()}`);
+    }, [selectedScenario, selectedDate]); // Se ejecuta cuando layerName o time cambian
     useEffect(() => {
         const foundItem = filteredData.find(item => item.Name === selectedScenario);
         setDates(foundItem ? foundItem.Fechas : []);
     }, [filteredData, selectedScenario]);
     return (
+        <>
         <MapContainer
             id="map"
             center={[9.149175, 40.498867]}
@@ -141,7 +143,7 @@ function Rain() {
             />
             <MapClickHandler />
 
-
+            
 
 
 
@@ -169,15 +171,28 @@ function Rain() {
                 styles="Ethiopia_admin_style_waterpoints"
             />
 
-            {popupInfo && (
-                <Popup className="custom-popup" zIndex={5000} position={[popupInfo.lat, popupInfo.lng]}>
-                    <div>
-                        <p>
-                            <strong>value: </strong> {popupInfo.value} mm
-                        </p>
-                    </div>
-                </Popup>
-            )}
+{popupInfo && (
+    <Popup className="custom-popup" zIndex={5000} position={[popupInfo.lat, popupInfo.lng]}>
+        <div>
+            <p>
+                <strong>value: </strong> 
+                {
+                    (() => {
+                        let value = popupInfo.value;
+                        const isDominant = selectedScenario === 'subseasonal_country_et_dominant' || selectedScenario === 'seasonal_country_et_dominant';
+
+                        if (isDominant) {
+                            if (value > 200) value -= 200;
+                            else if (value > 100) value -= 100;
+                        }
+
+                        return `${value.toFixed(2)} mm`;
+                    })()
+                }
+            </p>
+        </div>
+    </Popup>
+)}
 
             <Form
                 dates={dates}
@@ -189,9 +204,9 @@ function Rain() {
                 selectedOption={selectedOption}
                 setSelectedOption={setSelectedOption}
             />
+            
 
-
-{legendUrl && selectedDate && (
+            {legendUrl && selectedDate && (
     <div
         className="position-absolute"
         style={{
@@ -205,36 +220,45 @@ function Rain() {
         }}
     >
         <img
-  src={legendUrl}
-  alt="Leyenda"
-  style={{
-    maxWidth: "200px",
-    height:
-      selectedScenario.startsWith("subseasonal_country_et_dominant") ||
-      selectedScenario.startsWith("seasonal_country_et_dominant")
-        ? "80vh"
-        : "auto", // Se aplica 80vh solo para los escenarios "dominant"
-    objectFit: "contain", // Mantiene la imagen ajustada sin distorsión
-    width: "100%"
-  }}
-/>
-
+            src={
+                selectedScenario.startsWith("subseasonal_country_et_dominant") ||
+                selectedScenario.startsWith("seasonal_country_et_dominant")
+                    ? dominnantlegend // Ruta de la leyenda especial
+                    : legendUrl
+            }
+            alt="Leyenda"
+            style={{
+                maxWidth: "200px",
+                height:
+                    selectedScenario.startsWith("subseasonal_country_et_dominant") ||
+                    selectedScenario.startsWith("seasonal_country_et_dominant")
+                        ? "80vh"
+                        : "auto",
+                objectFit: "contain",
+                width: "100%"
+            }}
+        />
     </div>
 )}
 
 
-        {selectedOption && selectedScenario && selectedDate && (
-           <div id="btn-rain">
-             <BtnDownload
-            raster
-            rasterFile={rasterFileUrl}
-            jpg
-            idElement={"#map"}
-            nameFile={selectedScenario + "_" + selectedDate}
-          />
-           </div>
-        )}
+
+            {selectedOption && selectedScenario && selectedDate && (
+                <div id="btn-rain">
+                    <BtnDownload
+                        raster
+                        rasterFile={rasterFileUrl}
+                        jpg
+                        idElement={"#map"}
+                        nameFile={selectedScenario + "_" + selectedDate}
+                    />
+                </div>
+            )}
         </MapContainer>
+        
+        </>
+        
+        
     );
 }
 export default Rain;

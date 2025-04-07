@@ -174,22 +174,24 @@ function Rain() {
 {popupInfo && (
     <Popup className="custom-popup" zIndex={5000} position={[popupInfo.lat, popupInfo.lng]}>
         <div>
-            <p>
-                <strong>value: </strong> 
-                {
-                    (() => {
-                        let value = popupInfo.value;
-                        const isDominant = selectedScenario === 'subseasonal_country_et_dominant' || selectedScenario === 'seasonal_country_et_dominant';
+        <p>
+    <strong>value: </strong> 
+    {
+        (() => {
+            let value = Number(popupInfo.value); // Asegurarnos de que value es un número
+            const isDominant = selectedScenario === 'subseasonal_country_et_dominant' || selectedScenario === 'seasonal_country_et_dominant';
 
-                        if (isDominant) {
-                            if (value > 200) value -= 200;
-                            else if (value > 100) value -= 100;
-                        }
+            if (isDominant) {
+                if (value > 200) value -= 200;
+                else if (value > 100) value -= 100;
+            }
 
-                        return `${value.toFixed(2)} mm`;
-                    })()
-                }
-            </p>
+            // Verificar si el valor es un número antes de llamar a toFixed()
+            return isNaN(value) ? 'Invalid value' : `${value.toFixed(2)} mm`;
+        })()
+    }
+</p>
+
         </div>
     </Popup>
 )}

@@ -75,7 +75,6 @@ const getWaterpointColor = (depth, climatologyDepth, name) => {
   depth = parseFloat(depth);
   climatologyDepth = parseFloat(climatologyDepth);
 
-  if (name === "Muya" || name === "Bakke") return "brown";
   if (name === "Ketala") return "black";
   if (depth === 0 && climatologyDepth === 0) return "gray";
   if (depth >= 0 && depth < 0.2) return "red";

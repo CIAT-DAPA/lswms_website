@@ -74,7 +74,6 @@ const getWaterpointColor = (depth, climatologyDepth, name) => {
   // Convertir a números flotantes
   depth = parseFloat(depth);
   climatologyDepth = parseFloat(climatologyDepth);
-
   if (name === "Ketala") return "black";
   if (depth === 0 && climatologyDepth === 0) return "gray";
   if (depth >= 0 && depth < 0.2) return "red";
@@ -398,7 +397,7 @@ function Visualization() {
                 </Dropdown>
               </div>
               <p className="mt-0 mb-2">
-                {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
+                {t("monitoring.date")}: {monitoredData?.date.split("T")[0]}
               </p>
             </div>
             <table className="fs-6">
@@ -428,16 +427,16 @@ function Visualization() {
                     </OverlayTrigger>
                     {t("monitoring.median-depth")} (%):
                   </td>
-                  <td>{depthValue.value.toFixed(2)}</td>
+                  <td>{depthValue?.value.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
             <p className="fs-6 mt-0">
-              {depthValue.value < 0.2
+              {depthValue?.value < 0.2
                 ? t("monitoring.near-m")
-                : depthValue.value >= 0.2 && depthValue.value < 0.3
+                : depthValue?.value >= 0.2 && depthValue?.value < 0.3
                 ? t("monitoring.alert-m")
-                : depthValue.value >= 0.3 && depthValue.value < 0.7
+                : depthValue?.value >= 0.3 && depthValue?.value < 0.7
                 ? t("monitoring.watch-m")
                 : t("monitoring.good-m")}
             </p>

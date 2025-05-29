@@ -70,29 +70,50 @@ const colorIconMap = {
   }),
 };
 
-const getWaterpointColor = (depth, climatologyDepth, name) => {
-  // Convertir a números flotantes
-  depth = parseFloat(depth);
-  climatologyDepth = parseFloat(climatologyDepth);
-  if (name === "Ketala") return "black";
-  if (depth === 0 && climatologyDepth === 0) return "gray";
-  if (depth >= 0 && depth < 0.2) return "red";
-  if (depth >= 0.2 && depth < 0.3) return "brown";
-  if (depth >= 0.3 && depth < 0.7) return "yellow";
-  if (depth >= 0.7) return "green";
-  return "gray"; // Default para casos no contemplados
+const thresholdsMap = {
+  156: [0, 0.465, 0.775, 1.24],
+  152: [0, 1.2, 2, 3.2],
+  164: [0, 1.2, 2, 3.2],
+  162: [0, 1.2, 2, 3.2],
+  166: [0, 1.2, 2, 3.2],
+  172: [0, 0.72, 1.2, 1.92]
 };
+const legendMap = ['green', 'yellow', 'brown', 'red', 'gray'];
+
+const getWaterpointColor = (ext_id, depth,name) => {
+  if (name === "Bakke") {
+    return "brown";  // Forzado para Bakke
+  }
+  depth = parseFloat(depth);
+  const threshold = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= threshold[3]) return legendMap[0];       // green = Good
+  if (depth >= threshold[2] && depth < threshold[3]) return legendMap[1]; // yellow = Watch
+  if (depth >= threshold[1] && depth < threshold[2]) return legendMap[2]; // brown = Alert
+  if (depth > threshold[0] && depth < threshold[1]) return legendMap[3];  // red = Near-Dry
+  return legendMap[4];                                  // gray = Seasonally-Dry
+};
+const getStatusTextByDepth = (ext_id, depth, t) => {
+  const thresholds = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= thresholds[3]) return t("monitoring.good-m");
+  if (depth >= thresholds[2] && depth < thresholds[3]) return t("monitoring.watch-m");
+  if (depth >= thresholds[1] && depth < thresholds[2]) return t("monitoring.alert-m");
+  if (depth > thresholds[0] && depth < thresholds[1]) return t("monitoring.near-m");
+  return t("monitoring.seasonally"); // Texto por defecto
+};
+
+
 const getStatusText = (color, t) => {
   const statusMap = {
-    gray: t("monitoring.seasonally"),
-    red: t("monitoring.near"),
-    brown: t("monitoring.alert"),
-    yellow: t("monitoring.watch"),
     green: t("monitoring.good"),
+    yellow: t("monitoring.watch"),
+    brown: t("monitoring.alert"),
+    red: t("monitoring.near"),
+    gray: t("monitoring.seasonally"),
     black: t("monitoring.no-available"),
   };
   return statusMap[color] || "";
 };
+
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
@@ -144,68 +165,94 @@ function Visualization() {
     if (originalWaterpoints.length > 0 && firstLoad) {
       const idsWp = originalWaterpoints.map((item) => item.id);
       const requests = idsWp.map((id) => Services.get_last_data(id));
-
+      
+  
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => response.data[0]);
+          setMonitored(monitoredData);
+          
+ 
+  
           const updatedWaterpoints = originalWaterpoints.map((wp) => {
-            const monitored = monitoredData.find(
-              (m) => m.waterpointId === wp.id
-            );
-            const depthValue =
-              monitored?.values.find((v) => v.type === "depth")?.value || 0;
-            const climatologyValue =
-              monitored?.values.find((v) => v.type === "climatology_depth")
-                ?.value || 0;
-
+            const monitored = monitoredData.find((m) => m?.waterpointId === wp.id);
+          
+            const depthValue = monitored?.values.find((v) => v.type === "depth")?.value || 0;
+            const climatologyValue = monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
+          
+          
             return {
               ...wp,
-              color: getWaterpointColor(depthValue, climatologyValue, wp.name),
+              color: getWaterpointColor(wp.ext_id, depthValue,wp.name)
+
             };
           });
-
+          
+  
           setOriginalWaterpoints(updatedWaterpoints);
           setFilteredWaterpoints(updatedWaterpoints);
-          setMonitored(monitoredData);
-          setDate(monitoredData[0]?.date.split("T")[0]);
-          setEndDate(monitoredData[0]?.date.split("T")[0]);
+          setDate(monitoredData[0]?.date?.split("T")[0]);
+          setEndDate(monitoredData[0]?.date?.split("T")[0]);
           setFirstLoad(false);
         })
         .catch(console.error)
         .finally(() => setLoading(false));
     }
   }, [originalWaterpoints.length, firstLoad]);
+  
+  
 
   useEffect(() => {
     if (!firstLoad) {
       setLoading(true);
+  
       Services.get_data_by_date(date)
         .then((response) => {
-          setMonitored(response.data);
+  
+          setMonitored(response.data); // Guarda monitoreados para la fecha
+          
+          // Contadores
+          let countWithData = 0;
+          let countWithoutData = 0;
+          let countDepthZero = 0;
+  
           const updatedWaterpoints = originalWaterpoints.map((wp) => {
-            const monitored = response.data.find(
-              (m) => m.waterpointId === wp.id
-            );
+            const monitored = response.data.find((m) => m.waterpointId === wp.id);
+  
+            if (monitored) {
+              countWithData++;
+            } else {
+              countWithoutData++;
+            }
+  
             const depthValue =
               monitored?.values.find((v) => v.type === "depth")?.value || 0;
             const climatologyValue =
-              monitored?.values.find((v) => v.type === "climatology_depth")
-                ?.value || 0;
-
+              monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
+  
+            if (depthValue === 0) countDepthZero++;
+  
+  
             return {
               ...wp,
-              color: getWaterpointColor(depthValue, climatologyValue, wp.name),
+              color: getWaterpointColor(wp.ext_id, depthValue,wp.name)
+
             };
           });
-
+  
+          
+  
           setOriginalWaterpoints(updatedWaterpoints);
           setFilteredWaterpoints(updatedWaterpoints);
         })
-        .catch(console.error)
+        .catch((error) => {
+          console.error("🚨 Error al obtener datos por fecha:", error);
+        })
         .finally(() => setLoading(false));
     }
   }, [date]);
-
+  
+  
   useEffect(() => {
     const filtered = originalWaterpoints.filter((wp) => {
       // Caso especial para Muya y Bakke
@@ -281,6 +328,8 @@ function Visualization() {
       );
     }
     const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
+
+
     const depthValue = monitoredData?.values.find(
       (value) => value.type === "depth"
     );
@@ -432,14 +481,11 @@ function Visualization() {
               </tbody>
             </table>
             <p className="fs-6 mt-0">
-              {depthValue?.value < 0.2
-                ? t("monitoring.near-m")
-                : depthValue?.value >= 0.2 && depthValue?.value < 0.3
-                ? t("monitoring.alert-m")
-                : depthValue?.value >= 0.3 && depthValue?.value < 0.7
-                ? t("monitoring.watch-m")
-                : t("monitoring.good-m")}
-            </p>
+  {depthValue?.value !== undefined 
+    ? getStatusTextByDepth(wp.ext_id, depthValue.value, t)
+    : t("monitoring.no-data")}
+</p>
+
             <div className="d-flex justify-content-between mt-3">
               {hasContentsWp && !monitoredData[i18n.language] ? (
                 <Button

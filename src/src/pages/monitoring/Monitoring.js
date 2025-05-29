@@ -81,9 +81,7 @@ const thresholdsMap = {
 const legendMap = ['green', 'yellow', 'brown', 'red', 'gray'];
 
 const getWaterpointColor = (ext_id, depth,name) => {
-  if (name === "Bakke") {
-    return "brown";  // Forzado para Bakke
-  }
+  
   depth = parseFloat(depth);
   const threshold = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
   if (depth >= threshold[3]) return legendMap[0];       // green = Good
@@ -256,7 +254,7 @@ function Visualization() {
   useEffect(() => {
     const filtered = originalWaterpoints.filter((wp) => {
       // Caso especial para Muya y Bakke
-      if (wp.name === "Muya" || wp.name === "Bakke") {
+      if (wp.name === "Muya") {
         return filter.brown;
       }
       // Caso especial para Ketala

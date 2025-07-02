@@ -80,8 +80,10 @@ const thresholdsMap = {
 };
 const legendMap = ['green', 'yellow', 'brown', 'red', 'gray'];
 
-const getWaterpointColor = (ext_id, depth,name) => {
-  
+const waterpointsExtidWithIrrigation = ['152', '172', '156', '401']
+
+const getWaterpointColor = (ext_id, depth, name) => {
+
   depth = parseFloat(depth);
   const threshold = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
   if (depth >= threshold[3]) return legendMap[0];       // green = Good
@@ -90,7 +92,7 @@ const getWaterpointColor = (ext_id, depth,name) => {
   if (depth > threshold[0] && depth < threshold[1]) return legendMap[3];  // red = Near-Dry
   return legendMap[4];                                  // gray = Seasonally-Dry
 };
-const getStatusTextByDepth = (ext_id, depth, t) => {
+const getStatusTextByDepthWithirrigation = (ext_id, depth, t) => {
   const thresholds = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
   if (depth >= thresholds[3]) return t("monitoring.good-m");
   if (depth >= thresholds[2] && depth < thresholds[3]) return t("monitoring.watch-m");
@@ -99,6 +101,14 @@ const getStatusTextByDepth = (ext_id, depth, t) => {
   return t("monitoring.seasonally"); // Texto por defecto
 };
 
+const getStatusTextByDepthWithNonirrigation = (ext_id, depth, t) => {
+  const thresholds = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= thresholds[3]) return t("monitoring.n-good-m");
+  if (depth >= thresholds[2] && depth < thresholds[3]) return t("monitoring.n-watch-m");
+  if (depth >= thresholds[1] && depth < thresholds[2]) return t("monitoring.n-alert-m");
+  if (depth > thresholds[0] && depth < thresholds[1]) return t("monitoring.n-near-m");
+  return t("monitoring.n-seasonally-m"); // Texto por defecto
+};
 
 const getStatusText = (color, t) => {
   const statusMap = {
@@ -163,30 +173,30 @@ function Visualization() {
     if (originalWaterpoints.length > 0 && firstLoad) {
       const idsWp = originalWaterpoints.map((item) => item.id);
       const requests = idsWp.map((id) => Services.get_last_data(id));
-      
-  
+
+
       Promise.all(requests)
         .then((responses) => {
           const monitoredData = responses.map((response) => response.data[0]);
           setMonitored(monitoredData);
-          
- 
-  
+
+
+
           const updatedWaterpoints = originalWaterpoints.map((wp) => {
             const monitored = monitoredData.find((m) => m?.waterpointId === wp.id);
-          
+
             const depthValue = monitored?.values.find((v) => v.type === "depth")?.value || 0;
             const climatologyValue = monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
-          
-          
+
+
             return {
               ...wp,
-              color: getWaterpointColor(wp.ext_id, depthValue,wp.name)
+              color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
 
             };
           });
-          
-  
+
+
           setOriginalWaterpoints(updatedWaterpoints);
           setFilteredWaterpoints(updatedWaterpoints);
           setDate(monitoredData[0]?.date?.split("T")[0]);
@@ -197,49 +207,49 @@ function Visualization() {
         .finally(() => setLoading(false));
     }
   }, [originalWaterpoints.length, firstLoad]);
-  
-  
+
+
 
   useEffect(() => {
     if (!firstLoad) {
       setLoading(true);
-  
+
       Services.get_data_by_date(date)
         .then((response) => {
-  
+
           setMonitored(response.data); // Guarda monitoreados para la fecha
-          
+
           // Contadores
           let countWithData = 0;
           let countWithoutData = 0;
           let countDepthZero = 0;
-  
+
           const updatedWaterpoints = originalWaterpoints.map((wp) => {
             const monitored = response.data.find((m) => m.waterpointId === wp.id);
-  
+
             if (monitored) {
               countWithData++;
             } else {
               countWithoutData++;
             }
-  
+
             const depthValue =
               monitored?.values.find((v) => v.type === "depth")?.value || 0;
             const climatologyValue =
               monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
-  
+
             if (depthValue === 0) countDepthZero++;
-  
-  
+
+
             return {
               ...wp,
-              color: getWaterpointColor(wp.ext_id, depthValue,wp.name)
+              color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
 
             };
           });
-  
-          
-  
+
+
+
           setOriginalWaterpoints(updatedWaterpoints);
           setFilteredWaterpoints(updatedWaterpoints);
         })
@@ -249,8 +259,8 @@ function Visualization() {
         .finally(() => setLoading(false));
     }
   }, [date]);
-  
-  
+
+
   useEffect(() => {
     const filtered = originalWaterpoints.filter((wp) => {
       // Caso especial para Muya y Bakke
@@ -354,8 +364,8 @@ function Visualization() {
                 {monitoredData["en"]
                   ? "English"
                   : monitoredData["am"]
-                  ? "Amharic"
-                  : "Afaan Oromo"}
+                    ? "Amharic"
+                    : "Afaan Oromo"}
               </strong>
             </Modal.Body>
             <Modal.Footer>
@@ -364,9 +374,8 @@ function Visualization() {
               </Button>
               <Link
                 type="button"
-                className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                  hasContentsWp ? "" : "disabled "
-                }`}
+                className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
+                  }`}
                 to={`/profile/${wp.id}/${Object.keys(monitoredData).find(
                   (key) => monitoredData[key] === true
                 )}`}
@@ -445,51 +454,40 @@ function Visualization() {
               </div>
               <p className="mt-0 mb-2">
                 {t("monitoring.date")}: {monitoredData?.date.split("T")[0]}
+                
               </p>
             </div>
             <table className="fs-6">
               <tbody>
                 <tr>
-                  <td>{t("monitoring.condition")}:</td>
-                  <td>
+                  <td className="d-flex">{t("monitoring.condition")}:
                     <div
-                      className={`td-name text-center fw-medium td-${wp.color}`}
+                      className={`td-name text-center fw-medium td-${wp.color} me-3 ms-2 px-3`}
                     >
+
                       {getStatusText(wp.color, t)}
                     </div>
                   </td>
-                </tr>
 
-                <tr>
-                  <td className="d-flex align-items-center ">
-                    <OverlayTrigger
-                      placement="left"
-                      overlay={
-                        <Tooltip id={`tooltip-left`}>
-                          {t("monitoring.median-depth-info")}
-                        </Tooltip>
-                      }
-                    >
-                      <IconInfoCircleFilled />
-                    </OverlayTrigger>
-                    {t("monitoring.median-depth")} (%):
-                  </td>
-                  <td>{depthValue?.value.toFixed(2)}</td>
+                  <td > {t("monitoring.depth")}: {depthValue?.value.toFixed(2)} m</td>
+
                 </tr>
               </tbody>
             </table>
             <p className="fs-6 mt-0">
-  {depthValue?.value !== undefined 
-    ? getStatusTextByDepth(wp.ext_id, depthValue.value, t)
-    : t("monitoring.no-data")}
-</p>
+              {depthValue?.value !== undefined
+                ? waterpointsExtidWithIrrigation.includes(wp.ext_id)
+                  ? getStatusTextByDepthWithirrigation(wp.ext_id, depthValue.value, t)
+                  : getStatusTextByDepthWithNonirrigation(wp.ext_id, depthValue.value, t)
+                : t("monitoring.no-data")}
+            </p>
+
 
             <div className="d-flex justify-content-between mt-3">
               {hasContentsWp && !monitoredData[i18n.language] ? (
                 <Button
-                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                    hasContentsWp ? "" : "disabled "
-                  }`}
+                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
+                    }`}
                   onClick={() => setShowWarning(true)}
                 >
                   <IconId style={{ position: "inherit" }} className="me-3" />
@@ -498,9 +496,8 @@ function Visualization() {
               ) : (
                 <Link
                   type="button"
-                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 ${
-                    hasContentsWp ? "" : "disabled "
-                  }`}
+                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 ${hasContentsWp ? "" : "disabled "
+                    }`}
                   to={`/profile/${wp.id}`}
                 >
                   <IconId style={{ position: "inherit" }} className="me-2" />

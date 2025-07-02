@@ -460,34 +460,17 @@ function Visualization() {
             <table className="fs-6">
               <tbody>
                 <tr>
-                  <td>{t("monitoring.condition")}:</td>
-
-                  <td>
+                  <td className="d-flex">{t("monitoring.condition")}:
                     <div
-                      className={`td-name text-center fw-medium td-${wp.color} mx-5`}
+                      className={`td-name text-center fw-medium td-${wp.color} me-3 ms-2 px-3`}
                     >
 
                       {getStatusText(wp.color, t)}
                     </div>
-
                   </td>
-                  <td >{depthValue?.value.toFixed(2)} m</td>
 
-                </tr>
+                  <td > {t("monitoring.depth")}: {depthValue?.value.toFixed(2)} m</td>
 
-                <tr>
-                  <td className="d-flex align-items-center ">
-                    <OverlayTrigger
-                      placement="left"
-                      overlay={
-                        <Tooltip id={`tooltip-left`}>
-                          {t("monitoring.median-depth-info")}
-                        </Tooltip>
-                      }
-                    >
-                      <IconInfoCircleFilled />
-                    </OverlayTrigger>
-                  </td>
                 </tr>
               </tbody>
             </table>

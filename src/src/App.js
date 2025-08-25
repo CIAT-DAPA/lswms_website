@@ -15,6 +15,7 @@ import Userprofile from "./pages/userprofile/Userprofile";
 import Forecast from "./pages/forecast/forecast";
 import Advisories from "./pages/advisories/advisories";
 import Rain from "./pages/rain/rain";
+import Manuals from "./pages/manuals/Manuals";
 function App() {
   return (
     <AuthProvider>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/advisories" element={<Advisories />} />
           <Route path="/rain" element={<Rain />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/manuals" element={<Manuals />} />
         </Routes>
         <Footer />
       </Router>

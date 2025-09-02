@@ -2,13 +2,12 @@ import React from "react";
 import BtnDownload from "../../components/btnDownload/BtnDownload";
 
 function Manuals() {
-    // Adjust the path if your build serves files from a different folder
     const MANUAL_NAME = "Training Manual LWSM.pdf";
     const MANUAL_ROUTE = "/data/Training Manual LWSM.pdf";
 
     return (
         <div className="container pt-4">
-            <h1 className="mb-3 mt-5">Advisories & Training Materials</h1>
+            <h1 className="mb-3 mt-5">User Guidelines and Training Manuals</h1>
 
             <div className="row">
                 <div className="col-md-10 col-lg-8">

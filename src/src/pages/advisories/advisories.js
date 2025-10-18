@@ -38,6 +38,12 @@ function Advisories() {
         route: "/data/Pastoral-Advisory-July-September-2025.pdf",
         start: new Date(2025, 6, 1),
       },
+      "q4-2025": {
+        label: "Sep-Nov 2025",
+        name: "PPastoral-Advisory-September-November-2025.pdf",
+        route: "/data/Pastoral-Advisory-September-November-2025.pdf",
+        start: new Date(2025, 9, 1),
+      },
     }),
     []
   );

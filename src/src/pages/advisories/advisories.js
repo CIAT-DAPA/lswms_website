@@ -40,7 +40,8 @@ function Advisories() {
       },
       "q4-2025": {
         label: "Sep-Nov 2025",
-        name: "PPastoral-Advisory-September-November-2025.pdf",
+        // corregido: antes decía "PPastoral-..."
+        name: "Pastoral-Advisory-September-November-2025.pdf",
         route: "/data/Pastoral-Advisory-September-November-2025.pdf",
         start: new Date(2025, 9, 1),
       },
@@ -242,6 +243,39 @@ function Advisories() {
           which works to deliver actionable, climate-informed solutions that
           help communities build resilience and scale sustainable practices
           across regions facing climatic challenges.
+        </p>
+      </div>
+    ),
+
+    // NUEVO: descripción para q4-2025 (SON 2025)
+    "q4-2025": (
+      <div>
+        <p>
+          The September to November (SON) rainfall is a crucial for pastoral
+          communities in south and southeastern Ethiopia. The season is locally
+          known as ‘Hagayya’ in the Borana zone and ’Deyr’ in the Somali
+          region. In Afar region, a small rainfall primarily occurs in October
+          and November which is locally known as ‘Dada&apos;e’ season. The
+          seasonal rainfall patterns in these pastoral regions are highly
+          variable and can unexpectedly change based on the shifts in global,
+          regional and local rainfall driving factors. Among the global rainfall
+          drivers, El Niño-Southern Oscillation (ENSO), Indian Ocean Dipole
+          (IOD) and Madden-Julian Oscillation (MJO) are used for generating this
+          crucial bulletin. In line with this, the recent ENSO evolution report
+          indicated that currently ENSO is at neutral phase and predicted to
+          linger on neutral condition during the upcoming season. Likewise,
+          currently, the IOD is neutral and predicted to shift towards a
+          negative phase between September and November. The MJO is currently
+          away from the phases that positively affect the East African rainfall
+          until mid-October.
+        </p>
+        <p>
+          Based on these, the late onset and drier than normal rainfall
+          condition is predicted in Somali region and Borena zone. Therefore,
+          this climate outlook, along with the waterpoint and rangeland
+          advisories, can help pastoral and agro-pastoral communities in the
+          south and southeastern lowlands of Ethiopia to alert key stakeholders
+          to make informed decisions.
         </p>
       </div>
     ),

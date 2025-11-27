@@ -60,29 +60,15 @@ class Services {
       });
   }
 
-  get_subseasonal(id) {
-    const url = `${Configuration.get_url_api_aclimate()}/Forecast/SubseasonalWS/${id}/json`;
-    return axios
-      .get(url)
-      .then((response) => {
-        return response.data.subseasonal[0].data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  get_seasonal(id) {
-    const url = `${Configuration.get_url_api_aclimate()}/Forecast/Climate/${id}/true/json`;
-    return axios
-      .get(url)
-      .then((response) => {
-        return response.data.climate[0].data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  get_forecasts(waterpointId) {
+  const url = `${Configuration.get_url_api_base()}/seasonal_sub_forecast/${waterpointId}`;
+  return axios
+    .get(url)
+    .then((response) => {
+      return response.data; // { seasonal: {...}, subseasonal: {...} }
+    })
+    .catch((error) => console.log(error));
+}
 
   get_route(inicio_lat, inicio_lon, final_lat, final_lon, profile) {
     const url = `${Configuration.get_url_graphhopper()}/route?key=${

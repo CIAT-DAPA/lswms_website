@@ -5,10 +5,23 @@ import { useTranslation } from "react-i18next";
 function ForecastItem({ year, month, week, probabilities, name }) {
   const [t] = useTranslation("global");
 
+
+  let pBase = probabilities || {};
+
+  if (Array.isArray(pBase)) {
+    pBase = pBase[0] || {};
+  }
+
+  const {
+    lower = 0,
+    normal = 0,
+    upper = 0,
+  } = pBase;
+
   const roundedProbabilities = {
-    lower: Math.round(probabilities[0].lower * 100),
-    normal: Math.round(probabilities[0].normal * 100),
-    upper: Math.round(probabilities[0].upper * 100),
+    lower: Math.round(lower * 100),
+    normal: Math.round(normal * 100),
+    upper: Math.round(upper * 100),
   };
 
   const data = {
@@ -33,7 +46,7 @@ function ForecastItem({ year, month, week, probabilities, name }) {
       },
       plotOptions: {
         bar: {
-          distributed: true, // this line is mandatory
+          distributed: true,
           horizontal: false,
           barHeight: "75%",
           columnWidth: "55%",
@@ -41,7 +54,6 @@ function ForecastItem({ year, month, week, probabilities, name }) {
         },
       },
       colors: ["#e3bab2", "#b3e4b3", "#97cdd8"],
-
       dataLabels: {
         enabled: false,
       },
@@ -106,7 +118,7 @@ function ForecastItem({ year, month, week, probabilities, name }) {
   let maxValue = 0;
 
   for (const key in roundedProbabilities) {
-    if (roundedProbabilities.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(roundedProbabilities, key)) {
       const value = roundedProbabilities[key];
       if (value > maxValue) {
         maxValue = value;
@@ -140,7 +152,6 @@ function ForecastItem({ year, month, week, probabilities, name }) {
         <span className="fw-medium"> {name} </span>
         {t("data.forecast-3")}{" "}
         <span className="fw-medium">
-          {" "}
           {maxKey === "lower"
             ? t("data.lower")
             : maxKey === "normal"

@@ -13,6 +13,7 @@ import {
   ToastContainer,
   Toast,
 } from "react-bootstrap";
+
 import ForecastItem from "../../components/forecastItem/ForecastItem";
 import Services from "../../services/apiService";
 import { useTranslation } from "react-i18next";
@@ -29,33 +30,36 @@ function Forecast() {
   const [wp, setWp] = useState();
   const [wpData, setWpData] = useState();
   const [loading, setLoading] = useState(true);
-  const [aclimateId, setAclimateId] = useState(null);
-  const [subseasonal, setSubseasonal] = useState([]);
-  const [seasonal, setSeasonal] = useState([]);
+
+  // Nuevo formato: vienen directo del endpoint seasonal_sub_forecast
+  const [subseasonal, setSubseasonal] = useState(null); // {year, month, weeks:[...]}
+  const [seasonal, setSeasonal] = useState(null);       // {year, month, measure, lower, normal, upper}
+
   const { idWp } = useParams();
 
+  // Perfil del waterpoint
   useEffect(() => {
-    //Call to API to get waterpoint
+    if (!idWp) return;
+
+    // Call to API to get waterpoint profile
     Services.get_waterpoints_profile(idWp, i18n.language)
       .then((response) => {
-        setWp(response[0]);
+        if (response && response.length > 0) {
+          setWp(response[0]);
+        } else {
+          setWp(null);
+        }
       })
       .catch((error) => {
         console.log(error);
-      });
-
-    //Call to API to get climatology
-    Services.get_one_waterpoints(idWp)
-      .then((response) => {
-        setAclimateId(response[0].aclimate_id);
-      })
-      .catch((error) => {
-        console.log(error);
+        setWp(null);
       });
   }, [idWp, i18n.language]);
 
+  // Datos monitoreados para el gráfico / info histórica
   useEffect(() => {
-    //Call to API to get monitored data waterpoints
+    if (!idWp) return;
+
     Services.get_data_monitored(idWp)
       .then((response) => {
         setWpData(response);
@@ -63,44 +67,31 @@ function Forecast() {
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   }, [idWp]);
 
+  // Listener para refrescar al navegar atrás
   useEffect(() => {
-    if (wpData) {
-      const years = [
-        ...new Set(wpData.map((item) => new Date(item.date).getFullYear())),
-      ];
-      years.sort((a, b) => b - a);
-    }
-  }, [wpData]);
-
-  useEffect(() => {
-    window.addEventListener("popstate", (event) => {
-      window.location.reload();
-    });
+    const handler = () => window.location.reload();
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
   }, []);
 
+  // Nuevo: obtener forecasts desde NUEVO endpoint backend
   useEffect(() => {
-    if (aclimateId) {
-      //Call to API to get forecast
-      Services.get_subseasonal(aclimateId)
-        .then((response) => {
-          setSubseasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if (!idWp) return;
 
-      Services.get_seasonal(aclimateId)
-        .then((response) => {
-          setSeasonal(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [aclimateId]);
+    Services.get_forecasts(idWp)
+      .then((response) => {
+        if (!response) return;
+        setSeasonal(response.seasonal || null);
+        setSubseasonal(response.subseasonal || null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [idWp]);
 
   return (
     <div>
@@ -120,6 +111,7 @@ function Forecast() {
           </Modal>
         ) : (
           <>
+            {/* Toast para idioma de perfil */}
             <ToastContainer
               className="p-3 position-fixed "
               position="bottom-end"
@@ -148,6 +140,7 @@ function Forecast() {
               </Toast>
             </ToastContainer>
 
+            {/* Toast para suscripciones */}
             <ToastContainer
               className="p-3 position-fixed"
               position="bottom-end"
@@ -169,7 +162,9 @@ function Forecast() {
                 </Toast.Body>
               </Toast>
             </ToastContainer>
+
             <Container className="">
+              {/* Header con info del WP */}
               <Row className="pt-5 border-bottom border-2">
                 <Container className="d-flex justify-content-between align-items-center">
                   <div>
@@ -192,6 +187,7 @@ function Forecast() {
                 </Container>
               </Row>
 
+              {/* Subseasonal */}
               <Row className="mt-3">
                 <h5 className="mb-0">{t("data.subseasonal")}</h5>
                 <p className="fw-light ">
@@ -206,14 +202,20 @@ function Forecast() {
                   </a>
                 </p>
                 <p>{t("data.subseasonal-d")}</p>
-                {subseasonal && subseasonal.length > 0 ? (
-                  subseasonal.map((week, i) => (
+
+                {subseasonal && subseasonal.weeks && subseasonal.weeks.length > 0 ? (
+                  subseasonal.weeks.map((week, i) => (
                     <Col className="col-12 col-md-3" key={i}>
                       <ForecastItem
-                        year={week.year}
-                        month={week.month}
+                        year={subseasonal.year}
+                        month={subseasonal.month}
                         week={week.week}
-                        probabilities={week.probabilities}
+                        probabilities={{
+                          measure: week.measure,
+                          lower: week.lower,
+                          normal: week.normal,
+                          upper: week.upper,
+                        }}
                         name={wp.name}
                       />
                     </Col>
@@ -225,26 +227,29 @@ function Forecast() {
                   </div>
                 )}
               </Row>
+
+              {/* Seasonal */}
               <Row className="mt-3 justify-content-around ">
                 <h5 className="mb-0">{t("data.seasonal")}</h5>
                 <p className="fw-light ">
                   {t("data.source")}: AClimate Ethiopia
                 </p>
                 <p>{t("data.seasonal-d")}</p>
-                {seasonal && seasonal.length > 0 ? (
-                  seasonal.map((month, i) => {
-                    return (
-                      <Col className="col-12 col-md-4">
-                        <ForecastItem
-                          year={month.year}
-                          month={month.month}
-                          probabilities={month.probabilities}
-                          name={wp.name}
-                          key={i}
-                        />
-                      </Col>
-                    );
-                  })
+
+                {seasonal ? (
+                  <Col className="col-12 col-md-4">
+                    <ForecastItem
+                      year={seasonal.year}
+                      month={seasonal.month}
+                      probabilities={{
+                        measure: seasonal.measure,
+                        lower: seasonal.lower,
+                        normal: seasonal.normal,
+                        upper: seasonal.upper,
+                      }}
+                      name={wp.name}
+                    />
+                  </Col>
                 ) : (
                   <div className="d-flex flex-column align-items-center ">
                     <h6 className=" mb-1 ">{t("data.no-forecast")}</h6>
@@ -253,6 +258,8 @@ function Forecast() {
                 )}
               </Row>
             </Container>
+
+            {/* Botones de navegación abajo */}
             <Container className="mb-2 mt-2 d-flex justify-content-between ">
               <div className="d-flex align-items-center">
                 <NavigationGroupBtns
@@ -273,6 +280,7 @@ function Forecast() {
           </>
         )
       ) : (
+        // Caso sin idWp
         <div
           style={{ height: "100vh" }}
           className="d-flex justify-content-around flex-column align-items-center flex-lg-row"

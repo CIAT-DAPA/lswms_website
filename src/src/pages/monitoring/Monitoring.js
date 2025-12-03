@@ -170,43 +170,42 @@ function Visualization() {
   }, []);
 
   useEffect(() => {
-    if (originalWaterpoints.length > 0 && firstLoad) {
-      const idsWp = originalWaterpoints.map((item) => item.id);
-      const requests = idsWp.map((id) => Services.get_last_data(id));
+  if (originalWaterpoints.length > 0 && firstLoad) {
+    const idsWp = originalWaterpoints.map((item) => item.id);
+    const requests = idsWp.map((id) => Services.get_last_data(id));
 
+    Promise.all(requests)
+      .then((responses) => {
+        const monitoredData = responses
+          .map((response) => response.data?.[0] || null)
+          .filter(Boolean);
 
-      Promise.all(requests)
-        .then((responses) => {
-          const monitoredData = responses.map((response) => response.data[0]);
-          setMonitored(monitoredData);
+        setMonitored(monitoredData);
 
+        const updatedWaterpoints = originalWaterpoints.map((wp) => {
+          const monitored = monitoredData.find((m) => m?.waterpointId === wp.id);
 
+          const depthValue =
+            monitored?.values.find((v) => v.type === "depth")?.value || 0;
+          const climatologyValue =
+            monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
 
-          const updatedWaterpoints = originalWaterpoints.map((wp) => {
-            const monitored = monitoredData.find((m) => m?.waterpointId === wp.id);
+          return {
+            ...wp,
+            color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
+          };
+        });
 
-            const depthValue = monitored?.values.find((v) => v.type === "depth")?.value || 0;
-            const climatologyValue = monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
-
-
-            return {
-              ...wp,
-              color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
-
-            };
-          });
-
-
-          setOriginalWaterpoints(updatedWaterpoints);
-          setFilteredWaterpoints(updatedWaterpoints);
-          setDate(monitoredData[0]?.date?.split("T")[0]);
-          setEndDate(monitoredData[0]?.date?.split("T")[0]);
-          setFirstLoad(false);
-        })
-        .catch(console.error)
-        .finally(() => setLoading(false));
-    }
-  }, [originalWaterpoints.length, firstLoad]);
+        setOriginalWaterpoints(updatedWaterpoints);
+        setFilteredWaterpoints(updatedWaterpoints);
+        setDate(monitoredData[0]?.date?.split("T")[0]);
+        setEndDate(monitoredData[0]?.date?.split("T")[0]);
+        setFirstLoad(false);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }
+}, [originalWaterpoints.length, firstLoad]);
 
 
 
@@ -217,7 +216,7 @@ function Visualization() {
       Services.get_data_by_date(date)
         .then((response) => {
 
-          setMonitored(response.data); // Guarda monitoreados para la fecha
+          setMonitored(response.data); 
 
           // Contadores
           let countWithData = 0;

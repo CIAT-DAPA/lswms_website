@@ -194,11 +194,11 @@ function Forecast() {
                   {t("data.source")}:{" "}
                   <a
                     className="edacap-link"
-                    href="https://edacap.ethioagroclimate.net/#/Home"
+                    href="https://www.icpac.net/seasonal-forecast/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    AClimate Ethiopia{" "}
+                    ICPAC{" "}
                   </a>
                 </p>
                 <p>{t("data.subseasonal-d")}</p>
@@ -232,7 +232,7 @@ function Forecast() {
               <Row className="mt-3 justify-content-around ">
                 <h5 className="mb-0">{t("data.seasonal")}</h5>
                 <p className="fw-light ">
-                  {t("data.source")}: AClimate Ethiopia
+                  {t("data.source")}: ICPAC
                 </p>
                 <p>{t("data.seasonal-d")}</p>
 

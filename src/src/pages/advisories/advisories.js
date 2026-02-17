@@ -1,336 +1,104 @@
-import React, { useState, useEffect, useMemo} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import "./Advisories.css";
 import BtnDownload from "../../components/btnDownload/BtnDownload";
 import ShareButton from "../../components/shareButton/ShereButton";
+import Services from "../../services/apiService"; // ajusta el path si es diferente
 
 function Advisories() {
   const { t } = useTranslation("global");
 
-  // Estado
-  const [type, setType] = useState("seasonal"); 
-  const [season, setSeason] = useState("");
-  const [seasonOptions, setSeasonOptions] = useState([]);
+  // UI state
+  const [type, setType] = useState("seasonal"); // "seasonal" | "subseasonal"
+  const [season, setSeason] = useState(""); // aquí guardamos el filename seleccionado
 
-  const FILE_MAP = useMemo(
-    () => ({
-      "q2-2024": {
-        label: "Jun-Aug 2024",
-        name: "Pastoral-Advisory-Jun-August-2024.pdf",
-        route: "/data/Pastoral-Advisory-Jun-August-2024.pdf",
-        start: new Date(2024, 5, 1),
-      },
-      "q4-2024": {
-        label: "Oct-Dec 2024",
-        name: "Pastoral-Advisory-October-December-2024.pdf",
-        route: "/data/Pastoral-Advisory-October-December-2024.pdf",
-        start: new Date(2024, 9, 1),
-      },
-      "q1-2025": {
-        label: "Mar-May 2025",
-        name: "Pastoral-Advisory-March-May-2025.pdf",
-        route: "/data/Pastoral-Advisory-March-May-2025.pdf",
-        start: new Date(2025, 2, 1), 
-      },
-      "q3-2025": {
-        label: "Jul-Sep 2025",
-        name: "Pastoral-Advisory-July-September-2025.pdf",
-        route: "/data/Pastoral-Advisory-July-September-2025.pdf",
-        start: new Date(2025, 6, 1),
-      },
-      "q4-2025": {
-        label: "Sep-Nov 2025",
-        // corregido: antes decía "PPastoral-..."
-        name: "Pastoral-Advisory-September-November-2025.pdf",
-        route: "/data/Pastoral-Advisory-September-November-2025.pdf",
-        start: new Date(2025, 9, 1),
-      },
-    }),
-    []
-  );
+  // data state
+  const [pdfs, setPdfs] = useState({ seasonal: [], subseasonal: [] });
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const SPECIAL_DESCRIPTIONS = {
-    "q2-2024": (
-      <ul>
-        <li>
-          Moderate to severe heat stress is likely in the Afar and Somali
-          regions during the upcoming JJA season, while Borana zone is expected
-          to experience minimal heat stress.
-        </li>
-        <li>
-          With the projected wetter-than-average kiremt rainfall in the northern
-          highlands, there is an increased risk of the Awash River overflowing
-          and causing flash flooding in the Afar region.
-        </li>
-        <li>
-          The recent March to May (MAM) season rainfall has benefited rangelands
-          in the country&apos;s pastoral areas substantially. This has resulted
-          in visible improvements in pasture availability in many of the Southern
-          Oromia zones (Borana &amp; Guji zone) and south and western parts of
-          the Somali Regional State.
-        </li>
-        <li>
-          Pastoral areas in the Borana zone are anticipated to have good
-          rangeland conditions during the JJA season, while the Eastern part of
-          the Somali Regional State is expected to experience very poor
-          conditions. It&apos;s strongly recommended that regions with good
-          rangeland stockpiles feed for potential future shortages. Pastoralists
-          in areas with very poor rangeland conditions are advised to closely
-          monitor rangeland and consider moving their livestock to areas with
-          better grazing availability.
-        </li>
-        <li>
-          The water points in the Borana Zone and most parts of the Somali
-          Regional State are expected to decline due to dry and reduced
-          rainfall, high evaporation, and limited water resources. Therefore,
-          close monitoring of the water points is key.
-        </li>
-      </ul>
-    ),
-
-    "q4-2024": (
-      <div>
-        <p>
-          The October to December 2024 seasonal forecast for pastoral regions
-          anticipated rainfall trends across the Ethiopian lowlands. It
-          indicates that below-normal rainfall is likely in the southern,
-          eastern, and southeastern areas. Specifically, the Borana and South
-          Omo zones, as well as various regions in Oromia, are predicted to
-          experience normal to below normal rainfall. In contrast, the Somali
-          and Afar regional states are predicted to face significantly
-          below-normal rainfall, having potential impacts on the target pastoral
-          activities in these regions. To address these challenges, it is
-          essential for local authorities and pastoral communities to adopt
-          proactive measures, such as implementing all possible water
-          management, including indigenous practices and promoting sustainable
-          soil and water conservation practices to mitigate its adverse effects.
-        </p>
-        <p>
-          Additionally, the predicted pasture coverage during the OND season
-          will be poor in the Afar region, South Omo zone, Borana zone, and
-          most areas of the Somali region, except for the eastern Somali zones
-          where moderate pasture availability is expected. This disparity in
-          pasture conditions is crucial for the health of livestock and the
-          livelihoods of communities in the affected regions. Therefore, it is
-          essential for the pastoral communities and local authorities to
-          promote and implement practices that can enhance pasture management
-          and optimize the utilization of available resources.
-        </p>
-        <p>
-          Regarding heat stress, the Borana Zone will likely experience less
-          heat stress than the Afar and Somali regions during the OND season.
-          Heat stress level in the Afar region is expected to be moderate to
-          severe in October, while the Somali region may also face moderate heat
-          stress. To address this, communities in these regions should implement
-          heat management practices like providing shade and ensuring sufficient
-          watering for their livestock.
-        </p>
-        <p>
-          Moreover, heat stress is expected to persist in irrigated lowland
-          wheat farms, particularly affecting critical growth stages; like
-          flowering, seed setting, and grain filling, which may lead to crop
-          failure. To effectively manage heat stress in wheat farming, it is
-          recommended to plant strategically: in Gode, Kelafo, and Dega Habur,
-          planting from early to mid-October is advised; while for Amibara,
-          planting in the fourth week of September is advised, For Selamago,
-          planting from early October is advised. Additionally, utilizing
-          heat-tolerant varieties and implementing effective irrigation
-          practices will further help mitigate heat stress.
-        </p>
-        <p>
-          Finally, given the anticipated drier rainy season across most pastoral
-          regions, pastoral communities may face an increased risk of
-          resource-related conflicts and unintended migrations. To address these
-          potential tensions, it is crucial to engage in proactive community
-          dialogue through different community platforms, including the Pastoral
-          Community of Practice Alliance (PCoPs-Alliance), targeting scarce
-          resource management, raise community awareness, and establish early
-          warning systems.
-        </p>
-      </div>
-    ),
-
-    "q1-2025": (
-      <div>
-        <p>
-          The March to May (MAM) 2025 seasonal climate forecast for pastoral
-          regions considers the OND 2024 rainfall deficit impacts and the
-          agropastoral activities of these areas. Most Southern, Southeastern,
-          and Eastern regions of Ethiopia are expected to receive below-normal
-          rainfall, except for the Southwest zones and Western woredas of Borana
-          and Guji.
-        </p>
-        <p>
-          March is predicted to be particularly dry, exacerbating the dryness
-          from the previous season. However, as the season progresses into April
-          and May, rainfall distribution is likely to improve in southern
-          agropastoral zones. Conversely, the Somali and Afar regional states
-          are expected to continue experiencing below-normal rainfall, which
-          could adversely impact pastoral activities.
-        </p>
-        <p>
-          To mitigate these challenges, local authorities and pastoral
-          communities must promote and adopt proactive measures, including
-          various water management practices, indigenous agroecological
-          techniques, and sustainable soil and water conservation methods. Such
-          strategies are essential to alleviate the adverse effects of the
-          anticipated weather patterns.
-        </p>
-        <p>
-          In the meantime, pasture coverage during the MAM season is expected to
-          be poor in Afar, Eastern Borana, South Omo, and Northeastern Somali
-          regions. Moderate pasture availability is anticipated in southeastern
-          Borana and larger areas of the Somali region. This disparity in
-          pasture conditions is critical, as it directly influences livestock
-          health and community livelihoods, leading to potential outbreaks of
-          diseases like black leg following extended dry periods. Given the
-          transportation difficulties for forage during drought, agropastoral
-          communities should consider investing in forage crops rather than food
-          crops, which are easier to transport.
-        </p>
-        <p>
-          Additionally, the risk of heat stress varies across regions; Borana
-          Zone is likely to experience less heat stress than Afar and Somali
-          regions, where heat stress levels may be mild to moderate throughout
-          MAM. Communities in these areas should implement heat management
-          practices, such as providing shade and reducing the risk of
-          heat-related illnesses.
-        </p>
-        <p>
-          Finally, the anticipated drier conditions across most pastoral regions
-          may increase the likelihood of resource-related conflicts and
-          unintended migrations. Addressing these potential tensions requires
-          proactive community dialogue through platforms like the Pastoral
-          Community of Practice Alliance (PCoPs-Alliance). These discussions
-          should focus on resource management, community awareness, and the
-          establishment of early warning systems to navigate the challenges
-          ahead effectively.
-        </p>
-      </div>
-    ),
-
-    "q3-2025": (
-      <div>
-        <p>
-          The Southern and Southeastern lowlands of Ethiopia typically
-          experienced dry climatic condition from July to September. Borana,
-          part of these lowlands, usually experiences cold-dry conditions during
-          July and August while SON rain usually starts in September. Climate
-          drivers influencing the region are El Niño–Southern Oscillation (ENSO)
-          and Indian Ocean Dipole (IOD) (WMO). Current forecasts indicate that
-          ENSO is likely to remain in a neutral phase with a 70% probability
-          during July, August and September. Similarly, the IOD is expected to
-          remain neutral at least until August, following a warming of sea
-          surface temperatures south of Java and cooling near the Horn of Africa
-          (BoM).
-        </p>
-        <p>
-          During July-September, climate model guidance favors a drier period in
-          most of lowlands except for the “kiremt” rainfall receiving areas in
-          Northern Somali region. During these months (July to September),
-          significant heat stress is anticipated across much of the pastoral
-          regions of the country. However, Borana Zone will be an exception, as
-          it enters its cold and dry season during this period. Therefore, this
-          climate outlook information and forecast driven pastoral and
-          agro-pastoral climate seasonal and sub-seasonal advisory could support
-          pastoral and agro-pastoral communities and relevant stakeholders in
-          making informed decisions to protect livestock, reduce crop loss and
-          manage rangeland resources more effectively under expected climatic
-          stress.
-        </p>
-        <p>
-          This advisory is part of the CGIAR Scaling for Impact Science Program,
-          which works to deliver actionable, climate-informed solutions that
-          help communities build resilience and scale sustainable practices
-          across regions facing climatic challenges.
-        </p>
-      </div>
-    ),
-
-    // NUEVO: descripción para q4-2025 (SON 2025)
-    "q4-2025": (
-      <div>
-        <p>
-          The September to November (SON) rainfall is a crucial for pastoral
-          communities in south and southeastern Ethiopia. The season is locally
-          known as ‘Hagayya’ in the Borana zone and ’Deyr’ in the Somali
-          region. In Afar region, a small rainfall primarily occurs in October
-          and November which is locally known as ‘Dada&apos;e’ season. The
-          seasonal rainfall patterns in these pastoral regions are highly
-          variable and can unexpectedly change based on the shifts in global,
-          regional and local rainfall driving factors. Among the global rainfall
-          drivers, El Niño-Southern Oscillation (ENSO), Indian Ocean Dipole
-          (IOD) and Madden-Julian Oscillation (MJO) are used for generating this
-          crucial bulletin. In line with this, the recent ENSO evolution report
-          indicated that currently ENSO is at neutral phase and predicted to
-          linger on neutral condition during the upcoming season. Likewise,
-          currently, the IOD is neutral and predicted to shift towards a
-          negative phase between September and November. The MJO is currently
-          away from the phases that positively affect the East African rainfall
-          until mid-October.
-        </p>
-        <p>
-          Based on these, the late onset and drier than normal rainfall
-          condition is predicted in Somali region and Borena zone. Therefore,
-          this climate outlook, along with the waterpoint and rangeland
-          advisories, can help pastoral and agro-pastoral communities in the
-          south and southeastern lowlands of Ethiopia to alert key stakeholders
-          to make informed decisions.
-        </p>
-      </div>
-    ),
-  };
-
-  const sortedSeasonEntries = useMemo(() => {
-    return Object.entries(FILE_MAP).sort(
-      (a, b) => a[1].start.getTime() - b[1].start.getTime()
-    );
-  }, [FILE_MAP]);
-
-  const selectedSeasonLabel = FILE_MAP[season]?.label || "";
-  const descriptionWithSeason = t("advisories.description-3", {
-    season: selectedSeasonLabel,
-  });
-
+  // 1) cargar PDFs desde el endpoint
   useEffect(() => {
-    if (type === "seasonal") {
-      const options = sortedSeasonEntries.map(([value, { label }]) => ({
-        value,
-        label,
-      }));
-      setSeasonOptions(options);
-      if (options.length) setSeason(options[options.length - 1].value);
-    } else if (type === "subseasonal") {
-      const now = new Date();
-      const months = [];
-      for (let offset = -5; offset <= 6; offset++) {
-        const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-        months.push({
-          label: d.toLocaleString("en-US", { month: "long", year: "numeric" }),
-          value: `m${d.getMonth() + 1}-${d.getFullYear()}`,
-        });
-      }
-      setSeasonOptions(months);
-      setSeason(`m${now.getMonth() + 1}-${now.getFullYear()}`); 
-    }
-  }, [type, sortedSeasonEntries]);
+    let isMounted = true;
 
-  const getDownloadInfo = () => {
-    if (type !== "seasonal" || !FILE_MAP[season]) {
+    async function load() {
+      try {
+        setLoading(true);
+        setErrorMsg("");
+
+        const data = await Services.get_all_pdfs(); // debe devolver { seasonal: [], subseasonal: [] }
+        if (!isMounted) return;
+
+        setPdfs({
+          seasonal: Array.isArray(data?.seasonal) ? data.seasonal : [],
+          subseasonal: Array.isArray(data?.subseasonal) ? data.subseasonal : [],
+        });
+      } catch (e) {
+        if (!isMounted) return;
+        setErrorMsg("Failed to load advisories.");
+      } finally {
+        if (!isMounted) return;
+        setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // 2) lista actual según type
+  const currentList = useMemo(() => {
+    return type === "seasonal" ? pdfs.seasonal : pdfs.subseasonal;
+  }, [type, pdfs]);
+
+  // 3) opciones para el select (label = name, value = filename)
+  const seasonOptions = useMemo(() => {
+    return (currentList || []).map((item) => ({
+      value: item.filename,
+      label: item.name || item.filename,
+    }));
+  }, [currentList]);
+
+  // 4) cuando cambie type o lleguen datos, setear selección por defecto
+  useEffect(() => {
+    if (!seasonOptions.length) {
+      setSeason("");
+      return;
+    }
+
+    // si lo que está seleccionado no existe en el nuevo listado, ponemos el último
+    const exists = seasonOptions.some((o) => o.value === season);
+    if (!exists) {
+      setSeason(seasonOptions[seasonOptions.length - 1].value);
+    }
+  }, [type, seasonOptions, season]);
+
+  // 5) item seleccionado (por filename)
+  const selected = useMemo(() => {
+    if (!season) return null;
+    return currentList.find((x) => x.filename === season) || null;
+  }, [season, currentList]);
+
+  const downloadInfo = useMemo(() => {
+    if (!selected?.url || !selected?.filename) {
       return { name: "", route: "", disabled: true };
     }
-    const { name, route } = FILE_MAP[season];
-    return { name, route, disabled: false };
-  };
+    return {
+      name: selected.filename,
+      route: selected.url, // <-- viene del backend
+      disabled: false,
+    };
+  }, [selected]);
 
-  const { name, route, disabled } = getDownloadInfo();
+  const { name, route, disabled } = downloadInfo;
 
   return (
     <div className="container pt-4">
       <h1 className="mb-4 mt-5">{t("advisories.title")}</h1>
 
       <div className="row">
-        {/* Selectores */}
         <div className="col-md-4">
           <div className="mb-3">
             <label className="form-label">{t("rain.type")}</label>
@@ -339,6 +107,7 @@ function Advisories() {
               value={type}
               onChange={(e) => setType(e.target.value)}
               aria-label={t("rain.type")}
+              disabled={loading}
             >
               <option value="seasonal">{t("rain.seasonal")}</option>
               <option value="subseasonal">{t("rain.subseasonal")}</option>
@@ -352,6 +121,7 @@ function Advisories() {
               value={season}
               onChange={(e) => setSeason(e.target.value)}
               aria-label={t("rain.escenario")}
+              disabled={loading || !seasonOptions.length}
             >
               {seasonOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -359,25 +129,28 @@ function Advisories() {
                 </option>
               ))}
             </select>
+
+            {loading && <small className="text-muted">Loading...</small>}
+            {!loading && errorMsg && (
+              <small className="text-danger">{errorMsg}</small>
+            )}
+            {!loading && !errorMsg && !seasonOptions.length && (
+              <small className="text-muted">No advisories available.</small>
+            )}
           </div>
         </div>
 
         <div className="col-md-8 mb-5">
           <h5 className="fw-bold mb-2">
-            Pastoral {type} Advisory {selectedSeasonLabel}
+            {selected?.name
+              ? selected.name
+              : `Pastoral ${type} Advisory`}
           </h5>
 
-          {SPECIAL_DESCRIPTIONS[season] ? (
-            SPECIAL_DESCRIPTIONS[season]
+          {selected?.description ? (
+            <p style={{ whiteSpace: "pre-line" }}>{selected.description}</p>
           ) : (
-            <p>
-              {descriptionWithSeason.split("\n").map((line, idx) => (
-                <span key={idx}>
-                  {line}
-                  <br />
-                </span>
-              ))}
-            </p>
+            <p className="text-muted">{t("advisories.description-3")}</p>
           )}
 
           <div className="mt-4 d-flex gap-3">

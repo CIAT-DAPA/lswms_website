@@ -4,7 +4,16 @@ import html2canvas from "html2canvas";
 import React from "react";
 import { Button, Dropdown } from "react-bootstrap";
 
-function BtnDownload({ idElement, jpg, raster, rasterFile, nameFile, route, disabled, manuals }) {
+function BtnDownload({
+  idElement,
+  jpg,
+  raster,
+  rasterFile,
+  nameFile,
+  route,
+  disabled,
+  manuals,
+}) {
   const downloadMapAsJpg = async () => {
     try {
       const html = document.querySelector(idElement);
@@ -37,12 +46,35 @@ function BtnDownload({ idElement, jpg, raster, rasterFile, nameFile, route, disa
     }
   };
 
-  const downloadFromRoute = () => {
+  // ✅ FORZAR DESCARGA PDF (aunque el server lo abra inline)
+  const downloadFromRoute = async () => {
     try {
+      if (!route) return;
+
+      const filename =
+        nameFile || (manuals ? "manuals.pdf" : "advisory.pdf");
+
+      const response = await fetch(route, {
+        method: "GET",
+        // headers: { accept: "application/pdf" }, // opcional
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch file: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
       const link = document.createElement("a");
-      link.href = route;
-      link.download = nameFile || (manuals ? "manuals.pdf" : "advisory.pdf");
+      link.href = url;
+      link.download = filename;
+
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading PDF:", error);
     }
@@ -74,7 +106,9 @@ function BtnDownload({ idElement, jpg, raster, rasterFile, nameFile, route, disa
 
       <Dropdown.Menu>
         {jpg && <Dropdown.Item onClick={downloadMapAsJpg}>JPG</Dropdown.Item>}
-        {raster && <Dropdown.Item onClick={downloadRaster}>Raster</Dropdown.Item>}
+        {raster && (
+          <Dropdown.Item onClick={downloadRaster}>Raster</Dropdown.Item>
+        )}
         {route && (
           <Dropdown.Item onClick={downloadFromRoute}>
             {manuals ? "Manuals (PDF)" : "Advisory (PDF)"}

@@ -167,6 +167,24 @@ class Services {
         console.log(error);
       });
   }
+
+   get_all_pdfs() {
+    const url = `${Configuration.get_url_api_base()}/pdfs`;
+    return axios
+      .get(url, {
+        headers: {
+          accept: "application/json",
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }
+
+ 
 
 export default new Services();

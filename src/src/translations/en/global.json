@@ -206,6 +206,7 @@
   "forage": {
     "show-woredas": "Show woredas",
     "show": "Show watershed",
+    "south-omo": "South Omo",
     "loading": "Getting the pasture data...",
     "loading-woreda": "Fetching Woreda details...",
     "biomass": "Biomass",

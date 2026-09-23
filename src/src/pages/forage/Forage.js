@@ -114,6 +114,16 @@ console.log( rasterFileUrl)
               transparent={true}
             />
           </LayersControl.Overlay>
+          <LayersControl.Overlay name={t("forage.south-omo")} checked>
+            <WMSTileLayer
+              url={Configuration.get_url_geoserver()}
+              layers="waterpoints_et:south_omo_et"
+              version="1.1.0"
+              format="image/png"
+              transparent={true}
+            />
+          </LayersControl.Overlay>
+
         </LayersControl>
         <ZoomControl position="topright" />
         <TimelineController

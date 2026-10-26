@@ -1,15 +1,20 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-timedimension";
 import Configuration from "../../conf/Configuration";
 import axios from "axios";
+import { Modal, Spinner } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
-function TimelineController({ dimensionName, layer }) {
+function TimelineController({ dimensionName, layer, onTimeChange }) {
+  const [t] = useTranslation("global");
+
   const map = useMap();
   const timeDimensionControlRef = useRef(null);
+  const [loaded, setLoaded] = useState(true);
+  const wmsLayerRef = useRef(null);
 
-  // Define your custom control
   L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function (date) {
       return (
@@ -17,7 +22,7 @@ function TimelineController({ dimensionName, layer }) {
         "-" +
         ("0" + (date.getUTCMonth() + 1)).slice(-2) +
         "-" +
-        ("0" + date.getUTCDate()).slice(-2) // Add this line
+        ("0" + date.getUTCDate()).slice(-2)
       );
     },
   });
@@ -44,6 +49,8 @@ function TimelineController({ dimensionName, layer }) {
     return dates;
   }
 
+  
+
   useEffect(() => {
     getDatesFromGeoserver().then((dates) => {
       const wmsLayer = L.tileLayer.wms(Configuration.get_url_geoserver(), {
@@ -58,41 +65,75 @@ function TimelineController({ dimensionName, layer }) {
       });
       map.timeDimension = timeDimension;
 
-      // Create and add a TimeDimension Layer to the map
-      const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
-        timeDimensionName: dimensionName,
-      });
-      tdWmsLayer.addTo(map);
-      // Create and add a TimeDimension Control to the map
-      if (!timeDimensionControlRef.current) {
-        const timeDimensionControl = new L.Control.TimeDimensionCustom({
-          timeDimension: timeDimension,
-          position: "bottomleft",
-          autoPlay: false,
-          speedSlider: false,
-          playerOptions: {
-            buffer: 1,
-            minBufferReady: -1,
-          },
+      if (!wmsLayerRef.current) {
+        const tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+          timeDimensionName: dimensionName,
         });
-        map.addControl(timeDimensionControl);
-        timeDimensionControlRef.current = timeDimensionControl;
+        tdWmsLayer.addTo(map);
+        wmsLayerRef.current = tdWmsLayer;
+        tdWmsLayer.on("timeload", function () {
+          setLoaded(false);
+        });
+
+        if (!timeDimensionControlRef.current) {
+          const timeDimensionControl = new L.Control.TimeDimensionCustom({
+            timeDimension: timeDimension,
+            position: "bottomleft",
+            autoPlay: false,
+            speedSlider: false,
+            playerOptions: {
+              buffer: 1,
+              minBufferReady: -1,
+            },
+          });
+          map.addControl(timeDimensionControl);
+          timeDimensionControlRef.current = timeDimensionControl;
+
+          const initialFormattedTime = new Date(timeDimension.getCurrentTime())
+            .toISOString()
+            .split("T")[0];
+          onTimeChange(initialFormattedTime);
+
+          map.timeDimension.on("timeload", function (event) {
+            const currentTime = timeDimension.getCurrentTime();
+            const formattedTime = new Date(currentTime)
+              .toISOString()
+              .split("T")[0];
+            onTimeChange(formattedTime);
+          });
+        }
       }
+
       let targetLayer;
       map.eachLayer((layer) => {
-        if (layer.options.layers === 'waterpoints_et:Watershed_boundaries') {
+        if (layer.options.layers === "waterpoints_et:Watershed_boundaries") {
           targetLayer = layer;
           targetLayer.setZIndex(1000);
         }
-        if (layer.options.layers === 'administrative:et_adm3_wp') {
+        if (layer.options.layers === "administrative:et_adm3_wp") {
           targetLayer = layer;
           targetLayer.setZIndex(1000);
         }
       });
     });
-  }, [map]);
+  }, [map, layer, dimensionName, onTimeChange]);
 
-  return null;
+  return (
+    <>
+      <Modal
+        show={loaded}
+        backdrop="static"
+        keyboard={false}
+        centered
+        size="sm"
+      >
+        <Modal.Body className="d-flex align-items-center">
+          <Spinner animation="border" role="status" className="me-2" />
+          {t("forage.loading")}
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 }
 
 export default TimelineController;

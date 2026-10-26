@@ -12,3 +12,7 @@
 .legend > div {
   cursor: pointer;
 }
+.iconBlack {
+  width: 32px;
+  height: 32px; 
+}

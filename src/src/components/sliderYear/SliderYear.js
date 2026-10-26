@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import "./SliderYear.css";
+import { Form, Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { IconCalendarTime } from "@tabler/icons-react";
 
 function SliderYear({ step, min, max, value, onChange }) {
-  const [minValue, setMinValue] = useState(max - 1);
-  const [maxValue, setMaxValue] = useState(max);
+  const [t, i18n] = useTranslation("global");
 
-  const minPos = ((minValue - min) / (max - min)) * 100;
-  const maxPos = ((maxValue - min) / (max - min)) * 100;
+  const [minValue, setMinValue] = useState(max);
+  const [maxValue, setMaxValue] = useState(max);
 
   useEffect(() => {
     onChange({ min: minValue, max: maxValue });
-  }, []);
+  }, [minValue, maxValue]);
 
   useEffect(() => {
     if (value) {
@@ -20,54 +21,44 @@ function SliderYear({ step, min, max, value, onChange }) {
   }, [value]);
 
   const handleMinChange = (e) => {
-    e.preventDefault();
-    const newMinVal = Math.min(+e.target.value, maxValue - step);
-    if (!value) setMinValue(newMinVal);
-    onChange({ min: newMinVal, max: maxValue });
+    const newMinVal = parseInt(e.target.value);
+    setMinValue(newMinVal);
+    if (newMinVal > maxValue) {
+      setMaxValue(newMinVal);
+    }
   };
 
   const handleMaxChange = (e) => {
-    e.preventDefault();
-    const newMaxVal = Math.max(+e.target.value, minValue + step);
-    if (!value) setMaxValue(newMaxVal);
-    onChange({ min: minValue, max: newMaxVal });
+    const newMaxVal = parseInt(e.target.value);
+    setMaxValue(newMaxVal);
+    if (newMaxVal < minValue) {
+      setMinValue(newMaxVal);
+    }
   };
 
   return (
-    <div class="wrapper">
-      <div class="input-wrapper">
-        <h6 className="start-year">{min}</h6>
-        <input
-          class="input"
-          type="range"
-          value={minValue}
-          min={min}
-          max={max}
-          step={step}
-          onChange={handleMinChange}
-        />
-        <input
-          class="input"
-          type="range"
-          value={maxValue}
-          min={min}
-          max={max}
-          step={step}
-          onChange={handleMaxChange}
-        />
-        <h6 className="end-year">{max}</h6>
-      </div>
+    <div>
+      <p className="mb-1">{t("data.filter")}</p>
 
-      <div class="control-wrapper">
-        <div class="control" style={{ left: `${minPos}%` }} />
-        <div class="rail">
-          <div
-            class="inner-rail"
-            style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }}
-          />
-        </div>
-        <div class="control" style={{ left: `${maxPos}%` }} />
-      </div>
+      <Row >
+        <Col className="col-4 col-lg-3">
+          <label className="mb-1 d-flex aling-items-center" htmlFor="min"><IconCalendarTime stroke={1} className="me-2" />{t("data.slider-start")}</label>
+          <Form.Select size="lg" id="min" value={minValue} onChange={handleMinChange}>
+            {Array.from({ length: max - min + 1 }, (_, i) => (
+              <option key={max - i} value={max - i}>{max - i}</option>
+            ))}
+          </Form.Select>
+        </Col>
+        <Col className="col-2 col-lg-2 d-flex flex-column fs-2 justify-content-end text-center w-auto">-</Col>
+        <Col className="col-4 col-lg-3">
+          <label className="mb-1 d-flex aling-items-center" htmlFor="max"><IconCalendarTime stroke={1} className="me-2" />{t("data.slider-end")}</label>
+          <Form.Select size="lg" id="max" value={maxValue} onChange={handleMaxChange} >
+            {Array.from({ length: max - min + 1 }, (_, i) => (
+              <option key={min + i} value={min + i} >{min + i} </option>
+            ))}
+          </Form.Select>
+        </Col>
+      </Row>
     </div>
   );
 }

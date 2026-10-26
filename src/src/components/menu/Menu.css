@@ -1,10 +1,14 @@
 .menu {
-    background-color: #FFF;
-    z-index: 2000;
-    /* opacity: 0.2; */
-    transition: all 0.5s;
+  background-color: #fff;
+  z-index: 2000;
+  /* opacity: 0.2; */
+  transition: all 0.5s;
 }
 
 .menu:hover {
-    opacity: 1 !important;
+  opacity: 1 !important;
+}
+
+.dropdown-toggle-profile::after {
+  display: none !important;
 }

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" type="image/png" href="./images/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -13,10 +13,11 @@
       name="keywords"
       content="water, water management, water management system, monitoring, waterpoints, water management system for agriculture, water management system for irrigation, water management system for farmers, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in india, water management system for farmers in maharashtra, water management system for farmers in pune, water management system for farmers in ethiopia"
     />
-    <meta property="og:image" content="%PUBLIC_URL%/logo192.png" />
+    <meta property="og:image" content="./images/logo.png" />
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="./images/logo.png" />
+    <link rel="manifest" href="./manifest.json">
+
     <!--Google fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -74,4 +75,15 @@
   <!--Apex chart-->
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-apexcharts"></script>
+  <script>
+    if("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").then(registration => {
+          console.log("SW registered: ", registration.scope);
+        }).catch(registrationError => {
+          console.log("SW registration failed: ", registrationError);
+        });
+      });
+    }
+  </script>
 </html>

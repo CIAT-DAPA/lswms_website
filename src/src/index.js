@@ -11,6 +11,7 @@ import i18next from "i18next";
 import global_am from "./translations/am/global.json";
 import global_en from "./translations/en/global.json";
 import global_or from "./translations/or/global.json";
+import global_so from "./translations/so/global.json";
 
 i18next.init({
   interpolation: { escapeValue: false },
@@ -25,6 +26,10 @@ i18next.init({
     or: {
       global: global_or,
     },
+    so: {
+      global: global_so,
+    },
+
   },
 });
 

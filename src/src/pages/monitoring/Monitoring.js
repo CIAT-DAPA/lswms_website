@@ -16,11 +16,11 @@ import {
   Spinner,
   OverlayTrigger,
   Tooltip,
-  Badge,
   Button,
   Dropdown,
   ToastContainer,
   Toast,
+  Form,
 } from "react-bootstrap";
 import Legend from "../../components/legend/Legend";
 import { useTranslation } from "react-i18next";
@@ -31,44 +31,114 @@ import {
   IconCar,
   IconRoad,
   IconWalk,
-  IconChartLine,
   IconId,
   IconInfoCircleFilled,
+  IconCloudRain,
+  IconChartDonut,
 } from "@tabler/icons-react";
 import RouteInfo from "../../components/routeInfo/RouteInfo";
 import WpLabel from "../../components/wpLabel/WpLabel";
 import SubscriptionButton from "../../components/subscriptionButton/SubscriptionButton";
 import { useAuth } from "../../hooks/useAuth";
-import { IconInfoCircle } from "@tabler/icons-react";
+import BtnDownload from "../../components/btnDownload/BtnDownload";
+
+// Mapa de iconos
+const colorIconMap = {
+  green: new L.Icon({
+    iconUrl: require(`../../assets/img/greenMarker.png`),
+    iconSize: [32, 32],
+  }),
+  yellow: new L.Icon({
+    iconUrl: require(`../../assets/img/yellowMarker.png`),
+    iconSize: [32, 32],
+  }),
+  brown: new L.Icon({
+    iconUrl: require(`../../assets/img/brownMarker.png`),
+    iconSize: [32, 32],
+  }),
+  red: new L.Icon({
+    iconUrl: require(`../../assets/img/redMarker.png`),
+    iconSize: [32, 32],
+  }),
+  black: new L.Icon({
+    iconUrl: require(`../../assets/img/blackMarker.png`),
+    iconSize: [32, 32],
+  }),
+  gray: new L.Icon({
+    iconUrl: require(`../../assets/img/grayMarker.png`),
+    iconSize: [32, 32],
+  }),
+};
+
+const thresholdsMap = {
+  156: [0, 0.465, 0.775, 1.24],
+  152: [0, 1.2, 2, 3.2],
+  164: [0, 1.2, 2, 3.2],
+  162: [0, 1.2, 2, 3.2],
+  166: [0, 1.2, 2, 3.2],
+  172: [0, 0.72, 1.2, 1.92],
+  404: [0, 1.2, 2, 3.2],
+  406: [0, 0.72, 1.2, 1.92],
+  408: [0,0.4,0.8,1.2],
+  409: [0, 0.465, 0.775, 1.24],
+  413: [0, 0.72, 1.2, 1.92],
+  414: [0, 1.2, 2, 3.2],
+  415: [0, 0.9, 1.5, 2.4],
+  416: [0, 0.9, 1.5, 2.4],
+  417: [0, 0.72, 1.2, 1.92],
+};
+const legendMap = ['green', 'yellow', 'brown', 'red', 'gray'];
+
+const waterpointsExtidWithIrrigation = ['152', '172', '156', '401']
+
+const getWaterpointColor = (ext_id, depth, name) => {
+
+  depth = parseFloat(depth);
+  const threshold = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= threshold[3]) return legendMap[0];       // green = Good
+  if (depth >= threshold[2] && depth < threshold[3]) return legendMap[1]; // yellow = Watch
+  if (depth >= threshold[1] && depth < threshold[2]) return legendMap[2]; // brown = Alert
+  if (depth > threshold[0] && depth < threshold[1]) return legendMap[3];  // red = Near-Dry
+  return legendMap[4];                                  // gray = Seasonally-Dry
+};
+const getStatusTextByDepthWithirrigation = (ext_id, depth, t) => {
+  const thresholds = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= thresholds[3]) return t("monitoring.good-m");
+  if (depth >= thresholds[2] && depth < thresholds[3]) return t("monitoring.watch-m");
+  if (depth >= thresholds[1] && depth < thresholds[2]) return t("monitoring.alert-m");
+  if (depth > thresholds[0] && depth < thresholds[1]) return t("monitoring.near-m");
+  return t("monitoring.seasonally"); // Texto por defecto
+};
+
+const getStatusTextByDepthWithNonirrigation = (ext_id, depth, t) => {
+  const thresholds = thresholdsMap[ext_id] || [0, 0.3, 0.65, 1, 1.4];
+  if (depth >= thresholds[3]) return t("monitoring.n-good-m");
+  if (depth >= thresholds[2] && depth < thresholds[3]) return t("monitoring.n-watch-m");
+  if (depth >= thresholds[1] && depth < thresholds[2]) return t("monitoring.n-alert-m");
+  if (depth > thresholds[0] && depth < thresholds[1]) return t("monitoring.n-near-m");
+  return t("monitoring.n-seasonally-m"); // Texto por defecto
+};
+
+const getStatusText = (color, t) => {
+  const statusMap = {
+    green: t("monitoring.good"),
+    yellow: t("monitoring.watch"),
+    brown: t("monitoring.alert"),
+    red: t("monitoring.near"),
+    gray: t("monitoring.seasonally"),
+    black: t("monitoring.no-available"),
+  };
+  return statusMap[color] || "";
+};
+
 
 function Visualization() {
   const [t, i18n] = useTranslation("global");
-  //Options for leaflet map
-  const greenIcon = new L.Icon({
-    iconUrl: require(`../../assets/img/greenMarker.png`),
-    iconSize: [32, 32],
-  });
-  const yellowIcon = new L.Icon({
-    iconUrl: require(`../../assets/img/yellowMarker.png`),
-    iconSize: [32, 32],
-  });
-  const brownIcon = new L.Icon({
-    iconUrl: require(`../../assets/img/brownMarker.png`),
-    iconSize: [32, 32],
-  });
-  const redIcon = new L.Icon({
-    iconUrl: require(`../../assets/img/redMarker.png`),
-    iconSize: [32, 32],
-  });
-  const grayIcon = new L.Icon({
-    iconUrl: require(`../../assets/img/grayMarker.png`),
-    iconSize: [32, 32],
-  });
   const mapRef = useRef(null);
-  const [waterpoints, setWaterpoints] = useState([]);
+  const [originalWaterpoints, setOriginalWaterpoints] = useState([]);
+  const [filteredWaterpoints, setFilteredWaterpoints] = useState([]);
   const [monitored, setMonitored] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [alert, setAlert] = useState(false);
   const [alertText, setAlertText] = useState("");
   const [showSearchPlace, setShowSearchPlace] = useState("");
@@ -79,6 +149,7 @@ function Visualization() {
     brown: true,
     red: true,
     gray: true,
+    black: true,
   });
   const [showWarning, setShowWarning] = useState(false);
   const [profile, setProfile] = useState();
@@ -86,330 +157,138 @@ function Visualization() {
   const [toastSuccess, setToastSuccess] = useState();
   const [showToastSubscribe, setShowToastSubscribe] = useState(false);
   const { userInfo } = useAuth();
+  const [wpstolabel, setWpstolabel] = useState([]);
+  const [date, setDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const handleClose = () => setShowWarning(false);
 
   useEffect(() => {
-    //Call to API to get waterpoints
     Services.get_all_waterpoints()
       .then((response) => {
-        setWaterpoints(response);
+        const initialWaterpoints = response.map((wp) => ({
+          ...wp,
+          color: "gray",
+          show: true,
+        }));
+        setOriginalWaterpoints(initialWaterpoints);
+        setFilteredWaterpoints(initialWaterpoints);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
-    if (waterpoints.length > 0) {
-      const idsWp = waterpoints.map((item) => item.id);
-      const requests = idsWp.map((id) => Services.get_last_data(id));
+  if (originalWaterpoints.length > 0 && firstLoad) {
+    const idsWp = originalWaterpoints.map((item) => item.id);
+    const requests = idsWp.map((id) => Services.get_last_data(id));
 
-      Promise.all(requests)
-        .then((responses) => {
-          const monitoredData = responses.map((response) => response.data[0]);
-          setMonitored(monitoredData);
+    Promise.all(requests)
+      .then((responses) => {
+        const monitoredData = responses
+          .map((response) => response.data?.[0] || null)
+          .filter(Boolean);
+
+        setMonitored(monitoredData);
+
+        const updatedWaterpoints = originalWaterpoints.map((wp) => {
+          const monitored = monitoredData.find((m) => m?.waterpointId === wp.id);
+
+          const depthValue =
+            monitored?.values.find((v) => v.type === "depth")?.value || 0;
+          const climatologyValue =
+            monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
+
+          return {
+            ...wp,
+            color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
+          };
+        });
+
+        setOriginalWaterpoints(updatedWaterpoints);
+        setFilteredWaterpoints(updatedWaterpoints);
+        setDate(monitoredData[0]?.date?.split("T")[0]);
+        setEndDate(monitoredData[0]?.date?.split("T")[0]);
+        setFirstLoad(false);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }
+}, [originalWaterpoints.length, firstLoad]);
+
+
+
+  useEffect(() => {
+    if (!firstLoad) {
+      setLoading(true);
+
+      Services.get_data_by_date(date)
+        .then((response) => {
+
+          setMonitored(response.data); 
+
+          // Contadores
+          let countWithData = 0;
+          let countWithoutData = 0;
+          let countDepthZero = 0;
+
+          const updatedWaterpoints = originalWaterpoints.map((wp) => {
+            const monitored = response.data.find((m) => m.waterpointId === wp.id);
+
+            if (monitored) {
+              countWithData++;
+            } else {
+              countWithoutData++;
+            }
+
+            const depthValue =
+              monitored?.values.find((v) => v.type === "depth")?.value || 0;
+            const climatologyValue =
+              monitored?.values.find((v) => v.type === "climatology_depth")?.value || 0;
+
+            if (depthValue === 0) countDepthZero++;
+
+
+            return {
+              ...wp,
+              color: getWaterpointColor(wp.ext_id, depthValue, wp.name)
+
+            };
+          });
+
+
+
+          setOriginalWaterpoints(updatedWaterpoints);
+          setFilteredWaterpoints(updatedWaterpoints);
         })
         .catch((error) => {
-          console.error(error);
+          console.error("🚨 Error al obtener datos por fecha:", error);
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => setLoading(false));
     }
-  }, [waterpoints.length]);
+  }, [date]);
 
-  const popupData = (wp) => {
-    // Find the corresponding monitored data for the current waterpoint
-    const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
-    // Get the value of depth if the monitored data is foun
-    const depthValue = monitoredData
-      ? monitoredData.values.find((value) => value.type === "depth")
-      : null;
-    const scaledDepthValue = monitoredData
-      ? monitoredData.values.find((value) => value.type === "scaled_depth")
-      : null;
-    const scaledDepthClimatologyValue = monitoredData
-      ? monitoredData.values.find(
-          (value) => value.type === "climatology_scaled_depth"
-        )
-      : null;
-    const hasContentsWp =
-      monitoredData.am || monitoredData.or || monitoredData.en;
 
-    return !filter.green &&
-      scaledDepthValue.value >
-        scaledDepthClimatologyValue.value ? null : !filter.yellow &&
-      scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5 &&
-      scaledDepthValue.value <=
-        scaledDepthClimatologyValue.value ? null : !filter.brown &&
-      scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 &&
-      scaledDepthValue.value / scaledDepthClimatologyValue.value <=
-        0.5 ? null : !filter.red &&
-      !(
-        scaledDepthValue.value > scaledDepthClimatologyValue.value ||
-        scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5 ||
-        scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.03 ||
-        (scaledDepthValue.value === 0 &&
-          scaledDepthClimatologyValue.value === 0)
-      ) ? null : !filter.gray &&
-      scaledDepthValue.value === 0 &&
-      scaledDepthClimatologyValue.value === 0 ? null : (
-      <>
-        {hasContentsWp && (
-          <Modal show={showWarning} onHide={handleClose} centered>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                {t("monitoring.modal-title") || "Warning"}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {t("monitoring.modal-body") ||
-                "The waterpoint profile is not available in the language selected, only in"}{" "}
-              <strong>
-                {monitoredData["en"]
-                  ? "English"
-                  : monitoredData["am"]
-                  ? "Amharic"
-                  : "Afaan Oromo"}
-              </strong>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                {t("monitoring.modal-close") || "Close"}
-              </Button>
-              <Link
-                type="button"
-                className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                  hasContentsWp ? "" : "disabled "
-                }`}
-                to={`/profile/${wp.id}/${Object.keys(monitoredData).find(
-                  (key) => monitoredData[key] === true
-                )}`}
-              >
-                {t("monitoring.modal-continue") ||
-                  "Continue to waterpoint profile"}
-              </Link>
-            </Modal.Footer>
-          </Modal>
-        )}
+  useEffect(() => {
+    const filtered = originalWaterpoints.filter((wp) => {
+      // Caso especial para Muya y Bakke
+      if (wp.name === "Muya") {
+        return filter.brown;
+      }
+      // Caso especial para Ketala
+      if (wp.name === "Ketala") {
+        return filter.black;
+      }
+      return filter[wp.color];
+    });
 
-        <Marker
-          position={[wp.lat, wp.lon]}
-          icon={
-            scaledDepthValue.value > scaledDepthClimatologyValue.value
-              ? greenIcon
-              : scaledDepthValue.value / scaledDepthClimatologyValue.value > 0.5
-              ? yellowIcon
-              : scaledDepthValue.value / scaledDepthClimatologyValue.value >
-                0.03
-              ? brownIcon
-              : scaledDepthValue.value === 0 &&
-                scaledDepthClimatologyValue.value === 0
-              ? grayIcon
-              : redIcon
-          }
-          key={wp.id}
-        >
-          <Popup closeButton={false}>
-            <div>
-              <div className="d-flex align-items-center justify-content-between ">
-                <h6 className="fw-medium mb-0">
-                  {t("monitoring.waterpoint")} {wp.name}{" "}
-                  {t("monitoring.overview")}
-                </h6>
-                <div className="d-flex align-items-center ">
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id={`tooltip-top`}>
-                        {t("monitoring.subscription-info")}
-                      </Tooltip>
-                    }
-                  >
-                    <IconInfoCircleFilled />
-                  </OverlayTrigger>
-                  <SubscriptionButton
-                    idWater={wp.id}
-                    idUser={userInfo?.sub}
-                    setShowToastSubscribe={setShowToastSubscribe}
-                    setToastSuccess={setToastSuccess}
-                    size="sm"
-                  />
-                </div>
-              </div>
-              <p className="mt-0 mb-2">
-                {t("monitoring.date")}: {monitoredData.date.split("T")[0]}
-              </p>
-            </div>
-            <table className="fs-6">
-              <tbody>
-                <tr>
-                  <td>{t("monitoring.name")}:</td>
-                  <td>
-                    <div
-                      className={`td-name text-center fw-medium ${
-                        scaledDepthValue.value >
-                        scaledDepthClimatologyValue.value
-                          ? "td-green"
-                          : scaledDepthValue.value /
-                              scaledDepthClimatologyValue.value >
-                            0.5
-                          ? "td-yellow"
-                          : scaledDepthValue.value /
-                              scaledDepthClimatologyValue.value >
-                            0.03
-                          ? "td-brown"
-                          : scaledDepthValue.value === 0 &&
-                            scaledDepthClimatologyValue.value === 0
-                          ? "td-gray"
-                          : "td-red"
-                      }`}
-                    >
-                      {wp.name}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="d-flex align-items-center ">
-                    {" "}
-                    <OverlayTrigger
-                      placement="left"
-                      overlay={
-                        <Tooltip id={`tooltip-left`}>
-                          {t("monitoring.depth-info")}
-                        </Tooltip>
-                      }
-                    >
-                      <IconInfoCircleFilled />
-                    </OverlayTrigger>
-                    {t("monitoring.depth")} (%) :
-                  </td>
-                  <td>{depthValue.value}</td>
-                </tr>
-                <tr>
-                  <td className="d-flex align-items-center ">
-                    <OverlayTrigger
-                      placement="left"
-                      overlay={
-                        <Tooltip id={`tooltip-left`}>
-                          {t("monitoring.median-depth-info")}
-                        </Tooltip>
-                      }
-                    >
-                      <IconInfoCircleFilled />
-                    </OverlayTrigger>
-                    {t("monitoring.median-depth")} (%):
-                  </td>
-                  <td>{scaledDepthValue.value}</td>
-                </tr>
-                <tr>
-                  <td>{t("monitoring.area")} (ha):</td>
-                  <td>{wp.area}</td>
-                </tr>
-              </tbody>
-            </table>
-            <p className="fs-6 mt-0">
-              {scaledDepthValue.value > scaledDepthClimatologyValue.value
-                ? t("monitoring.good-m")
-                : scaledDepthValue.value / scaledDepthClimatologyValue.value >
-                  0.5
-                ? t("monitoring.watch-m")
-                : scaledDepthValue.value / scaledDepthClimatologyValue.value >
-                  0.03
-                ? t("monitoring.alert-m")
-                : scaledDepthValue.value === 0 &&
-                  scaledDepthClimatologyValue.value === 0
-                ? t("monitoring.seasonally-m")
-                : t("monitoring.near-m")}
-            </p>
-            <div className="d-flex justify-content-between mt-3">
-              {hasContentsWp && !monitoredData[i18n.language] ? (
-                <Button
-                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                    hasContentsWp ? "" : "disabled "
-                  }`}
-                  onClick={() => setShowWarning(true)}
-                >
-                  <IconId style={{ position: "inherit" }} className="me-3" />
-                  {t("monitoring.profile")}
-                </Button>
-              ) : (
-                <Link
-                  type="button"
-                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${
-                    hasContentsWp ? "" : "disabled "
-                  }`}
-                  to={`/profile/${wp.id}`}
-                >
-                  <IconId style={{ position: "inherit" }} className="me-3" />
-                  {t("monitoring.profile")}
-                </Link>
-              )}
+    setFilteredWaterpoints(filtered);
+    setWpstolabel(filtered);
+  }, [filter, originalWaterpoints]);
 
-              <Link
-                type="button"
-                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2"
-                to={`/dashboard/${wp.id}`}
-              >
-                <IconChartLine
-                  style={{ position: "inherit" }}
-                  className="me-3"
-                />
-                {t("monitoring.data")}
-              </Link>
-              <Dropdown variant="sm">
-                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic">
-                  <IconRoad style={{ position: "inherit" }} />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("foot");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconWalk
-                      style={{ position: "inherit" }}
-                      className="me-2"
-                    />
-                    {t("monitoring.walk")}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("car");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconCar style={{ position: "inherit" }} className="me-2" />
-                    {t("monitoring.car")}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      setShowSearchPlace(true);
-                      setProfile("bike");
-                      setWaterpointRoute(wp);
-                    }}
-                  >
-                    <IconBike
-                      style={{ position: "inherit" }}
-                      className="me-2"
-                    />
-                    {t("monitoring.bike")}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </Popup>
-        </Marker>
-      </>
-    );
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setDate(newDate);
   };
 
   const handleWpClick = (wp) => {
@@ -444,8 +323,240 @@ function Visualization() {
       });
   };
 
+  const popupData = (wp) => {
+    if (wp.name === "Ketala") {
+      return (
+        <Marker
+          position={[wp.lat, wp.lon]}
+          icon={colorIconMap["black"]}
+          key={wp.id}
+        >
+          <Popup closeButton={false} className="popup" maxWidth={200}>
+            <div className="text-center">
+              <WpLabel waterpoint={wp} />
+              <h6 className="fw-medium mb-0 text-gray">Apologies,</h6>
+              <p className="text-gray mt-0">
+                There is currently no data available for your selected location.
+              </p>
+            </div>
+          </Popup>
+        </Marker>
+      );
+    }
+    const monitoredData = monitored.find((data) => data.waterpointId === wp.id);
+
+
+    const depthValue = monitoredData?.values.find(
+      (value) => value.type === "depth"
+    );
+    const climatology_depthValue = monitoredData?.values.find(
+      (value) => value.type === "climatology_depth"
+    );
+
+    const hasContentsWp =
+      monitoredData?.am || monitoredData?.or || monitoredData?.en;
+
+    return (
+      <>
+        {hasContentsWp && (
+          <Modal show={showWarning} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {t("monitoring.modal-title") || "Warning"}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {t("monitoring.modal-body") ||
+                "The waterpoint profile is not available in the language selected, only in"}{" "}
+              <strong>
+                {monitoredData["en"]
+                  ? "English"
+                  : monitoredData["am"]
+                    ? "Amharic"
+                    : "Afaan Oromo"}
+              </strong>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                {t("monitoring.modal-close") || "Close"}
+              </Button>
+              <Link
+                type="button"
+                className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
+                  }`}
+                to={`/profile/${wp.id}/${Object.keys(monitoredData).find(
+                  (key) => monitoredData[key] === true
+                )}`}
+              >
+                {t("monitoring.modal-continue") ||
+                  "Continue to waterpoint profile"}
+              </Link>
+            </Modal.Footer>
+          </Modal>
+        )}
+
+        <Marker
+          position={[wp.lat, wp.lon]}
+          icon={colorIconMap[wp.color]}
+          key={wp.id}
+        >
+          <Popup closeButton={false} className="popup">
+            <div>
+              <div className="d-flex align-items-center justify-content-between ">
+                <h6 className="fw-medium mb-0">
+                  {t("monitoring.waterpoint")} {wp.name}{" "}
+                </h6>
+                <Dropdown variant="sm">
+                  <Dropdown.Toggle
+                    variant="outline-primary"
+                    id="dropdown-basic"
+                  >
+                    <IconRoad style={{ position: "inherit" }} />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("foot");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconWalk
+                        style={{ position: "inherit" }}
+                        className="me-2"
+                      />
+                      {t("monitoring.walk")}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("car");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconCar
+                        style={{ position: "inherit" }}
+                        className="me-2"
+                      />
+                      {t("monitoring.car")}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as="button"
+                      onClick={() => {
+                        setShowSearchPlace(true);
+                        setProfile("bike");
+                        setWaterpointRoute(wp);
+                      }}
+                    >
+                      <IconBike
+                        style={{ position: "inherit" }}
+                        className="me-2"
+                      />
+                      {t("monitoring.bike")}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+              <p className="mt-0 mb-2">
+                {t("monitoring.date")}: {monitoredData?.date.split("T")[0]}
+                
+              </p>
+            </div>
+            <table className="fs-6">
+              <tbody>
+                <tr>
+                  <td className="d-flex">{t("monitoring.condition")}:
+                    <div
+                      className={`td-name text-center fw-medium td-${wp.color} me-3 ms-2 px-3`}
+                    >
+
+                      {getStatusText(wp.color, t)}
+                    </div>
+                  </td>
+
+                  <td > {t("monitoring.depth")}: {depthValue?.value.toFixed(2)} m</td>
+
+                </tr>
+              </tbody>
+            </table>
+            <p className="fs-6 mt-0">
+              {depthValue?.value !== undefined
+                ? waterpointsExtidWithIrrigation.includes(wp.ext_id)
+                  ? getStatusTextByDepthWithirrigation(wp.ext_id, depthValue.value, t)
+                  : getStatusTextByDepthWithNonirrigation(wp.ext_id, depthValue.value, t)
+                : t("monitoring.no-data")}
+            </p>
+
+
+            <div className="d-flex justify-content-between mt-3">
+              {hasContentsWp && !monitoredData[i18n.language] ? (
+                <Button
+                  className={`btn btn-primary text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-3 py-2 ${hasContentsWp ? "" : "disabled "
+                    }`}
+                  onClick={() => setShowWarning(true)}
+                >
+                  <IconId style={{ position: "inherit" }} className="me-3" />
+                  {t("monitoring.profile")}
+                </Button>
+              ) : (
+                <Link
+                  type="button"
+                  className={`btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 ${hasContentsWp ? "" : "disabled "
+                    }`}
+                  to={`/profile/${wp.id}`}
+                >
+                  <IconId style={{ position: "inherit" }} className="me-2" />
+                  {t("monitoring.profile")}
+                </Link>
+              )}
+
+              <a
+                href={`/dashboard/${wp.id}`}
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between px-2 py-2 mx-2"
+                role="button"
+              >
+                <IconChartDonut
+                  style={{ position: "inherit" }}
+                  className="me-2"
+                />
+                {t("monitoring.data")}
+              </a>
+
+              <Link
+                type="button"
+                className="btn btn-primary btn-sm text-white rounded-3 fw-medium d-flex align-items-center justify-content-between "
+                to={`/forecast/${wp.id}`}
+              >
+                <IconCloudRain
+                  style={{ position: "inherit" }}
+                  className="me-2"
+                />
+                {t("monitoring.forecast")}
+              </Link>
+              <div className="mx-2">
+                <SubscriptionButton
+                  idWater={wp.id}
+                  idUser={userInfo?.sub}
+                  setShowToastSubscribe={setShowToastSubscribe}
+                  setToastSuccess={setToastSuccess}
+                  label
+                  size
+                  isMonitoringBtn
+                  language={i18n.language}
+                />
+              </div>
+            </div>
+          </Popup>
+        </Marker>
+      </>
+    );
+  };
+
   return (
-    <>
+    <div id="map">
       <ToastContainer
         className="p-3 position-fixed"
         position="bottom-end"
@@ -460,8 +571,8 @@ function Visualization() {
         >
           <Toast.Body>
             {!toastSuccess
-              ? `Woohoo, you've unsubscribe from the waterpoint!`
-              : `Success! You're now subscribed to the waterpoint.`}
+              ? t("subscriptionToast.unsubscribed")
+              : t("subscriptionToast.subscribed")}
           </Toast.Body>
         </Toast>
       </ToastContainer>
@@ -484,7 +595,7 @@ function Visualization() {
         <Modal.Body className="d-flex flex-column">
           <p>{t("monitoring.modal-search")}</p>
           <SearchBar
-            waterpoints={waterpoints}
+            waterpoints={originalWaterpoints}
             type="places"
             onWpClick={handlePlaceClick}
           />
@@ -506,10 +617,7 @@ function Visualization() {
       <MapContainer
         center={[9.149175, 40.498867]}
         zoom={6}
-        style={{
-          height: "100vh",
-          width: "100%",
-        }}
+        style={{ height: "100vh", width: "100%" }}
         className="map-monitoring"
         zoomControl={false}
         ref={mapRef}
@@ -519,8 +627,7 @@ function Visualization() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {waterpoints && <WpLabel waterpoints={waterpoints} />}
-
+        <WpLabel waterpoints={wpstolabel} />
         {route && (
           <Polyline
             color="#0016ff"
@@ -528,18 +635,37 @@ function Visualization() {
             weight={5}
           />
         )}
-        {waterpoints.map((wp, i) => (
-          <div key={i}>{loading ? <></> : popupData(wp)}</div>
+        {filteredWaterpoints.map((wp, i) => (
+          <div key={i}>{loading ? null : popupData(wp)}</div>
         ))}
       </MapContainer>
-      <SearchBar
-        waterpoints={waterpoints}
-        onWpClick={handleWpClick}
-        type="waterpoints"
-      />
+      <div className="position-absolute top-left-bar d-flex gap-2 flex-column flex-md-row">
+        <SearchBar
+          bigSize={true}
+          waterpoints={originalWaterpoints}
+          onWpClick={handleWpClick}
+          type="waterpoints"
+        />
+        <Form.Control
+          className="date-picker rounded-4"
+          type="date"
+          aria-label="Monitored Date"
+          value={date}
+          onChange={handleDateChange}
+          min="2001-01-01"
+          max={endDate}
+        />
+      </div>
+
       <Legend setFilter={setFilter} filter={filter} />
+      <BtnDownload
+        jpg
+        idElement={"#map"}
+        route={route}
+        nameFile="monitoring_map"
+      />
       {route && <RouteInfo route={route} />}
-    </>
+    </div>
   );
 }
 

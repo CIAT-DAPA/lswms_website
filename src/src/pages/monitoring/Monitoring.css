@@ -37,7 +37,7 @@ table {
 }
 
 .leaflet-popup-content {
-  min-width: 380px;
+  min-width: 485px;
 }
 
 .leaflet-popup-content-wrapper {
@@ -55,4 +55,15 @@ table {
 
 .modal-backdrop.show {
   opacity: 1;
+}
+
+.date-picker {
+  width: 150px !important;
+  cursor: pointer;
+}
+
+.top-left-bar {
+  top: 70px;
+  left: 20px;
+  z-index: 1000;
 }

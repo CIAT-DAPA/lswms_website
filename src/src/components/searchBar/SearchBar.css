@@ -1,8 +1,19 @@
-.bar-hints {
-  position: absolute;
-  top: 70px;
-  z-index: 1000;
-  left: 20px;
+/* SearchBar.css */
+
+/* Definir el ancho máximo de 500px para pantallas grandes */
+.search-bar-big {
+  width: 50vw;
+}
+.search-bar {
+  width: 350px;
+}
+
+/* Media query para dispositivos móviles */
+@media (max-width: 767px) {
+  /* Reducir el ancho máximo a 350px en dispositivos móviles */
+  .search-bar {
+    width: 320px;
+  }
 }
 
 .search-bar {
@@ -25,14 +36,14 @@
   border: none;
 }
 
-.text-input:focus{
-  box-shadow: none !important; 
+.text-input:focus {
+  box-shadow: none !important;
 }
 
-.hint-div{
+.hint-div {
   cursor: pointer;
 }
 
-.hint-div:hover{
+.hint-div:hover {
   background-color: rgb(235, 235, 235);
 }

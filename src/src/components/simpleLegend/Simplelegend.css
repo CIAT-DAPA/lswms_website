@@ -1,0 +1,15 @@
+.legendd {
+    position: absolute;
+    bottom: 50px;
+    z-index: 1000;
+    left: 20px;
+  }
+  
+  .legendd > div > p {
+    user-select: none;
+  }
+  
+  .legendd > div {
+    pointer-events: none;
+  }
+  

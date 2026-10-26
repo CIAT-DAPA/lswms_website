@@ -67,8 +67,10 @@ pipeline {
                 script {
                     sshCommand remote: remote, command: '''
                         # Verify and control PM2 service
-                        cd /var/www/waterpointsFrontend
+                        cd /var/www/waterpointsFrontend                        
                         cd ./webapp_WP
+                        source /home/ethwaterpoints/.miniforge3/etc/profile.d/conda.sh
+                        conda activate waterpoints-front
                         if pm2 show waterpointsfrontend >/dev/null 2>&1; then
                             echo "stopping PM2 process..."
                             pm2 stop waterpointsfrontend
